@@ -17,15 +17,15 @@ title: Cynp-Blogs
 description: > # this means to ignore newlines until "baseurl:"
   Material theme based on <a href="http://materializecss.com">Materialize.css</a> for jekyll sites
 baseurl: 
-url: "https://cynpna.github.io"
+url: "https://cmaven.github.io"
 permalink: /:year/:month/:day/:title
-repository: cynpna/cynpna.github.io
+repository: cmaven/cmaven.github.io
 paginate: 5
 
 # MatJek specific configurations
 # cynp specific configurations - 171124
-github_profile: "https://github.com/cynpna"
-user: "cynpna"
+github_profile: "https://github.com/cmaven"
+user: "cmaven"
 user_email: "not yet"
 contact_url: "https://goo.gl/tVljbV"
 google_tracking_id: "UA-96359860-1"
