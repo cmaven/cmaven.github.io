@@ -28,7 +28,7 @@ pip install selenium 실행 시, 아래와 같은 Warning 발생
 
 ![python-warning, Ignoring invaild distribution -ip 을 표시한 디렉토리 삭제](https://user-images.githubusercontent.com/76153041/154229784-99ba096e-8645-45e5-96e6-fe45bcccd276.png)  
 
-** 해당 디렉토리를 삭제하면, WARNING이 사라짐 **
+**해당 디렉토리를 삭제하면, WARNING이 사라짐**
 
 ![python-warning, Ignoring invaild distribution -ip 을 표시한 디렉토리 삭제 후 WARNING 해결됨](https://user-images.githubusercontent.com/76153041/154229799-47af874e-e7a2-4d7e-8d1f-82affd7dc51e.png)
 
