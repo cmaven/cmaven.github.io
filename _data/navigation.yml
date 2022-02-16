@@ -1,0 +1,57 @@
+# main links
+main:
+  #- title: "Quick-Start Guide"
+  #  url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
+  # - title: "About"
+  #   url: https://mmistakes.github.io/minimal-mistakes/about/
+  # - title: "Sample Posts"
+  #   url: /year-archive/
+  # - title: "Sample Collections"
+  #   url: /collection-archive/
+  # - title: "Sitemap"
+  #   url: /sitemap/
+  - title: "Home"
+    url: /
+  - title: "Categories"
+    url: /categories
+  - title: "Tags"
+    url: /tags
+
+# cmaven links
+cmaven_sidebar:
+  - title: "운영체제"
+    children:
+      - title: "Linux"  #sub title은 카테고리 명과 일치해야함(대소문자도)
+        url: /categories/linux
+      - title: "Windows"
+        url: /categories/windows
+  - title: "프로그래밍언어"
+    children:
+      - title: "Python"
+        url: /categories/python
+      - title: "C"
+        url: /categories/c
+      - title: "C++"
+        url: /categories/c++
+      - title: "HTML"
+        url: /categories/html
+      - title: "CSS"
+        url: /categories/css
+  - title: "기술"
+    children:
+      - title: "Docker" 
+        url: /categories/docker
+      - title: "Kubernetes"
+        url: /categories/k8s 
+      - title: "Storage"
+        url: /categories/storage
+  - title: "도구"
+    children:
+      - title: "VScode"
+        url: /categories/vscode
+      - title: "Git"
+        url: /categories/git
+  - title: "블로그"
+    children:
+      - title: "Gitblog"
+        url: /categories/gitblog      
