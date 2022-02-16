@@ -1,5 +1,5 @@
 ---
-title: "Pip Error-ERROR: Could not install Packages due to.. or No moudle named pip"
+title: "Pip Error-ERROR: No moudle named pip"
 date: 2022-02-16
 categories: Python
 tags: [Error, Pip, Venv]
@@ -14,7 +14,7 @@ Pip 명령어 실행이 갑자기 동작하지 않을 때
 - `python -m pip install --upgrdae pip`를 수행하면, No module named pip
 
 
-![01_pip 가 갑자기 안될 때  get-pip 설치](https://user-images.githubusercontent.com/76153041/154234206-a0165a40-8c33-4338-8ee4-39eebb01bfd2.png)  
+![01_pip 가 갑자기 안될 때  get-pip 설치](https://user-images.githubusercontent.com/76153041/154236547-701486e1-087f-49a5-ba01-889958cadbc4.png)
 
 
 ### 원인
