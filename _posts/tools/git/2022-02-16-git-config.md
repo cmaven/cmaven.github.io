@@ -17,7 +17,7 @@ tags: [User, Config]
 ``` shell
 git config -l
 ```
-- 출력예시
+- 출력예시  
 ![git-confing 확인-01](https://user-images.githubusercontent.com/76153041/154203932-08c2ccee-1154-47e5-9de2-c4a89ed00e18.png)
 
 
@@ -26,7 +26,7 @@ git config -l
 git config user.name
 git config user.email
 ```
-- 출력예시
+- 출력예시  
 ![git-confing 확인-02](https://user-images.githubusercontent.com/76153041/154203935-2d0f7c70-01ff-46df-b9df-a7a8a2c06080.png)
 
 ### 설정 변경
@@ -38,7 +38,7 @@ git config --global user.name $(username)
 git config --global user.email $(useremail)
 ```
 
-- 출력예시
+- 출력예시  
 ![git-config 수정](https://user-images.githubusercontent.com/76153041/154203940-6bce8ce9-827d-449a-9b02-7c781b3ce793.png)
 
 
