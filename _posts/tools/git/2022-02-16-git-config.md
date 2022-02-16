@@ -2,7 +2,7 @@
 title: "Git 계정(사용자) 변경 하기"
 date: 2022-02-16
 categories: Git
-tags: [User, Config]]
+tags: [User, Config]
 ---
 
 로컬 환경(Shell)에서 Git 계정(사용자) 변경 하기
