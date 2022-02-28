@@ -20,7 +20,7 @@ Selenium 사용 시, 버튼 클릭 오류
 구동한 웹브라우저의 크기가 너무 작을 경우 발생할 수 있음
 
 > 그 외 다른 문제로 발생할 수도 있음  
-> 참고: https://www.testim.io/blog/selenium-element-is-not-clickable-at-point/
+> 참고: [Link](https://www.testim.io/blog/selenium-element-is-not-clickable-at-point/)
 
 ### 해결방안
 
