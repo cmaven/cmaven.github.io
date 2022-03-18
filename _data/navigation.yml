@@ -51,6 +51,8 @@ cmaven_sidebar:
         url: /categories/vscode
       - title: "Git"
         url: /categories/git
+      - title: "Excel"
+        url: /categories/excel
   - title: "블로그"
     children:
       - title: "Gitblog"
