@@ -17,11 +17,12 @@ GitBlog 에 파비콘(Favicon) 생성 및 적용하는 방법
 
 ### 이미지 준비 및 파비콘 생성
 
-- 사용할 이미지 : 정사각형 이미지를 사용하는 것이 좋음  
+- 사용할 이미지  
+      
+  정사각형 이미지를 사용하는 것이 좋음  
 
-![favicon용 이미지](https://user-images.githubusercontent.com/76153041/159210308-0e238928-1658-4216-bfcd-aa0df9f463cb.png){: width="30%" height="30%"}  
+  ![favicon용 이미지](https://user-images.githubusercontent.com/76153041/159210308-0e238928-1658-4216-bfcd-aa0df9f463cb.png){: width="20%" height="20%"}  
 
-   정사각형 이미지를 사용하는 것이 좋음  
    
 - 파비콘 생성  
   
