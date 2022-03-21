@@ -26,7 +26,7 @@ GitBlog 에 파비콘(Favicon) 생성 및 적용하는 방법
    
 - 파비콘 생성  
   
-  [(링크) favicon-generator](https://www.favicon-generator.org/)
+  [(링크) favicon-generator](https://www.favicon-generator.org/){:target="_blank"}
   
   
   사용할 이미지 파일을 업로드하고 (파일선택) → 파비콘을 생성함 (Create Favicon)  
