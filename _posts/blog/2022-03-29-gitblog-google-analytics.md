@@ -67,7 +67,7 @@ GitBlog 에 Google Analytics(GA4) 적용하여 방문자 통계 파악하기
 
 - `_includes>analytics-providers>google-gtag.html` `<script>` 부분에 아래 코드 추가
   ```html
-  gtag('config', '{{ site.analytics.google.measurement_id }}');
+  gtag('config', {{ site.analytics.google.measurement_id }});
   ```
   ![10](https://user-images.githubusercontent.com/76153041/160599852-a8f310a6-4c8d-4abc-b8bb-8801a240933e.png)  
 
