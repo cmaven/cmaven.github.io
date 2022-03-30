@@ -1,18 +1,23 @@
 ---
-title: "GitBlog 방문자 통계 확인하기(Google Analytics) 구글 파비콘(Favicon) 생성 및 적용하기"
-date: 2022-03-29
+title: "GitBlog 구글 검색 엔진에 노출시키기(Google Search Console"
+date: 2022-03-30
 categories: Gitblog
-tags: [GoogleAnalytics]
+tags: [GoogleSearchConsole]
 ---
 
-GitBlog 에 Google Analytics(GA4) 적용하여 방문자 통계 파악하기  
+GitBlog 구글 검색 엔진에 노출 시켜, 외부 사용자가 접근할 수 있도록 하기  
 
 ------
 
-### Google Analytics? 
-> 구글에서 제공하는 웹사이트 트래픽을 추적하고 보고하는 Web Analytics Service  
+### Google Search Console? 
+> 구글 검색 엔진에서 등록된 웹사이트가 검색되도록 등록하고, 검색 결과를 모니터링 할 수 있는 서비스 (웹 크롤링)
 
-사용 중인 블로그에 대해 방문자 통계 정보를 확인할 수 있도록 한다.
+사용 중인 블로그에 대해 구글 검색 엔진을 통해 접근할 수 있도록 한다.  
+
+---
+
+구글 검색 결과에서 등록한 웹사이트가 나오려면 구글 검색 엔진이 웹사이트를 읽는 작업이 필요함(크롤링)
+
 
 ### Google Analytics 설정하기
 
