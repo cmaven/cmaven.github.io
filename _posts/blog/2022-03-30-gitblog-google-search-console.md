@@ -75,5 +75,9 @@ GitBlog 구글 검색 엔진에 노출 시켜, 외부 사용자가 접근할 수
   
   ![이미지 15](https://user-images.githubusercontent.com/76153041/160787304-121e1694-eba1-4ded-ba09-e79aeeee999f.png)  
 
+### Robots.txt 생성 및 적용  
+
+- 웹 크롤러가 사이트의 정보를 크롤링 할 때, 적용할 정책을 지정하는 파일
+- 사이트의 어떤 정보를 참조할지 결정하는 역할  
 
 (작 성 중)
