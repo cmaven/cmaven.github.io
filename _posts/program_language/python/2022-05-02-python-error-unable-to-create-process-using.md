@@ -28,7 +28,7 @@ Python 또는 Pip 명령어 실행 시, Process 경로 오류로 문제로 실�
 - 가상환경에 설정되어 있는 Python, Pip 등의 경로가 서로 다름(Machine A에는 E:...에, Machine B에는 D:....에)  
 
 ### 해결방안  
-- <b><span style="color:#fa2c6d">아래 방법은 임시해결 방안</span></span></b>
+- <b><span style="color:#fa2c6d">아래 방법은 임시해결 방안</span></b>
   - 실행 환경이 달라지면, 매번 재설치해야하는 번거러움이 있음
   - VENV의 환경변수만 업데이트 하는 방안 확인 필요함
 
