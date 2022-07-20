@@ -48,3 +48,53 @@ PS D:\githubblog\flask-pybo> git branch -a
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 ```  
+
+
+### 브랜치 생성 후, 작업환경을 생성 브런치로 변경
+
+- 기본 방법(2개 명령어 사용)  
+
+```shell
+git branch ${branch_name}
+git checkout ${branch_name}
+
+''' 실행 예 '''
+D:\githubblog\flask-app> git branch
+* main
+D:\githubblog\flask-app> git branch test-branch-01
+D:\githubblog\flask-app> git checkout test-branch-01
+Switched to branch 'test-branch-01'
+PS D:\githubblog\flask-app> git branch
+  main
+* test-branch-01
+```  
+
+- 한 번의 명령어로 생성 및 이동하기  
+
+```shell
+git checkout -b ${branchname}
+
+''' 실행 예 '''
+D:\githubblog\flask-pybo> git branch   
+  main
+* test-branch-01
+D:\githubblog\flask-pybo> git checkout -b test-branch-02
+Switched to a new branch 'test-branch-02'
+D:\githubblog\flask-pybo> git branch
+  main
+  test-branch-01
+* test-branch-02
+```
+
+### 브랜치에서 작업 완료 후, main 에 병합
+
+```shell
+# 작업 내용 commit
+git add *
+git commit -m "comment"
+
+git push
+git checkout main
+git merge ${branchname}
+```  
+
