@@ -59,6 +59,19 @@ Failed to initialize NVML: Driver/library version mismatch 오류 발생할 때
 #### unattended-upgrade를 방지하는 방법
 
 - unattended-upgrade의 대상 패키지에서 nvidia 관련 패키지를 제외  
+  - `/etc/apt/apt.conf.d/50unattended-upgrades` 파일 수정
+
+  ``` shell
+  # ubuntu 20.04 기준
+  # /etc/apt/apt.conf.d/50unattended-upgrades 파일에 아래 내용 추가
+  
+  Unattended-Upgrade::Package-Blacklist {
+    "nvidia-*.";
+  }    
+  ```  
+  
+  ![이미지 41](https://user-images.githubusercontent.com/76153041/183000202-374ce1b1-ae1e-46d2-8374-63c91c2ddae4.png)  
+
 
   [해당링크참조](https://blog.ggaman.com/1029){:target="_blank"}
 
