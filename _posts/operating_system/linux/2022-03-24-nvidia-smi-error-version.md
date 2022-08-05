@@ -111,4 +111,3 @@ Failed to initialize NVML: Driver/library version mismatch 오류 발생할 때
 
 - 모듈이 자동으로 재업로드되어 `nvidia-smi` 명령어가 정상 작동함
 ![nvidia-error-09](https://user-images.githubusercontent.com/76153041/159903143-af2f7b1e-3098-4322-b79d-8ae6808b0dc0.png)
-
