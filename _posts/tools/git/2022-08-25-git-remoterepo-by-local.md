@@ -22,7 +22,7 @@ tags: [RemoteRepository]
 - 기존 토큰 재생성은 토큰명 선택후, `Regenerate token`  
 - 생성된 토큰을 API Call에 사용함
 - 참조 스크린샷  
-  ![doit_django_09](https://user-images.githubusercontent.com/76153041/186601949-d98457be-e591-4cd0-88ba-d1b5afbcdcb3.png){: width="70%" }
+  ![doit_django_09](https://user-images.githubusercontent.com/76153041/186601949-d98457be-e591-4cd0-88ba-d1b5afbcdcb3.png){: width="200px" }
   ![doit_django_02](https://user-images.githubusercontent.com/76153041/186601994-d07dbb55-5450-443e-9862-2e62249a0a4d.png)
   ![doit_django_03](https://user-images.githubusercontent.com/76153041/186602003-bb8e12d7-deb6-463b-a97a-c3a348a4572f.png)
   ![doit_django_04](https://user-images.githubusercontent.com/76153041/186602019-ec0fa3f2-2ecb-4ee7-9fa4-9c0f6f83ce3a.png)
