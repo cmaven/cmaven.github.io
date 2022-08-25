@@ -24,7 +24,7 @@ tags: [RemoteRepository]
 - 참조 스크린샷  
   ![doit_django_09](https://user-images.githubusercontent.com/76153041/186601949-d98457be-e591-4cd0-88ba-d1b5afbcdcb3.png){: width="200px" }  
 
-  ![doit_django_02](https://user-images.githubusercontent.com/76153041/186601994-d07dbb55-5450-443e-9862-2e62249a0a4d.png)  
+  ![doit_django_02](https://user-images.githubusercontent.com/76153041/186601994-d07dbb55-5450-443e-9862-2e62249a0a4d.png)
 
   ![doit_django_03](https://user-images.githubusercontent.com/76153041/186602003-bb8e12d7-deb6-463b-a97a-c3a348a4572f.png)  
 
@@ -70,8 +70,8 @@ curl -i -u cmaven:${user_token} https://api.github.com/user/repos -d '{"name":"d
 ```  
 - 생성 예  
 
-![doit_django_07](https://user-images.githubusercontent.com/76153041/186604838-32cbd253-9b55-4eb2-b924-b345b6fbeaf0.pngg)
+![doit_django_08](https://user-images.githubusercontent.com/76153041/186613043-ed07ae08-d5e6-49b8-ad21-f3ef91d5ce19.png)
 
 - 생성모습  
 
-![doit_django_07](https://user-images.githubusercontent.com/76153041/186612457-9d0a9387-1751-4256-96c8-2cfef27c5f9d.png)
+![doit_django_07](https://user-images.githubusercontent.com/76153041/186612457-9d0a9387-1751-4256-96c8-2cfef27c5f9d.png){: width="50%" }  
