@@ -70,8 +70,8 @@ curl -i -u cmaven:${user_token} https://api.github.com/user/repos -d '{"name":"d
 ```  
 - 생성 예  
 
-![doit_django_08](https://user-images.githubusercontent.com/76153041/186613043-ed07ae08-d5e6-49b8-ad21-f3ef91d5ce19.png)
+![doit_django_08](https://user-images.githubusercontent.com/76153041/186613043-ed07ae08-d5e6-49b8-ad21-f3ef91d5ce19.png){: width="70%" }
 
 - 생성모습  
 
-![doit_django_07](https://user-images.githubusercontent.com/76153041/186612457-9d0a9387-1751-4256-96c8-2cfef27c5f9d.png){: width="50%" }  
+![doit_django_07](https://user-images.githubusercontent.com/76153041/186612457-9d0a9387-1751-4256-96c8-2cfef27c5f9d.png){: width="60%" }  
