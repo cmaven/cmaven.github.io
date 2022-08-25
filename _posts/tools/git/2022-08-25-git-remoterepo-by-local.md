@@ -65,6 +65,9 @@ curl -i -u cmaven:${user_token} https://api.github.com/user/repos -d "{\"name\":
 Linux 환경의 bash-shell
 '''
 curl -i -u cmaven:${user_token} https://api.github.com/user/repos -d '{"name":"doit_django", "private":"true"}'
-```
+```  
+- 생성 예  
+![doit_django_07](https://user-images.githubusercontent.com/76153041/186605224-99d9d71f-70ad-4016-81b9-8f725886ec50.png)
+
 - 생성모습
 ![doit_django_07](https://user-images.githubusercontent.com/76153041/186604838-32cbd253-9b55-4eb2-b924-b345b6fbeaf0.png)
