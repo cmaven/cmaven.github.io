@@ -1,6 +1,5 @@
 ---
 title: "로컬 환경(Host)에서 깃 원격 저장소(Git Remote Repository) 생성하기"
-git clone으로 로컬 환경에 받은 저장소에서 브랜치(branch) 변경"
 date: 2022-08-25
 categories: Git
 tags: [RemoteRepository]
