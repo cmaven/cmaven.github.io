@@ -6,10 +6,10 @@ date: 2022-10-26
 ---
 
 서버에 장착된 하드웨어 정보를 확인한다.
-- CPU, Memory, Disk, Network Interface Card  
 
 ------  
 
+> CPU, Memory, Disk, Network Interface Card 정보 확인
 ### 환경
 - Ubuntu 20.04 Server
 
