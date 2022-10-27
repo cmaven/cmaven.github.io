@@ -6,6 +6,7 @@ date: 2022-10-27
 ---
 
 설치된 우분투 버전과 해당 버전이 Ubuntu-Desktop 인지, Ubuntu-Server 인지 확인하기
+
 ------
 
 ### Ubuntu Desktop? Server? 확인방법
