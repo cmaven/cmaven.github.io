@@ -6,26 +6,27 @@ date: 2022-10-26
 ---
 
 서버에 장착된 하드웨어 정보를 확인한다.
-- CPU, Memory, Disk, Network Interface Card
-------
+- CPU, Memory, Disk, Network Interface Card  
+
+------  
 
 ### 환경
 - Ubuntu 20.04 Server
 
 ### 관련 명령어  
 
-## dmidecode
+#### dmidecode
 - 시스템에 장착된 하드웨어 정보를 확인할 때 사용
 - 컴퓨터의 DMI(Desktop Management Interface, SMBIOS) 테이블의 정보를 사용자가 알아보기 쉽게 변경하여 출력함  
 
-## free
+#### free
 - 시스템의 메모리의 사용 가능한 양, 사용 중인 양을 출력
 
-## lshw
+#### lshw
 - 시스템의 하드웨어 설정 정보를 추출
 - 메모리 설정, 펌웨어 버전, 메인보드 설정, CPU 버전/속도, 캐시설정, 버스 스피드 등을 확인 가능함
 
-## lsblk
+#### lsblk
 - 특정 블럭 디바이스의 정보를 표현함
 - `sysfs` 파일 시스템으로 확인 가능한 정보를 정제하여 출력
 
