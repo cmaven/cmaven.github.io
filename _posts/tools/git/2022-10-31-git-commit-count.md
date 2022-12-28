@@ -29,12 +29,23 @@ root@master:~/tools# git shortlog -sne --since="01 Jan 2022" --before="30 Dec 20
 - `awk` 명령어와 조합
 
 ```shell
+# current branch
 git shortlog -sne --since={$날짜} --before={$날짜} | awk '{sum += $1} END {print sum}'
+
+# all branch
+git shortlog --all -sne --since="01 Jan 2022" --before="30 Dec 2022" | awk '{sum += $1} END {print sum}'
+
+# without merge commit
+git shortlog --all --no-merges -sne --since="01 Jan 2022" --before="30 Dec 2022" | awk '{sum += $1} END {print sum}'
 
 # ex) 2022년 동안 Contributor 별 Commit 수
 root@master:~/tools# git shortlog -sne --since="01 Jan 2022" --before="30 Dec 2022" | awk '{sum += $1} END {print sum}'
 311
 ```  
+
+- `--all`은 현재 Repository의 모든 branch에 대한 log 정보를 가져온다.
+- `--nomerges`의 경우, branch 간 merger commit으로 발생한 commit은 제외한다.
+
 
 [참조][Git-shortlog](https://git-scm.com/docs/git-shortlog){: target="_blank"}   
 [참조][Git number of commits per author on all branches](https://stackoverflow.com/questions/9839083/git-number-of-commits-per-author-on-all-branches){: target="_blank"}   
