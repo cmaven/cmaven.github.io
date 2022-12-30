@@ -39,7 +39,8 @@ Activate.ps1 파일을 로드할 수 없습니다. 자세한 내용은 about_Exe
   - `Undefined`: 권한 설정 안함
 
 #### Windows 10 경우
-> 검색창 → `Powershell` → 관리자 권한 실행 → Script 실행 권한 변경
+> 검색창 → `Powershell` → 관리자 권한 실행 → Script 실행 권한 변경  
+
 
 ![2022-12-30 16 38 34](https://user-images.githubusercontent.com/76153041/210047358-081a290a-c342-4cec-ac83-cacc327f45ba.png)   
 
