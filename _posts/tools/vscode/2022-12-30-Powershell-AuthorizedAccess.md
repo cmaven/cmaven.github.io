@@ -26,7 +26,7 @@ Activate.ps1 파일을 로드할 수 없습니다. 자세한 내용은 about_Exe
     + FullyQualifiedErrorId : UnauthorizedAccess
 ```  
 
-![2022-12-30 16 44 13](https://user-images.githubusercontent.com/76153041/210047352-3af31350-b906-4c24-90c6-52876b544dff.png)  
+![2022-12-30 16 36 45](https://user-images.githubusercontent.com/76153041/210055346-6e9599f6-b157-433f-9ca5-2c399580a6ec.png)
 
 ### 원인 및 해결방안  
 - `Powershell`은 Script 파일을 실행할 수 없도록 기본 설정되어 있다.
@@ -72,3 +72,8 @@ RemoteSigned
 
 
 ![2022-12-30 16 40 26](https://user-images.githubusercontent.com/76153041/210047361-49250795-b471-410e-9bce-f0b5d736a761.png)  
+
+### 변경 후, 실행 확인
+- Script 파일 (여기에선 Python 가상환경)이 정상 동작하는 것을 확인할 수 있다.  
+
+![2022-12-30 16 44 13](https://user-images.githubusercontent.com/76153041/210047352-3af31350-b906-4c24-90c6-52876b544dff.png)  
