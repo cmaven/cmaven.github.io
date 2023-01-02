@@ -124,5 +124,7 @@ Syncing disks.
 sudo shred -v -z -n3 /dev/sdx
 ```  
 
-[참조][How can I seurely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){: target="_blank"} 
-[참조][shred - Linux man page](https://linux.die.net/man/1/shred){: target="_blank"} 
+[참조][How can I seurely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){: target="_blank"}  
+[참조][shred - Linux man page](https://linux.die.net/man/1/shred){: target="_blank"}  
+
+
