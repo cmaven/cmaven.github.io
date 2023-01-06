@@ -87,6 +87,14 @@ systemctl restart docker
 newgrp docker
 ```  
 
+### 확인
+
+- 사용자의 명령어 권한 확인 후, 
+- docker 명령어를 수행하면 해당 오류가 사라짐을 확인할 수 있음
+
+![2023-01-05 16 41 52](https://user-images.githubusercontent.com/76153041/210956441-bb8175b9-e1e7-41da-84dd-6add1d9db05e.png)  
+
+
 
 
 
