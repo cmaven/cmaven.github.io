@@ -1,12 +1,22 @@
 ---
 title: "우분투(Linux)에서 하드디스크(HDD) 완전 삭제"
 category: Linux
-tags: [Ubuntu, Shred]
+tags: [Ubuntu, Shred, Badblocks]
 date: 2023-01-02
 ---
 
 우분투에서 하드디스크 완전 삭제
 ------
+
+### 요약
+
+```shell
+sudo shred -v -z -n3 /dev/sdx
+sudo badblocks -w -c 600 /dev/sdx
+dd if=/dev/urandom of=/dev/sdx bs=1M
+```  
+
+---  
 
 > shred?  
 
@@ -127,4 +137,39 @@ sudo shred -v -z -n3 /dev/sdx
 [참조][How can I seurely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){: target="_blank"}  
 [참조][shred - Linux man page](https://linux.die.net/man/1/shred){: target="_blank"}  
 
+---  
 
+
+> badblocks
+
+- 디스크의 배드블럭(badblock, 물리적으로 손상된 부분)을 찾을 때 사용하는 명령어
+  - 옵션 중, 랜덤 값을 디스크에 쓰면서, 배드블럭인지 아닌지 확인하는 기능이 있음
+  - 이를 활용하여, 랜덤쓰기를 수행
+### 설치  
+- Ubuntu 20.04
+
+```shell
+apt-get install e2fsprogs
+```  
+
+### 디스크 삭제
+
+- 사용할 옵션
+  - `-w` : 랜덤 값(0xaa, 0x55, 0xff, 0x00) 을 장치의 모든 블럭에 쓰고(Write) 읽은 후, 서로 비교하여 배드블럭인지 유무를 판단 
+  - `-ㅊ` : 한 번에 테스트할 블럭의 크기 (default 64)
+
+```shell
+# block size는 512, 4096, 32768 등 
+sudo badblocks -w -c 600 /dev/sdx
+```  
+
+---  
+
+> dd
+
+- 일반적으로 리눅스 환경에서 로우 포맷용으로 활용
+  - randomw 쓰기로 장치에 입력
+
+```shell
+dd if=/dev/urandom of=/dev/sdx bs=1M
+```
