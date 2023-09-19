@@ -59,6 +59,18 @@ dmidecode -t memory |grep -i size | egrep -Ev No | wc -l
 
 # 메모리 전체 용량 보기
 free -mh
+
+# dmidecode -t memory 결과에 Volatile Size 등의 결과가 포함될 경우
+# 서버의 총 메모리 수 확인 (Size에 GB값이 있는 부분 + No Module(설치안된 부분) - Volatile Size 부분 제외)
+dmidecode -t memory | egrep "Size: ([0-9]+ GB|No Module Installed)" |grep -v "Volatile Size:" | wc -l
+
+# 서버에 장착된 메모리 확인 및 수 확인
+dmidecode -t memory | egrep "Size: [0-9]+ GB" | grep -v "Volatile Size:"
+dmidecode -t memory | egrep "Size: [0-9]+ GB" | grep -v "Volatile Size:"| wc -l
+
+# 서버에 장착되지 않은 슬롯 및 수 확인
+dmidecode -t memory | egrep "Size: No Module Installed"
+dmidecode -t memory | egrep "Size: No Module Installed" | wc -l
 ```
 
 ![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)
@@ -82,3 +94,14 @@ lshw -c network -businfo
 ```
 
 ![2022-10-27 13 44 10](https://user-images.githubusercontent.com/76153041/198193433-2e10005b-9618-4583-a2af-9b49607e5d90.png)
+
+
+### GPU 정보 확인
+
+```shell
+# gpu display 확인
+lshw -C display
+
+# nvidia-gpu 이며, driver 설치된 경우
+nvidia-smi
+```
