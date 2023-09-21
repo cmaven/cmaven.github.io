@@ -6,9 +6,11 @@ date: 2023-09-21
 ---
 
 BAD PASSWORD: the password contains the user name in some form  
-기능 끄기  
+기능 끄기   
 
 ------  
+
+
 
 ### 상황
 Linux(Ubuntu)에서 Password를 입력하는데, 
