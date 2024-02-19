@@ -115,7 +115,7 @@ body {
   dl {
     //font-size: 1em;
     font-size: 0.9em;
-    font-family: $cmaven-squre;
+    font-family: $cmaven-page;
   }
 
   /* paragraph indents */
@@ -336,7 +336,7 @@ body {
   text-decoration: none;
   border: 1px solid mix(#000, $border-color, 25%);
   border-radius: $border-radius;
-  font-family: $cmaven-pen, $serif;
+  font-family: $cmaven-taxonomy, $serif;
 
   &:hover {
     text-decoration: none;
@@ -353,7 +353,7 @@ body {
   border: 1px solid $background-color;
   border-radius: $border-radius;
   background-color: mix(#fff, #c2e5e5, 18%);
-  font-family: $cmaven-pen, $serif;
+  font-family: $cmaven-taxonomy, $serif;
   color: $primary-color;
 
   &:hover {
@@ -371,7 +371,7 @@ body {
   border: 1px solid $background-color;
   border-radius: $border-radius;
   background-color: mix(#fff, #c2e5e5, 18%);
-  font-family: $cmaven-pen, $serif;
+  font-family: $cmaven-taxonomy, $serif;
   color: $primary-color;
 
   &:hover {

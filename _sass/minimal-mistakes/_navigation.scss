@@ -19,7 +19,13 @@
     animation-delay: 0.3s;
   
     @include breakpoint($x-large) {
-      max-width: $x-large;
+      //max-width: $x-large;
+      max-width: calc(100%);
+    }
+
+    // add cmaven 24.02.19
+    @include breakpoint($max-width) {
+      max-width: $max-width;
     }
   
     ol {
@@ -31,8 +37,13 @@
         float: right;
         width: calc(100% - #{$right-sidebar-width-narrow});
       }
-  
+      
       @include breakpoint($x-large) {
+        width: calc(100% - #{$right-sidebar-width});
+      }
+
+      // add cmaven 24.02.19
+      @include breakpoint($max-width) {
         width: calc(100% - #{$right-sidebar-width});
       }
     }
@@ -505,7 +516,7 @@
     display: block;
     margin: 0.5rem 0;
     padding: 0.25rem 0;
-    font-family: $cmaven-squre-bold;    
+    font-family: $cmaven-total-title;    
     font-size: $type-size-6;
     font-weight: bold;
     text-transform: uppercase;    

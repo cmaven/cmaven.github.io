@@ -42,11 +42,22 @@ font-family: 'NanumGothicCodingLigatureBold';
 font-family: 'NanumGothicCoding';
 font-family: 'NanumGothicCodingBold';
 
+font-family: 'NanumSquareNeoLight';
+font-family: 'NanumSquareNeo';
+font-family: 'NanumSquareNeoBold';
+font-family: 'NanumSquareNeoExtraBold';
+font-family: 'NanumSquareNeoHeavy';
+
 */
 
-$cmaven-pen: 'NanumBarunPen';
+
 $cmaven-squre: 'NanumSquareRound';
 $cmaven-squre-bold: 'NanumSquareRoundBold';
+
+$cmaven-page: 'SUITE-Regular';
+$cmaven-total-title: 'SUITE-Regular';
+$cmaven-taxonomy: 'SUITE-Regular';
+$cmaven-coding: 'D2Coding';
 
 $doc-font-size: 16 !default;
 
@@ -56,9 +67,14 @@ $indent-var: 1.3em !default;
 
 /* system typefaces */
 $serif: Georgia, Times, serif !default;
+/*
 $sans-serif: 'MaruBuri', -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI",
   "Helvetica Neue", "Lucida Grande", Arial, sans-serif !default;
-$monospace: 'NanumGothicCoding', Monaco, Consolas, "Lucida Console", monospace !default;
+*/
+$sans-serif: $cmaven-page, -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI",
+  "Helvetica Neue", "Lucida Grande", Arial, sans-serif !default;
+  // Conding Font
+$monospace: $cmaven-coding, Monaco, Consolas, "Lucida Console", monospace !default;
 
 /* sans serif typefaces */
 $sans-serif-narrow: $sans-serif !default;
@@ -191,15 +207,21 @@ $medium: 768px !default;
 $medium-wide: 900px !default;
 $large: 1024px !default;
 $x-large: 1280px !default;
-$max-width: $x-large !default;
+//$max-width: $x-large !default; 
+$max-width: 1920px !default; 
 
 /*
    Grid
    ========================================================================== */
 
-$right-sidebar-width-narrow: 200px !default;
+/*
+$right-sidebar-width-narrow: 200px !default; 
 $right-sidebar-width: 300px !default;
 $right-sidebar-width-wide: 400px !default;
+*/
+$right-sidebar-width-narrow: 180px !default; 
+$right-sidebar-width: 230px !default;
+$right-sidebar-width-wide: 250px !default;
 
 /*
    Other

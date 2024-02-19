@@ -6,3 +6,44 @@
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
+
+
+// 눈누 - Sun Suite Font
+@font-face {
+    font-family: 'SUITE-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+// 눈누 - D2Coding Font
+@font-face {
+    font-family: 'D2Coding';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// 눈누 - Suit Font
+@font-face {
+    font-family: 'SUIT-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// 눈누 - 둘기마요
+@font-face {
+    font-family: 'Dovemayo_gothic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.1/Dovemayo_gothic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// 눈누 - Orbit
+@font-face {
+    font-family: 'Orbit-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/Orbit-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
