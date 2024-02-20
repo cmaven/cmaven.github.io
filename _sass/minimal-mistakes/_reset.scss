@@ -11,15 +11,15 @@ html {
   font-size: 16px;
 
   @include breakpoint($medium) {
-    font-size: 17px;  // deafult 18px
+    font-size: 18px;  // deafult 18px
   }
 
   @include breakpoint($large) {
-    font-size: 19px;  // default 20px
+    font-size: 20px;  // default 20px
   }
 
   @include breakpoint($x-large) {
-    font-size: 21px;  // default 22px
+    font-size: 22px;  // default 22px
   }
 
   -webkit-text-size-adjust: 100%;
@@ -120,6 +120,7 @@ img {
   vertical-align: middle;
   border: 0;
   -ms-interpolation-mode: bicubic;
+  border-radius: 6px;   // 추가 이미지 끝 부분 Round
 }
 
 /* Prevent max-width from affecting Google Maps */

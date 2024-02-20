@@ -38,6 +38,12 @@ h1 {
   font-size: $h-size-1;
 }
 
+/* 본문 H1 제목 크기 조정 
+section > h1 {
+  font-size: $h-size-2;
+}
+*/
+
 h2 {
   font-size: $h-size-2;
 }
@@ -178,6 +184,22 @@ td > code {
     letter-spacing: -0.2em;
     content: "\00a0"; /* non-breaking space*/
   }
+}
+
+/* quote (inline 코드 색상변경) */
+p > code.language-plaintext {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  font-size: 0.8em;
+  color: #fefaff;
+  background: #263238;
+  border-radius: $border-radius;
+
+  &:before,
+  &:after {
+    letter-spacing: -0.2em;
+    content: "\00a0"; /* non-breaking space*/
+  }    
 }
 
 /* horizontal rule */
