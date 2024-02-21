@@ -8,7 +8,7 @@ tags: [User, Config]
 :bulb: 두 개의 Git 계정을 하나의 시스템에서 사용 시, 원하는 계정으로 Remote Repository에 작업을 수행하고자 할 때
 {: .notice--info}
 
-# 설정 확인
+# [01]  설정 확인
 
 전체 설정 확인
 
@@ -27,7 +27,7 @@ git config user.email
 - 출력예시  
 ![git-confing 확인-02](https://user-images.githubusercontent.com/76153041/154203935-2d0f7c70-01ff-46df-b9df-a7a8a2c06080.png)
 
-# 설정 변경
+# [02]  설정 변경
 
 사용자 계정 및 이메일 변경
 
