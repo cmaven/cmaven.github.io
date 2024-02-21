@@ -521,12 +521,14 @@ body:hover .visually-hidden button {
 }
 
 .footnotes {
-  color: mix(#fff, $gray, 25%);
+  color: mix(#fff, $gray, 5%);  // default 25%
+  border-top: 1px solid $border-color;  // 추가
+  margin-top: 2em;  // 추가
 
   ol,
   li,
   p {
-    margin-bottom: 0;
+    margin-bottom: 1em;
     font-size: $type-size-6;
   }
 }

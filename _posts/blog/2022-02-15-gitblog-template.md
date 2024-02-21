@@ -1,9 +1,12 @@
 ---
-title: "GitBlog"
+title: "GitBlog Post 작성 방법"
 date: 2022-02-15
 categories: Gitblog
-tags: [Temaplte]
+tags: [Template, GithubBlog]
 ---
+
+:triangular_flag_on_post: 2024-02-20 수정
+{: .notice--warning}
 
 >Post 최상단 내용 작성  
 
@@ -53,6 +56,23 @@ tags: [Temaplte]
 
 # [02]  문법
 
+## 줄바꿈  
+
+첫 번째 줄 마지막에 <u>스페이스바 두번, Enter</u>
+
+```python
+첫 번째 줄입니다. #Space#Space#Enter
+두 번째 줄입니다.
+```  
+
+## 강조, 기울임, 취소선, 밑줄
+
+**강조**  `**강조**`  
+*기울임*  `*기울임*`  
+~~취소선~~  `~~취소선~~`  
+<u>밑줄</u>  `<u>밑줄</u>`  
+
+
 ## 코드블록
 
 ```python
@@ -99,14 +119,46 @@ tags: [Temaplte]
 
 :small_blue_diamond:참조: [https://gist.github.com/rxaviers/7360908](https://gist.github.com/rxaviers/7360908){:target="_blank"}  
 
-주요이모지  
+### 주요이모지  
+
+:exclamation:  `:exclamation:`  
+:fire:  `:fire:`  
+:star:  `:star:`  
+:cloud:  `:cloud:`  
+:sunny:  `:sunny:`  
+:zap:  `:zap:`  
+:milky_way:  `:milky_way:`  
+:computer:  `:computer:`  
+:loudspeaker:  `:loudspeaker:`  
+:scroll:  `:scroll:`  
+:page_with_curl:  `:page_with_curl:`  
+:clipboard:  `:clipboard:`  
+:closed_book:	`:closed_book:`  
+:green_book:  `:green_book:`  
+:memo:  `:memo:`  
+:rocket:  `:rocket:`  
+:beginner:  `:beginner:`  
+:round_pushpin:  `:round_pushpin:`  
+:triangular_flag_on_post:  `:triangular_flag_on_post:`  
+:arrow_forward:  `:arrow_forward:`  
+:arrow_backward:  `:arrow_backward:`  
+:arrow_left:  `:arrow_left:`  
+:arrow_right:  `:arrow_right:`  
+:red_circle:  `:red_circle:`  
+:diamonds:  `:diamonds:`  
+:large_blue_circle:  `:large_blue_circle:`  
+:large_blue_diamond:  `:large_blue_diamond:`  
+:large_orange_diamond:  `:large_orange_diamond:`  
+:small_blue_diamond:  `:small_blue_diamond:`  
+:small_orange_diamond:  `:small_orange_diamond:`  
+:ballot_box_with_check:  `:ballot_box_with_check:`  
 
 
 ## 링크  
 
 > 같은창으로 열기  
   
-:small_blue_diamond:참조: [새창으로 열기](http://google.co.kr)  
+:small_blue_diamond:참조: [같은창으로 열기](http://google.co.kr)  
 
 > 새창으로 열기  
   
@@ -114,7 +166,7 @@ tags: [Temaplte]
 
 ```python
 # 같은 창으로 열기
-:small_blue_diamond:참조: [새창으로 열기](http://google.co.kr)  
+:small_blue_diamond:참조: [같은창으로 열기](http://google.co.kr)  
 
 # 새 창으로 열기
 :small_blue_diamond:참조: [새창으로 열기](http://google.co.kr){:target="_blank"}  
@@ -189,35 +241,45 @@ Issues :arrow_forward: New Issue :arrow_forward: Open a blank issue :arrow_forwa
 - 리스트
   - 리스트
     - 리스트
-    - 
 
 1. 리스트
    1. 리스트
-      1. 리스트
+      - 리스트
+   1. 리스트
    2. 리스트
-   3. 리스트
 2. 리스트
+
+- [ ] 체크안함
+- [x] 체크
 
 ```python
 - 리스트
   - 리스트
     - 리스트
-    - 
 
 1. 리스트
    1. 리스트
-      1. 리스트
+      - 리스트
    2. 리스트
    3. 리스트
 2. 리스트
+
+- [ ] 체크안함
+- [x] 체크
 ```  
 
 
-## 테이블
-
 ## 인용 (BlockQuote)  
 
+> 연정한 부상에서, 정당이 밝히면 문제화할지. 인근은 일으키어야 터진다 예산이, 않다. 적으라 적다 2024년, 않는, 나아 원칙은 놓은가.  
+
+>> 대한민국은 국제평화의 유지에 노력하고 침략적 전쟁을 부인한다. 국회는 국무총리 또는 국무위원의 해임을 대통령에게 건의할 수 있다. 통신·방송의 시설기준과 신문의 기능을 보장하기 위하여 필요한 사항은 법률로 정한다.
+
+```python
 > 연정한 부상에서, 정당이 밝히면 문제화할지. 인근은 일으키어야 터진다 예산이, 않다. 적으라 적다 2024년, 않는, 나아 원칙은 놓은가.
+
+>> 대한민국은 국제평화의 유지에 노력하고 침략적 전쟁을 부인한다. 국회는 국무총리 또는 국무위원의 해임을 대통령에게 건의할 수 있다. 통신·방송의 시설기준과 신문의 기능을 보장하기 위하여 필요한 사항은 법률로 정한다.
+```  
 
 ## 각주
 
