@@ -1,21 +1,23 @@
 ---
-title: "GitBlog 파비콘(Favicon) 생성 및 적용하기"
+title: "Github Blog 파비콘(Favicon) 생성 및 적용하기"
 date: 2022-03-21
-categories: Gitblog
+categories: Github_Blog
 tags: [Favicon]
----
+---  
 
-GitBlog 에 파비콘(Favicon) 생성 및 적용하는 방법
-------
 
-### Favicon? 
+:bulb: 깃헙 블로그에 파비콘(Favicon)을 생성하고 적용하는 방법을 작성한다.
+{: .notice--info}
+
+# [01]  파비콘(Favicon)?  
+
 > "Favorites + Icon"의 합성어로 인터넷 웹 브라우저의 주소창, 탭에 표시되는 대표 아이콘
 
 아래 블로그 왼쪽 편의 아이콘을 변경하려 한다.  
  
 ![favicon 설정이 안되어 있는 상태](https://user-images.githubusercontent.com/76153041/159212163-a60549fa-e776-454a-bb03-a1c9d7de688b.png)
 
-### 이미지 준비 및 파비콘 생성
+# [02]  이미지 준비 및 파비콘 생성
 
 - 사용할 이미지  
       
@@ -45,7 +47,7 @@ GitBlog 에 파비콘(Favicon) 생성 및 적용하는 방법
       
   ![favicon-파일 만들기](https://user-images.githubusercontent.com/76153041/159211993-91ae9936-55da-40ce-8a29-f9c973a00f67.png)  
 
-### 블로그에 생성한 파비콘 적용하기  
+# [03]  블로그에 생성한 파비콘 적용하기  
 
 - 생성한 파일의 압축을 풀고, 블로그의 `/assets/` 폴더 아래로 복사  
 
@@ -59,5 +61,5 @@ GitBlog 에 파비콘(Favicon) 생성 및 적용하는 방법
   ![_includes_head_custom html 경로에 favicon ico 설정](https://user-images.githubusercontent.com/76153041/159212365-3d2f69cd-28dc-4d6e-84c3-7e0910994404.png)  
 
 
-### 적용된 모습  
+# [04]  적용된 모습  
 ![favicon-update 된 상태](https://user-images.githubusercontent.com/76153041/159212719-0bfccb72-1cca-4d16-ae90-491a39c4d55e.png)  

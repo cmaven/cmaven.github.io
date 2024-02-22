@@ -1,15 +1,16 @@
 ---
-title: "Jekyll 기반 GitBlog를 Ubuntu에서 서비스 하기"
+title: "Jekyll 기반 Github Blog를 Ubuntu에서 서비스 하기"
 date: 2022-06-16
-categories: Gitblog
+categories: Github_Blog
 tags: [Jekyll, Ubuntu]
 ---
 
 작성한 블로그를 Ubuntu 환경에서 Local 또는 외부 접근(동일 네트워크망)에서 서비스 하는 방법
 
-------
+:bulb: 작성한 블로그를 Ubuntu 환경에서 Local 또는 외부 접근(동일 네트워크 망)에서 확인하는 방법을 작성한다.
+{: .notice--info}
 
-### Jekyll on Ubuntu 환경 구성 
+# [01]  Jekyll on Ubuntu 환경 구성 
 
 > 구글 검색 엔진에서 등록된 웹사이트가 검색되도록 등록하고, 검색 결과를 모니터링 할 수 있는 서비스로, 웹 크롤링 형태로 동작한다.  
 
@@ -35,7 +36,7 @@ source ~/.bashrc
 gem isntall jekyll bundler
 ```
 
-### GitBlog Site 구성 혹은 다운로드  
+# [02]  GitBlog Site 구성 혹은 다운로드  
 
 - 기 구성된 GitBlog 사이트를 다운 받아(git clone) 필요 패키지 설치
 

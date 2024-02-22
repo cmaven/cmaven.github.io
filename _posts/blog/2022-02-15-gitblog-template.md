@@ -1,7 +1,7 @@
 ---
-title: "GitBlog Post 작성 방법"
+title: "Github Blog Post 작성 방법"
 date: 2022-02-15
-categories: Gitblog
+categories: Github_Blog
 tags: [Template, GithubBlog]
 ---
 

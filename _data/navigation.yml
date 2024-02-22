@@ -55,5 +55,5 @@ cmaven_sidebar:
         url: /categories/excel
   - title: "블로그"
     children:
-      - title: "Gitblog"
-        url: /categories/gitblog      
+      - title: "Github_Blog"
+        url: /categories/github_blog 

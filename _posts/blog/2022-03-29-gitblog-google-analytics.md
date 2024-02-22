@@ -1,22 +1,23 @@
 ---
-title: "GitBlog 방문자 통계 확인하기(Google Analytics) 구글 파비콘(Favicon) 생성 및 적용하기"
+title: "Github Blog 방문자 통계 확인하기(Google Analytics) 구글 파비콘(Favicon) 생성 및 적용하기"
 date: 2022-03-29
-categories: Gitblog
+categories: Github_Blog
 tags: [GoogleAnalytics]
----
+---  
 
-GitBlog 에 Google Analytics(GA4) 적용하여 방문자 통계 파악하기  
 
-------
+:bulb: 깃헙 블로그에 Google Analytics(GA4)를 적용하여 방문제 통계를 확인하는 방법을 작성한다.
+{: .notice--info}
 
-### Google Analytics? 
+# [01]  Google Analytics? 
+
 > 구글에서 제공하는 웹사이트 트래픽을 추적하고 보고하는 Web Analytics Service  
 
 사용 중인 블로그에 대해 방문자 통계 정보를 확인할 수 있도록 한다.
 
-### Google Analytics 설정하기
+# [02]  Google Analytics 설정하기
 
-#### 가입 및 계정 생성
+## 가입 및 계정 생성
 
 - google anlytics 사이트에 접속하여 계정 생성 및 설정 진행
   
@@ -58,7 +59,7 @@ GitBlog 에 Google Analytics(GA4) 적용하여 방문자 통계 파악하기
 - 아래 화면의 `측정 ID`인 `G-4DKPW49KWZ`를 GitBlog에 적용하도록 한다.
   ![08](https://user-images.githubusercontent.com/76153041/160599844-e28d5077-03b5-48c9-aa88-171d0d01f5e2.png)  
 
-#### GitBlog 설정
+## Github Blog 설정
 
 > minimal mistake theme 기준  
 
@@ -73,7 +74,7 @@ GitBlog 에 Google Analytics(GA4) 적용하여 방문자 통계 파악하기
   ![10](https://user-images.githubusercontent.com/76153041/160599852-a8f310a6-4c8d-4abc-b8bb-8801a240933e.png)  
 
 
-### 결과 확인  
+# [03]  결과 확인  
 
 - 정상적으로 동작한다면, 접속을 새로고침하고 Google Analytics 홈 화면에서 바로 통계치를 확인할 수 있다.  
 - 

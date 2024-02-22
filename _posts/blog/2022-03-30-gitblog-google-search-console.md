@@ -1,7 +1,7 @@
 ---
 title: "GitBlog 구글 검색 엔진에 노출시키기(Google Search Console"
 date: 2022-03-30
-categories: Gitblog
+categories: Github_Blog
 tags: [GoogleSearchConsole]
 ---
 
