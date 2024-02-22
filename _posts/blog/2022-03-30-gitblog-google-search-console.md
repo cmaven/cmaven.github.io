@@ -1,5 +1,5 @@
 ---
-title: "Github Blog 구글 검색 엔진에 노출시키기(Google Search Console_"
+title: "Github Blog 구글 검색 엔진에 노출시키기(Google Search Console)"
 date: 2022-03-30
 categories: Github_Blog
 tags: [GoogleSearchConsole]
