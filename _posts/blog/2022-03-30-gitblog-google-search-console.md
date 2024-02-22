@@ -1,5 +1,5 @@
 ---
-title: "GitBlog 구글 검색 엔진에 노출시키기(Google Search Console"
+title: "Github Blog 구글 검색 엔진에 노출시키기(Google Search Console_"
 date: 2022-03-30
 categories: Github_Blog
 tags: [GoogleSearchConsole]
@@ -7,9 +7,10 @@ tags: [GoogleSearchConsole]
 
 GitBlog 구글 검색 엔진에 노출 시켜, 외부 사용자가 접근할 수 있도록 하기  
 
-------
+:bulb: 본 문서는 Github 블로그의 글을 구글 검색 엔진에 노출시키는 방법을 정리한다.  
+{: .notice--info}  
 
-### Google Search Console?  
+# [01]  Google Search Console?  
 
 > 구글 검색 엔진에서 등록된 웹사이트가 검색되도록 등록하고, 검색 결과를 모니터링 할 수 있는 서비스로, 웹 크롤링 형태로 동작한다.  
 
@@ -17,7 +18,7 @@ GitBlog 구글 검색 엔진에 노출 시켜, 외부 사용자가 접근할 수
 - [Google Search Concole](https://search.google.com/search-console/about){:target="_blank"} 사이트에서 등록 및 모니터링을 수행할 수 있음(구글 계정 필요)
 
 
-### Google Search Console 등록
+# [02]  Google Search Console 등록
 
 
 - 구글 계정 로그인 후, 사이트 접속, `시작하기` 선택  
@@ -42,7 +43,7 @@ GitBlog 구글 검색 엔진에 노출 시켜, 외부 사용자가 접근할 수
   ![이미지 4](https://user-images.githubusercontent.com/76153041/160787277-033ea137-cc95-47d6-a6cf-fbe6a94605fd.png)  
   
   
-### Sitemap.xml 생성 및 적용  
+# [03]  Sitemap.xml 생성 및 적용  
 
 - 소유권 확인으로 구글 검색 엔진이 해당 블로그를 인식할 수 있지만, 블로그 사이트를 읽고(크롤링), 정보를 제공하기 위한 데이터 필요
 - `sitemap.xml`은 웹사이트의 모든 페이지의 목록을 나열하여 검색 엔진이 사용자에게 정보를 제공할 수 있도록 함
@@ -75,9 +76,21 @@ GitBlog 구글 검색 엔진에 노출 시켜, 외부 사용자가 접근할 수
   
   ![이미지 15](https://user-images.githubusercontent.com/76153041/160787304-121e1694-eba1-4ded-ba09-e79aeeee999f.png)  
 
-### Robots.txt 생성 및 적용  
+# [04]  Robots.txt 생성 및 적용  
 
 - 웹 크롤러가 사이트의 정보를 크롤링 할 때, 적용할 정책을 지정하는 파일
-- 사이트의 어떤 정보를 참조할지 결정하는 역할  
+- 사이트의 어떤 정보를 참조할지 결정하는 역할 
+- 블로그의 Root 디렉토리에 Robots.txt를 생성하고 아래 내용을 작성한다.
 
-(작 성 중)
+```python
+# User-agent : 크롤링 규칙이 적용되는 크롤러 지정 (*는 모두 허용)
+# - Google은 Googlebot, 네이버는 Yeti 등으로 각 검색엔진의 크롤러는 다르다.
+# Allow: 크롤링할 경로 (/는 / 아래 모든 경로를 크롤링 수행)
+# Sitemap: Sitemap 지정 위치
+# - Sitemap은 해당 사이트의 페이지 목록(사이트 지도)
+
+User-agent: *
+Allow: /
+
+Sitemap: https://eona1301.github.io/sitemap.xml
+```
