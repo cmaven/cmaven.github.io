@@ -5,8 +5,6 @@ categories: Github_Blog
 tags: [Jekyll, Ubuntu]
 ---
 
-작성한 블로그를 Ubuntu 환경에서 Local 또는 외부 접근(동일 네트워크망)에서 서비스 하는 방법
-
 :bulb: 작성한 블로그를 Ubuntu 환경에서 Local 또는 외부 접근(동일 네트워크 망)에서 확인하는 방법을 작성한다.
 {: .notice--info}
 
