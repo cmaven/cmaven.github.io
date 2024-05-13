@@ -41,6 +41,8 @@ cmaven_sidebar:
     children:
       - title: "Docker" 
         url: /categories/docker
+      - title: "VM"
+        url: /categories/vm
       - title: "Kubernetes"
         url: /categories/k8s 
       - title: "Storage"
