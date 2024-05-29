@@ -177,6 +177,7 @@ sudo rm /etc/iptables/rules.v6
 ```shell
 # iptables 규칙 확인
 sudo iptables -t nat --line-numbers -L PREROUTING
+sudo iptables -t filter --line-numbers -L FORWARD
 
 # ipaddress 형태로 조회(table마다 동일)
 sudo iptables -t filter -L -n
@@ -186,7 +187,24 @@ sudo iptables -t raw -L -n
 
 # 특정 규칙 삭제
 sudo iptables -t nat -D PREROUTING ${줄 번호}
+sudo iptables -t filter -D FORWARD
 ```
+
+## (참조) virsh 관련 명령어
+
+```shell
+# VM 확인
+virsh list
+
+# 특정 VM 주소 확인
+virsh domifaddr ${id}
+virsh domifaddr ${name}
+
+# 전체 DHCP 주소 확인
+virsh net-dhcp-leases ${interface_name}
+#ex) virsh net-dhcp-leases default
+```  
+
 
 # [04]  접근확인
 
