@@ -19,7 +19,8 @@ LaTex Inline Math Experession (LaTex 문법 수학적 표현, 포맷팅 명령)�
   1. I only **$`\textcolor{orange}{\textsf{use}}`$** smartphone these days.
   ```   
 
-  - 일정 수를 넘어가면, 색상이 렌더링되지 않고, 명령어가 출력되는 현상 확인
+  - 일정 수를 넘어가면, 색상이 렌더링되지 않고, 명령어가 출력되는 현상 확인  
+
   ![2025-01-10 13 46 22](https://github.com/user-attachments/assets/3959c5d2-7d30-432e-b189-6e90dc2288e8)  
 
 
@@ -56,7 +57,8 @@ console> exit
 gitlab-ctl reconfigure
 ```  
 
-- 과정 참조(스크린샷)
+- 과정 참조(스크린샷)  
+
   ![2025-01-09 22 04 23](https://github.com/user-attachments/assets/1bac8242-e704-4638-abb0-c28bfa9bb474)  
 
   ![2025-01-09 22 05 03](https://github.com/user-attachments/assets/e37c1635-e211-4b7a-96b1-ee484834c72a)  
@@ -71,5 +73,6 @@ docker restart <gitlab-container-name>
 
 # [03] 적용 예
 
-- 정상적으로 적용된 렌더링(컬러 출력)
+- 정상적으로 적용된 렌더링(컬러 출력)  
+
   ![2025-01-09 22 05 29](https://github.com/user-attachments/assets/b4c58e0a-63c1-4aa2-a990-8f66b2ea3fe0)
