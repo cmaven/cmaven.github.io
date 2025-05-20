@@ -71,9 +71,14 @@ dmidecode -t memory | egrep "Size: [0-9]+ GB" | grep -v "Volatile Size:"| wc -l
 # 서버에 장착되지 않은 슬롯 및 수 확인
 dmidecode -t memory | egrep "Size: No Module Installed"
 dmidecode -t memory | egrep "Size: No Module Installed" | wc -l
+
+# 서버에 장착된 메모리의 DDRx 확인
+lshw -short -C memory
 ```
 
-![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)
+![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)  
+
+![Image](https://github.com/user-attachments/assets/b2c2a9da-4365-492d-9336-4db4f0f57e2a)
 
 
 ### 디스크 정보 확인
