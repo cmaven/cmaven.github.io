@@ -76,9 +76,10 @@ dmidecode -t memory | egrep "Size: No Module Installed" | wc -l
 lshw -short -C memory
 ```
 
-![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)  
+![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)    
 
-![Image](https://github.com/user-attachments/assets/b2c2a9da-4365-492d-9336-4db4f0f57e2a)
+
+![Image](https://github-production-user-asset-6210df.s3.amazonaws.com/76153041/445567781-4e1a1825-c315-43c1-9e8b-97f68cb54b7d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250520%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250520T105847Z&X-Amz-Expires=300&X-Amz-Signature=161f1921bc2d12cc40c6c37e3186d2cb3cf453b044d40ce982dc73f9064ea1db&X-Amz-SignedHeaders=host)    
 
 
 ### 디스크 정보 확인
