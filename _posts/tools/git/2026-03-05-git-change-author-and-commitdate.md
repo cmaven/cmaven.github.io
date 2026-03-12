@@ -398,7 +398,7 @@ history가 재작성되었으므로 `--force` 옵션으로 push해야 한다.
 :warning: force push는 원격 저장소의 history를 덮어쓰므로, **팀원이 있는 브랜치에서는 반드시 사전 협의**한다.
 {: .notice--warning}
 
-### 특정 브랜치만 push (권장)
+## 특정 브랜치만 push (권장)
 
 `--force-with-lease`는 내가 마지막으로 fetch한 이후 다른 사람이 push한 내역이 있으면 push를 거부하는 **더 안전한 force push** 방식이다.
 
@@ -406,7 +406,7 @@ history가 재작성되었으므로 `--force` 옵션으로 push해야 한다.
 git push --force-with-lease origin main
 ```
 
-### 전체 브랜치 및 태그 push
+## 전체 브랜치 및 태그 push
 
 ```shell
 git push origin --force --all
