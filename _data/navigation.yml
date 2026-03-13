@@ -37,6 +37,10 @@ cmaven_sidebar:
         url: /categories/html
       - title: "CSS"
         url: /categories/css
+  - title: "AI"
+    children:
+      - title: "Claude"
+        url: /categories/claude
   - title: "기술"
     children:
       - title: "Docker" 
