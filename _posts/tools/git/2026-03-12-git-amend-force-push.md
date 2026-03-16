@@ -1,8 +1,10 @@
 ---
 title: "Git 이전 커밋에 변경사항 끼워넣기 (amend + force push)"
+description: "git commit --amend로 직전 커밋을 수정하고 force push로 원격에 반영하는 방법"
+excerpt: "git --amend로 커밋 내용/메시지 수정 후 --force-with-lease로 안전하게 force push하는 방법"
 date: 2026-03-12
 categories: Git
-tags: [git, amend, force-push]
+tags: [Git, amend, force-push, force-with-lease, 커밋수정, 커밋메시지변경]
 ---
 
 :bulb: 이미 원격에 push한 직전 커밋의 내용이나 메시지를 수정하고 싶을 때, `--amend`로 직전 커밋에 합치고 force push하는 방법을 작성한다.

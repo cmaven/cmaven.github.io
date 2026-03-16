@@ -1,11 +1,9 @@
 ---
 title: "Ubuntu 16.04 한글 설치 및 단축키 지정"
-category: Linux
-tags: Ubuntu
-#toc: true
-#toc_sticky: false
-#sidebar:
-#   nav: "docs"
+description: "Ubuntu 16.04에서 fcitx-hangul 한글 입력기 설치 및 한영 전환 단축키 설정 방법"
+excerpt: "Ubuntu 16.04 영문 설치 후 fcitx-hangul 설치, 한영 전환 단축키(Multikey) 설정 가이드"
+categories: Linux
+tags: [Ubuntu, Ubuntu-16.04, fcitx, fcitx-hangul, 한글입력, 한영전환]
 date: 2018-01-10
 ---
 

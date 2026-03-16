@@ -1,8 +1,10 @@
 ---
 title: "Ubuntu 저장소(Repository) 한국 미러로 변경"
+description: "Ubuntu apt 저장소를 카카오(Kakao), KAIST 한국 미러 서버로 변경하여 다운로드 속도를 높이는 방법"
+excerpt: "sources.list를 수정하여 Ubuntu 패키지 저장소를 카카오, KAIST 한국 미러로 변경하는 방법"
 date: 2025-07-17
 categories: Linux
-tags: [Ubuntu, apt, kakao]
+tags: [Ubuntu, apt, kakao, KAIST, mirror, 미러서버, sources.list, 패키지저장소]
 ---
 
 :bulb: Ubuntu 환경에서 패키지 설치 시, 다운로드 속도를 높이기 위해 기본 다운로드 경로(미러 사이트)를 변경하는 방법을 작성한다.

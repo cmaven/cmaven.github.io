@@ -1,8 +1,10 @@
 ---
 title: "서버에서 구동 중인 VM에 외부에서 접근하는 방법"
+description: "KVM/QEMU NAT 환경의 VM에 iptables 포트포워딩으로 외부 접근을 설정하는 방법"
+excerpt: "iptables NAT/FORWARD 규칙으로 호스트 서버의 VM에 외부 접근 허용하기"
 date: 2024-05-13
 categories: VM
-tags: [VM, Ubuntu]
+tags: [VM, KVM, QEMU, iptables, NAT, 포트포워딩, Nginx, virbr0, virt-manager]
 ---
 
 :bulb: VM 환경(Qemu, KVM) 환경에서 생성한 Ubuntu VM에 접근하는 방법을 작성한다.  

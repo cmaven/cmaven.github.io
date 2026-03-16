@@ -1,8 +1,10 @@
 ---
 title: "Docker에 Ubuntu 컨테이너 생성 후, Nginx 서버 접근하기"
+description: "Dockerfile로 Ubuntu 22.04 컨테이너를 생성하고 Nginx 서버를 구동하여 외부에서 접근하는 방법"
+excerpt: "Dockerfile 작성, 이미지 빌드, 컨테이너 실행, Nginx 포트포워딩까지의 과정"
 date: 2024-05-10
 categories: Docker
-tags: [Docker, Ubuntu]
+tags: [Docker, Dockerfile, Ubuntu, Nginx, 컨테이너, 포트포워딩, docker-build, docker-run]
 ---
 
 :bulb: Docker 환경에서 Ubuntu 컨테이너를 Dockerfile로 생성하고, 실행하는 방법을 작성한다.  

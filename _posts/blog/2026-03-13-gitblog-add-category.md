@@ -1,8 +1,10 @@
 ---
 title: "Jekyll 블로그에 새 카테고리 추가하기 (Minimal Mistakes)"
+description: "Minimal Mistakes 테마 Jekyll 블로그에서 사이드바 카테고리를 추가하고 포스트를 연결하는 방법"
+excerpt: "navigation.yml, 카테고리 아카이브 페이지, frontmatter 설정으로 새 카테고리를 추가하는 3단계 가이드"
 date: 2026-03-13
 categories: Github_Blog
-tags: [Jekyll, category, sidebar, Minimal Mistakes]
+tags: [Jekyll, category, sidebar, Minimal-Mistakes, navigation, 카테고리추가, 사이드바]
 ---
 
 :bulb: Minimal Mistakes 테마 기반 Jekyll 블로그에서 새로운 카테고리를 추가하고, 사이드바에 표시하여 포스트를 확인할 수 있게 하는 방법을 작성한다.

@@ -1,8 +1,10 @@
 ---
 title: "Jekyll 기반 Github Blog를 Ubuntu에서 서비스 하기"
+description: "Ubuntu 환경에서 Ruby, Jekyll을 설치하고 GitHub 블로그를 로컬 또는 외부에서 미리보기하는 방법"
+excerpt: "Ubuntu에서 Ruby, Jekyll 설치 후 GitHub 블로그를 로컬 서버로 실행하여 미리보기하는 방법"
 date: 2022-06-16
 categories: Github_Blog
-tags: [Jekyll, Ubuntu]
+tags: [Jekyll, Ubuntu, Ruby, GEM, Bundler, 로컬서버, 블로그미리보기]
 ---
 
 :bulb: 작성한 블로그를 Ubuntu 환경에서 Local 또는 외부 접근(동일 네트워크 망)에서 확인하는 방법을 작성한다.

@@ -1,8 +1,10 @@
 ---
 title: "Jekyll 블로그에 Mermaid 다이어그램 추가하기"
+description: "Jekyll(Minimal Mistakes) 블로그에서 Mermaid CDN을 설정하여 코드 기반 다이어그램을 사용하는 방법"
+excerpt: "Mermaid v11 CDN 설정으로 Jekyll 블로그에서 플로우차트, 시퀀스, 간트 등 다이어그램을 사용하는 방법"
 date: 2026-03-13
 categories: Github_Blog
-tags: [Jekyll, Mermaid, diagram]
+tags: [Jekyll, Mermaid, diagram, 다이어그램, 플로우차트, CDN, Minimal-Mistakes]
 ---
 
 :bulb: Jekyll(Minimal Mistakes) 블로그에서 코드 기반 다이어그램을 그릴 수 있도록 Mermaid를 설정하는 방법을 작성한다.

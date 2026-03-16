@@ -1,8 +1,10 @@
 ---
 title: "tmux 기본 사용법"
+description: "tmux 터미널 멀티플렉서의 세션 관리, 화면 분할, 윈도우 전환 등 기본 사용법과 단축키 정리"
+excerpt: "tmux 세션 생성/분리/접속, 화면 분할(pane), 윈도우 전환 등 기본 사용법 가이드"
 date: 2026-03-06
 categories: Linux
-tags: [tmux, terminal, session, pane]
+tags: [tmux, terminal, session, pane, window, 화면분할, 터미널멀티플렉서]
 ---
 
 :bulb: 터미널 멀티플렉서 tmux의 세션 관리, 화면 분할, 단축키 등 기본 사용법을 작성한다.

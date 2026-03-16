@@ -1,8 +1,10 @@
 ---
 title: "Github Blog Post 작성 방법"
+description: "Jekyll 기반 GitHub 블로그에서 마크다운 문법, 이미지 삽입, 코드블록, 이모지 등 포스트 작성법 가이드"
+excerpt: "GitHub 블로그 포스트 작성을 위한 마크다운 문법, 이미지 업로드, 코드블록, 링크, 이모지 사용법 정리"
 date: 2022-02-15
 categories: Github_Blog
-tags: [Template, GithubBlog]
+tags: [Template, GithubBlog, Markdown, Jekyll, 마크다운, 블로그작성법, 코드블록, 이미지삽입]
 ---
 
 :triangular_flag_on_post: 2024-02-20 수정

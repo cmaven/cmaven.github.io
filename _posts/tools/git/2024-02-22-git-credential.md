@@ -1,8 +1,10 @@
 ---
 title: "Git Pull, Commit, Push 시, 인증 없이 수행하기(SSH,Credential)"
+description: "SSH Key 등록 또는 Git Credential 설정으로 매번 인증 없이 Git 작업을 수행하는 방법"
+excerpt: "SSH Key 생성/등록, git config credential.helper store/cache로 Git 인증을 간편하게 하는 방법"
 date: 2024-02-22
 categories: Git
-tags: [Git, Credential]
+tags: [Git, SSH, Credential, 인증, Token, credential-helper, ssh-keygen]
 ---
 
 :bulb: 본 문서는 Git 작업 수행에 필요한 credential(인증)에 대해 정리한다.  
@@ -21,7 +23,7 @@ tags: [Git, Credential]
 
 # [02]  SSH Key 등록, 활용  
 
-## SSH Key 생성
+## 2-1. SSH Key 생성
 
 ```bash
 # 수행 시, 입력 요구사항은 default (Enter)
@@ -35,7 +37,7 @@ root@cmaven:~# cat ~/.ssh/id_rsa.pub
 ssh-rsa AAAA124123QABAAACAQCbKx1YXw8bUIWUb39eLkm7+AMVT92PhMCo...
 ```  
 
-## SSH Key를 Git에 등록  
+## 2-2. SSH Key를 Git에 등록  
 
 프로필 :arrow_right: Settings :arrow_right: SSH and GPG Keys  :arrow_right:  New SSH Key  :arrow_right:  Key 값 입력  :arrow_right:  Add SSH Key  
 
@@ -45,7 +47,7 @@ ssh-rsa AAAA124123QABAAACAQCbKx1YXw8bUIWUb39eLkm7+AMVT92PhMCo...
 
 
 
-## 활용할 Repository를 Clone with SSH로 다운로드  
+## 2-3. 활용할 Repository를 Clone with SSH로 다운로드  
 
 ![2024-02-22 13 52 04](https://github.com/cmaven/cmaven.github.io/assets/76153041/8fdfd3d3-5f26-4a44-8258-ec53188b365e)  
 
@@ -57,7 +59,7 @@ ssh-rsa AAAA124123QABAAACAQCbKx1YXw8bUIWUb39eLkm7+AMVT92PhMCo...
 - 개발 시스템의 Git Repository에서 실행  
 - 아래 방법 중 하나를 적용하고 최초 IP,PW(Token)으로 인증하면 이 후에는 인증 없이 Pull, Commit, Push 수행 가능
 
-## 영구 저장  
+## 3-1. 영구 저장  
 
 ```bash
 git config credential.helper store
@@ -66,7 +68,7 @@ git config credential.helper store
 git config --list
 ```  
 
-## Cache 저장  
+## 3-2. Cache 저장  
 
 ```bash
 # default 15분
@@ -77,7 +79,7 @@ git config credential.helper `cache --timeout=3600`
 ```  
 
 
-## 모든 프로젝트에 적용  
+## 3-3. 모든 프로젝트에 적용  
 
 ```bash
 git config credential.helper store --global

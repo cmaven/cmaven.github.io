@@ -1,8 +1,10 @@
 ---
-title: "Github Blog 방문자 통계 확인하기(Google Analytics) 구글 파비콘(Favicon) 생성 및 적용하기"
+title: "Github Blog 방문자 통계 확인하기 (Google Analytics GA4)"
+description: "GitHub 블로그에 Google Analytics GA4를 적용하여 방문자 통계를 확인하는 방법 가이드"
+excerpt: "Google Analytics GA4 가입, 측정 ID 생성, Jekyll 블로그 _config.yml 설정까지 방문자 통계 적용법"
 date: 2022-03-29
 categories: Github_Blog
-tags: [GoogleAnalytics]
+tags: [GoogleAnalytics, GA4, Jekyll, 방문자통계, 트래픽분석, Minimal-Mistakes]
 ---  
 
 

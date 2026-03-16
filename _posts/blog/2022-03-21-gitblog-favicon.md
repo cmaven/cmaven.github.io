@@ -1,8 +1,10 @@
 ---
 title: "Github Blog 파비콘(Favicon) 생성 및 적용하기"
+description: "GitHub 블로그(Minimal Mistakes)에 파비콘을 생성하고 적용하는 방법 가이드"
+excerpt: "favicon-generator를 이용한 파비콘 생성 및 Jekyll 블로그에 적용하는 방법"
 date: 2022-03-21
 categories: Github_Blog
-tags: [Favicon]
+tags: [Favicon, Jekyll, Minimal-Mistakes, 파비콘, 블로그설정]
 ---  
 
 

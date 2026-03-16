@@ -1,8 +1,10 @@
 ---
 title: "복제(Clone)한 가상머신(VM)의 IP 충돌문제 해결"
+description: "KVM/QEMU 환경에서 VM Clone 시 동일 machine-id로 인한 IP 충돌 문제를 해결하는 방법"
+excerpt: "VM Clone 후 DHCP IP 할당 실패 원인(machine-id)과 해결 방법"
 date: 2024-02-29
 categories: VM
-tags: [VM, DHCP, IP]
+tags: [VM, KVM, QEMU, Clone, DHCP, machine-id, IP충돌, virt-manager]
 ---
 
 :bulb: Ubuntu, KVM, Virt-manager를 사용하는 환경에서, 기존의 가상머신을 복제(Clone)할 경우, DHCP 서버에서 IP를 할당 받지 못하는 문제가 발생한다.  

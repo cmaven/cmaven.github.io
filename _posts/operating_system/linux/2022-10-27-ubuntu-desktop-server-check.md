@@ -1,15 +1,16 @@
 ---
 title: "우분투(Ubuntu)가 데스크탑(Desktop), 서버(Server) 중 어느 버전으로 설치되었는지 확인하기"
-category: Linux
-tags: [Ubuntu]
+description: "설치된 Ubuntu가 Desktop인지 Server인지 확인하는 방법과 운영체제 버전, 커널 버전 확인 명령어"
+excerpt: "dpkg -l ubuntu-desktop 명령으로 Ubuntu Desktop/Server 구분 및 운영체제, 커널 버전 확인법"
+categories: Linux
+tags: [Ubuntu, Desktop, Server, dpkg, uname, 버전확인]
 date: 2022-10-27
 ---
 
-설치된 우분투 버전과 해당 버전이 Ubuntu-Desktop 인지, Ubuntu-Server 인지 확인하기
+:bulb: 설치된 우분투 버전과 해당 버전이 Ubuntu-Desktop인지, Ubuntu-Server인지 확인하는 방법을 작성한다.
+{: .notice--info}
 
-------
-
-### Ubuntu Desktop? Server? 확인방법
+# [01] Ubuntu Desktop / Server 확인
 
 ```shell
 dpkg -l ubuntu-desktop
@@ -28,12 +29,12 @@ root@gedgemaster:~# dpkg -l ubuntu-desktop
 dpkg-query: no packages found matching ubuntu-desktop
 ```
 
-![2022-10-27 13 54 57](https://user-images.githubusercontent.com/76153041/198195538-29a5408f-38b8-4f7a-a365-ac9c6061aaf7.png)  
+![2022-10-27 13 54 57](https://user-images.githubusercontent.com/76153041/198195538-29a5408f-38b8-4f7a-a365-ac9c6061aaf7.png)
 
-![2022-10-27 13 55 07](https://user-images.githubusercontent.com/76153041/198195542-2f340929-f0a7-404b-828d-aeb6ea75fd71.png)  
+![2022-10-27 13 55 07](https://user-images.githubusercontent.com/76153041/198195542-2f340929-f0a7-404b-828d-aeb6ea75fd71.png)
 
+# [02] 설치된 운영체제 확인
 
-### (기타) 설치된 운영체제 확인
 ```shell
 cat /etc/*release
 
@@ -57,7 +58,8 @@ VERSION_CODENAME=focal
 UBUNTU_CODENAME=focal
 ```
 
-### (기타) 설치된 커널 버전 확인
+# [03] 설치된 커널 버전 확인
+
 ```shell
 uname -a
 

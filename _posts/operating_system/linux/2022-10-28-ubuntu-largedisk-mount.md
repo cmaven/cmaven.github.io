@@ -1,16 +1,21 @@
 ---
 title: "우분투(Linux)에서 대용량 디스크 마운트하기"
-category: Linux
-tags: [Ubuntu]
+description: "Ubuntu에서 2TB 이상 대용량 디스크를 parted로 GPT 파티션 생성 후 마운트하는 방법"
+excerpt: "fdisk 대신 parted를 사용하여 2TB 이상 디스크를 GPT 파티션으로 포맷하고 마운트하는 방법"
+categories: Linux
+tags: [Ubuntu, parted, GPT, mount, fstab, 대용량디스크, 디스크마운트]
 date: 2022-10-28
 ---
 
-우분투 환경에서, 2TB 이상의 디스크를 마운트하기
-------
+:bulb: 우분투 환경에서 2TB 이상의 디스크를 포맷하고 마운트하는 방법을 작성한다.
+{: .notice--info}
 
-### 디스크 정보 확인  
-- 아래 시스템에서, 3.7TB로 인식되는 디스크를 포맷하고 마운트한다.
-  - 일반적인 `fdisk` 명령어로 포맷 및 마운트 시, `2TB`까지만 인식
+:warning: 일반적인 `fdisk` 명령어로 포맷 및 마운트 시, `2TB`까지만 인식된다. 2TB 이상은 `parted`를 사용해야 한다.
+{: .notice--warning}
+
+# [01] 디스크 정보 확인
+
+아래 시스템에서, 3.7TB로 인식되는 디스크를 포맷하고 마운트한다.
 
 ```shell
 root@test:~# lsblk
@@ -27,9 +32,9 @@ sdc                         8:32   0   3.7T  0 disk
 sdd                         8:48   0   3.7T  0 disk
 ```
 
-### parted - 파티션 설정  
+# [02] parted - 파티션 설정
 
-- 디스크 파티션 및 파티션 재설정 프로그램  
+parted는 디스크 파티션 및 파티션 재설정 프로그램이다.
 
 ```shell
 # (parted) 엔터 혹은 명령어 입력
@@ -49,13 +54,14 @@ Start? 1
 End? 3.7TB
 (parted) q
 Information: You may need to update /etc/fstab.
-```  
+```
 
-- 파티션 생성 후
-![fdisk-01(자르기)](https://user-images.githubusercontent.com/76153041/199198008-4bcc8161-fd47-4b7e-a6a2-7f5c614501c1.png)  
+파티션 생성 후:
 
+![fdisk-01(자르기)](https://user-images.githubusercontent.com/76153041/199198008-4bcc8161-fd47-4b7e-a6a2-7f5c614501c1.png)
 
-### mkfs - 포맷  
+# [03] mkfs - 포맷
+
 ```shell
 root@test:~# mkfs.ext4 /dev/sdd1
 mke2fs 1.45.5 (07-Jan-2020)
@@ -75,7 +81,7 @@ Creating journal (262144 blocks): done
 Writing superblocks and filesystem accounting information: done
 ```
 
-### 마운트  
+# [04] 마운트
 
 ```shell
 # 마운트 위치 생성
@@ -84,10 +90,12 @@ root@test:~# mkdir /mnt/sdd
 root@test:~# mount /dev/sdd1 /mnt/sdd
 # 마운트된 디렉토리 읽기,쓰기 권한 설정
 root@test:~# chmod 775 /mnt/sdd
-```  
+```
 
-- 마운트 완료 후, 결과 확인  
-  - `/dev/sdd1` 이, 2TB 넘는 용량으로 `/mnt/sdd` 에 마운트 됨을 확인
+마운트 완료 후, 결과 확인:
+
+- `/dev/sdd1` 이 2TB 넘는 용량으로 `/mnt/sdd` 에 마운트 됨을 확인
+
 ```shell
 root@test:~# df -h
 Filesystem                         Size  Used Avail Use% Mounted on
@@ -103,15 +111,16 @@ tmpfs                               24G     0   24G   0% /sys/fs/cgroup
 tmpfs                              4.7G   24K  4.7G   1% /run/user/128
 tmpfs                              4.7G     0  4.7G   0% /run/user/0
 /dev/sdd1                          3.6T   28K  3.4T   1% /mnt/sdd
-```  
+```
 
-### 부팅 시, 자동으로 마운트 시키기  
-- `/etc/fstab` 파일을 아래와 같이 수정
+# [05] 부팅 시 자동 마운트
+
+`/etc/fstab` 파일에 아래와 같이 추가한다.
 
 ```shell
 # /etc/fstab
 
-/dev/sdd1 /mnt/sdd ext4 defaults 0 0 
-```  
+/dev/sdd1 /mnt/sdd ext4 defaults 0 0
+```
 
 ![2022-11-01 17 43 12](https://user-images.githubusercontent.com/76153041/199199148-7378ae07-310b-42b1-979d-73f015066de3.png)

@@ -1,8 +1,10 @@
 ---
 title: "로컬 환경(Shell)에서 Git 계정(사용자) 변경 하기"
+description: "git config 명령어로 로컬 환경에서 Git 사용자 이름과 이메일을 확인하고 변경하는 방법"
+excerpt: "git config --global로 Git 계정(user.name, user.email)을 변경하는 방법"
 date: 2022-02-16
 categories: Git
-tags: [User, Config]
+tags: [Git, git-config, User, 계정변경, user.name, user.email]
 ---
 
 :bulb: 두 개의 Git 계정을 하나의 시스템에서 사용 시, 원하는 계정으로 Remote Repository에 작업을 수행하고자 할 때

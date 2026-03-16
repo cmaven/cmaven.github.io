@@ -1,37 +1,38 @@
 ---
 title: "우분투(Linux)에서 하드디스크(HDD) 완전 삭제"
-category: Linux
-tags: [Ubuntu, Shred, Badblocks]
+description: "Ubuntu에서 shred, badblocks, dd 명령어를 사용하여 하드디스크를 완전 삭제(로우 포맷)하는 방법"
+excerpt: "shred, badblocks, dd를 활용한 Linux 하드디스크 완전 삭제(데이터 복구 불가) 방법"
+categories: Linux
+tags: [Ubuntu, shred, badblocks, dd, HDD, 디스크삭제, 로우포맷, 데이터삭제]
 date: 2023-01-02
 ---
 
-우분투에서 하드디스크 완전 삭제
-------
+:bulb: 우분투에서 하드디스크를 완전 삭제(데이터 복구 불가)하는 방법을 작성한다.
+{: .notice--info}
 
-### 요약
+📘 Ubuntu 20.04 기준
+
+# [01] 요약
 
 ```shell
 sudo shred -v -z -n3 /dev/sdx
 sudo badblocks -w -c 600 /dev/sdx
 dd if=/dev/urandom of=/dev/sdx bs=1M
-```  
+```
 
----  
+# [02] shred
 
-> shred?  
+> 데이터 복구가 어렵도록, 실제 데이터를 쓰고/지우는 것을 반복하는(default 3) 명령어
 
-- 데이터 복구가 어렵도록, 실제 데이터를 쓰고/지우는 것을 반복하는(default 3) 명령어
-
-### 설치  
-- Ubuntu 20.04
+## 2-1. 설치
 
 ```shell
 apt-get install coreutils
-```  
+```
 
-### 디스크 삭제 준비
+## 2-2. 디스크 삭제 준비
 
-- 디스크 확인
+디스크 확인:
 
 ```shell
 lsblk
@@ -55,15 +56,15 @@ sdf                         8:80   0   1.8T  0 disk
 ├─sdf3                      8:83   0     1K  0 part
 └─sdf5                      8:85   0   1.8T  0 part
 sdg                         8:96   0   1.8T  0 disk
-```  
+```
 
-- 파티션이 존재하면 삭제
+파티션이 존재하면 삭제:
 
 ```shell
-# sdx는 삭제하려는 파티션이 존재하는 디스크 
+# sdx는 삭제하려는 파티션이 존재하는 디스크
 fdisk /dev/sdx
 
-# ex) 
+# ex)
 # 파티션 확인 command (p)
 # 파티션 삭제 command (d)
 # 실행 내용 저장 command (w)
@@ -121,54 +122,44 @@ Command (m for help): w
 The partition table has been altered.
 Calling ioctl() to re-read partition table.
 Syncing disks.
-```  
+```
 
-### 디스크 삭제
+## 2-3. 디스크 삭제
 
-- 사용할 옵션
-  - `-v` : 진행사항을 보여줌
-  - `-n1` : 반복하여 쓰기/지우기를 수행할 횟 수(default 3)
-  - `-z` : 마지막 쓰기 시, Zero 값으로 덮어쓰기
+- `-v` : 진행사항을 보여줌
+- `-n1` : 반복하여 쓰기/지우기를 수행할 횟수(default 3)
+- `-z` : 마지막 쓰기 시, Zero 값으로 덮어쓰기
 
 ```shell
 sudo shred -v -z -n3 /dev/sdx
-```  
+```
 
-[참조][How can I seurely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){: target="_blank"}  
-[참조][shred - Linux man page](https://linux.die.net/man/1/shred){: target="_blank"}  
+:small_blue_diamond:참조: [How can I securely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){:target="_blank"}
+:small_blue_diamond:참조: [shred - Linux man page](https://linux.die.net/man/1/shred){:target="_blank"}
 
----  
+# [03] badblocks
 
+> 디스크의 배드블럭(물리적으로 손상된 부분)을 찾을 때 사용하는 명령어. 랜덤 값을 디스크에 쓰면서 배드블럭 여부를 확인하는 기능을 활용한다.
 
-> badblocks
-
-- 디스크의 배드블럭(badblock, 물리적으로 손상된 부분)을 찾을 때 사용하는 명령어
-  - 옵션 중, 랜덤 값을 디스크에 쓰면서, 배드블럭인지 아닌지 확인하는 기능이 있음
-  - 이를 활용하여, 랜덤쓰기를 수행
-### 설치  
-- Ubuntu 20.04
+## 3-1. 설치
 
 ```shell
 apt-get install e2fsprogs
-```  
+```
 
-### 디스크 삭제
+## 3-2. 디스크 삭제
 
-- 사용할 옵션
-  - `-w` : 랜덤 값(0xaa, 0x55, 0xff, 0x00) 을 장치의 모든 블럭에 쓰고(Write) 읽은 후, 서로 비교하여 배드블럭인지 유무를 판단 
-  - `-ㅊ` : 한 번에 테스트할 블럭의 크기 (default 64)
+- `-w` : 랜덤 값(0xaa, 0x55, 0xff, 0x00)을 장치의 모든 블럭에 쓰고(Write) 읽은 후, 서로 비교하여 배드블럭 유무를 판단
+- `-c` : 한 번에 테스트할 블럭의 크기 (default 64)
 
 ```shell
-# block size는 512, 4096, 32768 등 
+# block size는 512, 4096, 32768 등
 sudo badblocks -w -c 600 /dev/sdx
-```  
+```
 
----  
+# [04] dd
 
-> dd
-
-- 일반적으로 리눅스 환경에서 로우 포맷용으로 활용
-  - randomw 쓰기로 장치에 입력
+> 일반적으로 리눅스 환경에서 로우 포맷용으로 활용. random 쓰기로 장치에 입력한다.
 
 ```shell
 dd if=/dev/urandom of=/dev/sdx bs=1M

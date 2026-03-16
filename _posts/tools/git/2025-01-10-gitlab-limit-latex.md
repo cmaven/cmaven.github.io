@@ -1,8 +1,10 @@
 ---
 title: "Gitlab md 파일의 수식 렌더링 제한 문제(LaTex, Math Rendering limts)"
+description: "GitLab 마크다운에서 LaTex Inline Math Expression 렌더링 제한 문제 원인 및 해결 방법"
+excerpt: "GitLab Rails console에서 math_rendering_limits_enabled를 비활성화하여 LaTex 렌더링 제한을 해제하는 방법"
 date: 2025-01-10
 categories: VScode
-tags: [Gitlab, LaTex, Math_Rendering_Limits]
+tags: [Gitlab, LaTex, Math-Rendering, Docker, gitlab-rails, 렌더링제한, 마크다운]
 ---
 
 :bulb: Gitlab 사용 시, 마크다운 파일(.md)에서 Math 관련 VSCode 사용 시,   
