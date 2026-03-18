@@ -1,3 +1,5 @@
+* text=auto eol=lf
+
 assets/fonts/*                  linguist-vendored
 assets/js/main.min.js           linguist-vendored
 assets/js/lunr/*                linguist-vendored
