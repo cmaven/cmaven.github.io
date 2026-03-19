@@ -12,7 +12,7 @@ tags: [VM, KVM, QEMU, virt-manager, 공유폴더, virtiofs, Shared-Folder, Ubunt
 
 # [01] 환경
 
-- Ubuntu 22.04
+- Ubuntu 24.04
 - virt-manager, KVM, QEMU, virsh, libvirt
 
 # [02] Host에서 설정

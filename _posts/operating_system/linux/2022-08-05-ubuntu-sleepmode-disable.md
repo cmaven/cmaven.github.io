@@ -12,14 +12,14 @@ date: 2022-08-05
 
 # [01] 환경 및 상황
 
-- Ubuntu 20.04 Server / Desktop
+- Ubuntu 24.04 Server / Desktop
 - 원격에서 SSH를 통해 Ubuntu 사용 중 접속 끊김 및 재접속 불가 현상 발생
 - 일정 시간 작업을 수행하지 않을 때, Suspend/Sleep Mode로 전환되어 세션이 끊기는 것으로 파악
 - 일부 Desktop 환경의 경우 재부팅이 필요하기도 함
 
 # [02] 원인
 
-Ubuntu 20.04는 기본적으로 Suspend/Sleep Mode(일시중단, 절전모드)가 활성화되어 있다.
+Ubuntu 24.04는 기본적으로 Suspend/Sleep Mode(일시중단, 절전모드)가 활성화되어 있다.
 
 ```shell
 sudo systemctl status sleep.target suspend.target hibernate.target hybrid-sleep.target

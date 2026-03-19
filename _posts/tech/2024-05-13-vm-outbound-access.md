@@ -15,7 +15,7 @@ tags: [VM, KVM, QEMU, iptables, NAT, 포트포워딩, Nginx, virbr0, virt-manage
 # [01]  Ubuntu VM 이미지 생성
 
 - virt-manager 활용  
-- ubuntu-22.04-server 이미지 다운로드: [(https://releases.ubuntu.com/22.04/)](https://releases.ubuntu.com/22.04/){:target="_blank"}  
+- ubuntu-24.04-server 이미지 다운로드: [(https://releases.ubuntu.com/24.04/)](https://releases.ubuntu.com/24.04/){:target="_blank"}  
 
 # [02]  VM 내부 Nginx 패키지 설치, (선택)설정
 

@@ -1,6 +1,6 @@
 ---
 title: "Docker에 Ubuntu 컨테이너 생성 후, Nginx 서버 접근하기"
-description: "Dockerfile로 Ubuntu 22.04 컨테이너를 생성하고 Nginx 서버를 구동하여 외부에서 접근하는 방법"
+description: "Dockerfile로 Ubuntu 24.04 컨테이너를 생성하고 Nginx 서버를 구동하여 외부에서 접근하는 방법"
 excerpt: "Dockerfile 작성, 이미지 빌드, 컨테이너 실행, Nginx 포트포워딩까지의 과정"
 date: 2024-05-10
 categories: Docker
@@ -16,10 +16,10 @@ tags: [Docker, Dockerfile, Ubuntu, Nginx, 컨테이너, 포트포워딩, docker-
 ## Dockerfile  
 
 ```shell
-# Dockerfile.ubuntu.22.04
-vim Dockerfile.ubuntu.22.04
+# Dockerfile.ubuntu.24.04
+vim Dockerfile.ubuntu.24.04
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ARG VERSION=latest
 WORKDIR /root
 RUN apt-get update ; apt-get install -y nginx net-tools vim iperf3
@@ -35,7 +35,7 @@ CMD service nginx start && tail -f /dev/null
 
 ```shell
 # 명령은 생성한 Dockerfile과 동일한 경로에서 실행
-sudo docker build -f Dockerfile.ubuntu.22.04 -t test/ubuntu22.04 .
+sudo docker build -f Dockerfile.ubuntu.24.04 -t test/ubuntu24.04 .
 ```  
 
 ## 생성 이미지 활용 컨테이너 실행  
@@ -46,7 +46,7 @@ sudo docker build -f Dockerfile.ubuntu.22.04 -t test/ubuntu22.04 .
   - always는 항상 재시작 된다. = 항상 실행 상태를 유지한다.
 
 ```shell
-docker run -d -p 8800:80 --name medge_ubuntu --restart always test/ubuntu22.04
+docker run -d -p 8800:80 --name medge_ubuntu --restart always test/ubuntu24.04
 ```
 
 # [02]  (선택)컨테이너 내부 Nginx 설정  

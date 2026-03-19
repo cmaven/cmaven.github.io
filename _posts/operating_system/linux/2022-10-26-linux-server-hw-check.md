@@ -10,7 +10,7 @@ date: 2022-10-26
 :bulb: 서버에 장착된 CPU, Memory, Disk, Network Interface Card, GPU 등 하드웨어 정보를 확인하는 방법을 작성한다.
 {: .notice--info}
 
-📘 Ubuntu 20.04 Server 기준
+📘 Ubuntu 24.04 Server 기준
 
 # [01] 관련 명령어
 

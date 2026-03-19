@@ -16,7 +16,7 @@ tags: [VM, KVM, QEMU, Clone, DHCP, machine-id, IP충돌, virt-manager]
 # [01]  환경 및 상황  
 
 ## 환경
-- ubuntu 22.04
+- ubuntu 24.04
 - virt-manager
 - kvm
 - qemu

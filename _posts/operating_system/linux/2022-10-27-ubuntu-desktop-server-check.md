@@ -41,21 +41,21 @@ cat /etc/*release
 # 출력 예
 root@gedgeworker1:~# cat /etc/*release
 DISTRIB_ID=Ubuntu
-DISTRIB_RELEASE=20.04
-DISTRIB_CODENAME=focal
-DISTRIB_DESCRIPTION="Ubuntu 20.04.4 LTS"
+DISTRIB_RELEASE=24.04
+DISTRIB_CODENAME=noble
+DISTRIB_DESCRIPTION="Ubuntu 24.04.1 LTS"
 NAME="Ubuntu"
-VERSION="20.04.4 LTS (Focal Fossa)"
+VERSION="24.04.1 LTS (Noble Numbat)"
 ID=ubuntu
 ID_LIKE=debian
-PRETTY_NAME="Ubuntu 20.04.4 LTS"
-VERSION_ID="20.04"
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+VERSION_ID="24.04"
 HOME_URL="https://www.ubuntu.com/"
 SUPPORT_URL="https://help.ubuntu.com/"
 BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
 PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
-VERSION_CODENAME=focal
-UBUNTU_CODENAME=focal
+VERSION_CODENAME=noble
+UBUNTU_CODENAME=noble
 ```
 
 # [03] 설치된 커널 버전 확인

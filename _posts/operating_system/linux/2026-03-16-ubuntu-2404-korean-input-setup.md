@@ -1,13 +1,13 @@
 ---
-title: "Ubuntu 22.04 한글 입력기 설치 및 한영 전환 설정"
-description: "Ubuntu 22.04에서 fcitx, ibus 한글 입력기 설치 방법과 한영 전환 단축키 설정 가이드"
-excerpt: "Ubuntu 22.04 LTS 영어 설치 후 fcitx-hangul, ibus-hangul 한글 입력기 설치 및 한영 전환 단축키 설정 방법"
+title: "Ubuntu 24.04 한글 입력기 설치 및 한영 전환 설정"
+description: "Ubuntu 24.04에서 fcitx, ibus 한글 입력기 설치 방법과 한영 전환 단축키 설정 가이드"
+excerpt: "Ubuntu 24.04 LTS 영어 설치 후 fcitx-hangul, ibus-hangul 한글 입력기 설치 및 한영 전환 단축키 설정 방법"
 date: 2026-03-16
 categories: Linux
-tags: [Ubuntu, Ubuntu-22.04, fcitx, fcitx-hangul, ibus, ibus-hangul, 한글입력, 한영전환, Linux-한글, Korean-input]
+tags: [Ubuntu, Ubuntu-24.04, fcitx, fcitx-hangul, ibus, ibus-hangul, 한글입력, 한영전환, Linux-한글, Korean-input]
 ---
 
-:bulb: Ubuntu 22.04 LTS를 영어로 설치한 후 한글 입력이 필요한 경우, 별도로 한글 입력기를 설치하고 한영 전환 단축키를 설정해야 합니다. fcitx 기반과 ibus 기반 두 가지 방법을 모두 다룹니다.
+:bulb: Ubuntu 24.04 LTS를 영어로 설치한 후 한글 입력이 필요한 경우, 별도로 한글 입력기를 설치하고 한영 전환 단축키를 설정해야 합니다. fcitx 기반과 ibus 기반 두 가지 방법을 모두 다룹니다.
 {: .notice--info}
 
 # [01] 사전 준비: 한국어 언어팩 설치

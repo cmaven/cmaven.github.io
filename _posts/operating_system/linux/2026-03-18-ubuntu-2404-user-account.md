@@ -1,10 +1,10 @@
 ---
-title: "Ubuntu 22.04 사용자 계정 생성 및 관리"
-description: "Ubuntu 22.04에서 adduser 명령어로 사용자 계정을 생성하고, sudo 권한 부여 및 계정 삭제하는 방법"
-excerpt: "Ubuntu 22.04 LTS에서 adduser를 이용한 사용자 계정 생성, sudo 그룹 추가를 통한 관리자 권한 부여, 계정 삭제까지 사용자 관리 방법 정리"
+title: "Ubuntu 24.04 사용자 계정 생성 및 관리"
+description: "Ubuntu 24.04에서 adduser 명령어로 사용자 계정을 생성하고, sudo 권한 부여 및 계정 삭제하는 방법"
+excerpt: "Ubuntu 24.04 LTS에서 adduser를 이용한 사용자 계정 생성, sudo 그룹 추가를 통한 관리자 권한 부여, 계정 삭제까지 사용자 관리 방법 정리"
 date: 2026-03-18
 categories: Linux
-tags: [Ubuntu, Ubuntu-22.04, adduser, useradd, deluser, sudo, 사용자계정, 계정생성, 계정삭제, 사용자관리]
+tags: [Ubuntu, Ubuntu-24.04, adduser, useradd, deluser, sudo, 사용자계정, 계정생성, 계정삭제, 사용자관리]
 ---
 
 :bulb: Ubuntu 환경에서 새로운 사용자 계정을 생성하고, 관리자 권한을 부여하며, 계정을 삭제하는 방법을 작성한다. Ubuntu Server와 Desktop 모두에 적용 가능하다.

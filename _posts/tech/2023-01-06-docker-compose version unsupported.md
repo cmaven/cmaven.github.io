@@ -26,7 +26,7 @@ For more on the Compose file format versions, see https://docs.docker.com/compos
 
 # [02] 원인
 
-- 실행하는 docker-compose 의 버전을 현재 운영체제(Ubuntu 20.04)에서 지원하지 않음
+- 실행하는 docker-compose 의 버전을 현재 운영체제(Ubuntu 24.04)에서 지원하지 않음
   - [참조: Version in docker-compose.yml is unsupported](https://github.com/datahub-project/datahub/issues/2020){:target="_blank"}
 
 - 현 시스템의 docker-compose 버전은 `1.25.0`
@@ -45,7 +45,7 @@ OpenSSL version: OpenSSL 1.1.1f  31 Mar 2020
 # [03] 수정
 
 - `docker-compose` 재설치
-  - `23.01.06` 기준 `Ubuntu 20.04`에서는 `2.14.2` 버전이 설치됨
+  - `23.01.06` 기준 `Ubuntu 24.04`에서는 `2.14.2` 버전이 설치됨
 
 ```shell
 # docker-compose의 최신 버전 값을 얻는데 사용하는 패키지 설치

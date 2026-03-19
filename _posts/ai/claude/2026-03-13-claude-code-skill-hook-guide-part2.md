@@ -154,7 +154,7 @@ coding-workflow/
 
 # [11] Agent Team 협업 가이드
 
-Ubuntu 22.04 + Claude Code 환경에서 여러 agent를 팀으로 구성할 때의 가이드다.
+Ubuntu 24.04 + Claude Code 환경에서 여러 agent를 팀으로 구성할 때의 가이드다.
 
 ## 11-1. 추천 팀 구조
 
