@@ -459,18 +459,56 @@ omc status
 
 ## 8-1. 설치
 
+omc는 Claude Code의 **플러그인 마켓플레이스**를 통해 설치한다.
+
+**Step 1: 마켓플레이스 등록**
+
+Claude Code 프롬프트에서 아래 명령어를 입력한다:
+
+```
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+```
+
+**Step 2: 플러그인 설치**
+
+```
+/plugin install oh-my-claudecode
+```
+
+**Step 3: 초기 설정**
+
+```
+/setup
+/omc-setup
+```
+
+:bulb: `/setup`은 Claude Code 기본 환경을, `/omc-setup`은 omc 전용 설정(Skill, Hook, config.yml)을 초기화한다.
+{: .notice--info}
+
+## 8-1-1. 설치 확인
+
 ```shell
-# 1. 스크립트 다운로드
-curl -fsSL https://raw.githubusercontent.com/cmaven/omc/main/install.sh | bash
-
-# 2. 또는 수동 설치
-git clone https://github.com/cmaven/omc.git ~/.omc
-echo 'export PATH="$HOME/.omc/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-
-# 3. 설치 확인
 omc --version
 ```
+
+## 8-1-2. 빠른 시작 예시
+
+설치 후 바로 사용할 수 있다:
+
+```
+autopilot: build a REST API for managing tasks
+```
+
+:bulb: 요구사항이 명확하지 않거나, 설계부터 꼼꼼히 검토하고 싶다면 `deep-interview`를 먼저 실행한다.
+{: .notice--info}
+
+```
+/deep-interview "I want to build a task management app"
+```
+
+`deep-interview`는 소크라테스식 질문을 통해 요구사항의 숨겨진 전제를 파악하고, 여러 항목에 대한 명확도를 측정한 뒤 실제 개발에 들어간다. **코드를 작성하기 전에 무엇을 만들지 정확히 아는 것**이 목표다.
+
+---
 
 ## 8-2. 설정 파일
 
