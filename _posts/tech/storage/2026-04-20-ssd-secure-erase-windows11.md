@@ -3,7 +3,7 @@ title: "Windows 11에서 SSD Secure Erase — 복구 불가능 삭제 방법 정
 description: "SSD를 복구 불가능하게 완전 삭제하는 Secure Erase의 개념, Samsung Magician/Rufus를 이용한 실행 방법, DiskPart clean all 대안 비교"
 excerpt: "일반 포맷으로는 SSD 데이터가 복구 가능하다 — Secure Erase, Rufus+ISO, DiskPart clean all 세 가지 방법 비교"
 date: 2026-04-20
-categories: Tech
+categories: Storage
 tags: [SSD, Secure-Erase, Windows11, Samsung-Magician, Rufus, DiskPart, 데이터삭제, Frozen, UEFI, 보안삭제]
 ---
 

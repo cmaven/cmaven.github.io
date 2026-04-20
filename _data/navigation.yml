@@ -49,6 +49,8 @@ cmaven_sidebar:
         url: /categories/storage
       - title: "Network"
         url: /categories/network
+      - title: "Etc"
+        url: /categories/etc
   - title: "도구"
     children:
       - title: "VScode"

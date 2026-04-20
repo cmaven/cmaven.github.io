@@ -3,7 +3,7 @@ title: "kebab-case, snake_case, camelCase — 네이밍 컨벤션 정리"
 description: "프로그래밍에서 자주 사용하는 케이스 스타일의 차이점, 각 언어/환경별 권장 컨벤션, 선택 기준을 정리"
 excerpt: "kebab-case, snake_case, camelCase, PascalCase 등 네이밍 컨벤션의 차이와 언어별 사용 기준"
 date: 2026-04-14
-categories: Tech
+categories: Etc
 tags: [네이밍컨벤션, kebab-case, snake_case, camelCase, PascalCase, 코딩스타일, 클린코드]
 ---
 

@@ -3,7 +3,7 @@ title: "cannot open display localhost:10.0 해결 — MobaXterm X11 포워딩으
 description: "MobaXterm X11 포워딩 시 'cannot open display localhost:10.0', 'Unsupported authorisation protocol' 오류의 원인과 XAUTHORITY 설정 해결법"
 excerpt: "Error: cannot open display: localhost:10.0 — Snap Firefox의 XAUTHORITY 미설정이 원인, 환경변수 명시적 설정으로 해결"
 date: 2026-04-15
-categories: Tech
+categories: Etc
 tags: [MobaXterm, X11, Firefox, Snap, xauth, XAUTHORITY, Ubuntu, cannot-open-display, 원격데스크톱, 한글폰트]
 ---
 
