@@ -16,7 +16,7 @@ layout: archive
     {% for tag in site.tags %}
       {% if tag[1].size == i %}
         <li>
-          <a href="#{{ tag[0] | slugify }}">
+          <a href="#{{ tag[0] | append: '' | slugify }}">
             <strong>{{ tag[0] }}</strong> <span class="taxonomy__count">{{ i }}</span>
           </a>
         </li>
@@ -29,7 +29,7 @@ layout: archive
 {% for i in (1..tags_max) reversed %}
   {% for tag in site.tags %}
     {% if tag[1].size == i %}
-      <section id="{{ tag[0] | slugify | downcase }}" class="taxonomy__section">
+      <section id="{{ tag[0] | append: '' | slugify | downcase }}" class="taxonomy__section">
         <h2 class="archive__subtitle">{{ tag[0] }}</h2>
         <div class="entries-{{ entries_layout }}">
           {% for post in tag.last %}
