@@ -3,7 +3,7 @@ title: "Mermaid 다이어그램을 이미지로 일괄 변환하기 — mermaid2
 description: "마크다운 파일에 포함된 Mermaid 다이어그램을 JPG/PNG로 한 번에 추출하는 쉘 스크립트의 사용법과 동작 원리"
 excerpt: "환경 자동 구성부터 mermaid 블록 추출, mmdc 렌더링, 포맷 변환까지 단일 스크립트로 처리하는 mermaid2img.sh 가이드"
 date: 2026-03-26
-categories: Tech
+categories: Github_Blog
 tags: [Mermaid, mermaid-cli, mmdc, 이미지변환, 쉘스크립트, WSL, Puppeteer, Chrome, Node.js, Pillow]
 ---
 

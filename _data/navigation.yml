@@ -39,14 +39,16 @@ cmaven_sidebar:
         url: /categories/claude
   - title: "기술"
     children:
-      - title: "Docker" 
+      - title: "Docker"
         url: /categories/docker
       - title: "VM"
         url: /categories/vm
       - title: "Kubernetes"
-        url: /categories/k8s 
+        url: /categories/k8s
       - title: "Storage"
         url: /categories/storage
+      - title: "Network"
+        url: /categories/network
   - title: "도구"
     children:
       - title: "VScode"

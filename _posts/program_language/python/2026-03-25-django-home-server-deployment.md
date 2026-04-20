@@ -3,7 +3,7 @@ title: "Django 웹앱을 직접 서비스하기: 개발에서 배포까지"
 description: "Django 프로젝트를 Gunicorn + systemd로 운영 환경 구성하고, DDNS + 포트포워딩으로 외부 접근 가능하게 배포하는 전체 과정"
 excerpt: "runserver 대신 Gunicorn, systemd 자동 실행, DDNS/포트포워딩 설정까지 Django 홈서버 배포 가이드"
 date: 2026-03-25
-categories: Tech
+categories: Python
 tags: [Django, Gunicorn, Nginx, systemd, DDNS, 포트포워딩, 홈서버, 배포, ufw, 방화벽, WSGI]
 ---
 
