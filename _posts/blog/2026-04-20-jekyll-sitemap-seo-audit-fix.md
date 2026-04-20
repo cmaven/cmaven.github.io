@@ -183,25 +183,21 @@ naver_site_verification  : "naver62d9a931d0465dfc21a3946c3128be56"
 
 각 포스트의 내용을 기반으로 50~160자의 `description`과 `excerpt`를 추가한다.
 
-```yaml
-# 수정 전
----
-title: "pip 'No module named pip' 오류 해결"
-date: 2022-02-16
-categories: Python
-tags: [pip, error]
----
+**수정 전:**
 
-# 수정 후
----
-title: "pip 'No module named pip' 오류 해결"
-description: "pip 실행 시 'No module named pip' 오류가 발생할 때 get-pip.py로 재설치하여 해결하는 방법"
-excerpt: "pip가 깨졌을 때 get-pip.py로 재설치하는 해결법"
-date: 2022-02-16
-categories: Python
-tags: [pip, error]
----
-```
+    title: "pip 'No module named pip' 오류 해결"
+    date: 2022-02-16
+    categories: Python
+    tags: [pip, error]
+
+**수정 후:**
+
+    title: "pip 'No module named pip' 오류 해결"
+    description: "pip 실행 시 'No module named pip' 오류가 발생할 때 ..."
+    excerpt: "pip가 깨졌을 때 get-pip.py로 재설치하는 해결법"
+    date: 2022-02-16
+    categories: Python
+    tags: [pip, error]
 
 ---
 
