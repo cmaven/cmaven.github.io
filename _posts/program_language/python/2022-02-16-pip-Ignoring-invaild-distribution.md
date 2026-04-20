@@ -1,5 +1,7 @@
 ---
 title: "Pip Error-WARNING: Ignoring invaild distribution -ip"
+description: "pip 실행 시 'Ignoring invalid distribution -ip' 경고가 발생하는 원인과 임시 디렉토리 삭제로 해결하는 방법을 설명합니다."
+excerpt: "pip 실행 시 'Ignoring invalid distribution -ip' 경고가 발생하는 원인과 임시 디렉토리 삭제로 해결하는 방법을 설명합니다."
 date: 2022-02-16
 categories: Python
 tags: [Error, Pip, Venv]

@@ -1,5 +1,7 @@
 ---
 title: "Claude Code 완벽 가이드 (2부): 프로젝트 적용, 고급 구조, FAQ"
+description: "CLAUDE.md, Skill, Hook을 실제 프로젝트에 적용하는 방법과 고급 스킬 구조, Agent 팀 협업, FAQ를 정리한 가이드입니다."
+excerpt: "CLAUDE.md, Skill, Hook을 실제 프로젝트에 적용하는 방법과 고급 스킬 구조, Agent 팀 협업, FAQ를 정리한 가이드입니다."
 date: 2026-03-13
 categories: Claude
 tags: [Claude Code, Skill, Hook, CLAUDE.md, Agent]

@@ -29,10 +29,6 @@ cmaven_sidebar:
     children:
       - title: "Python"
         url: /categories/python
-      - title: "C"
-        url: /categories/c
-      - title: "C++"
-        url: /categories/c++
       - title: "HTML"
         url: /categories/html
       - title: "CSS"

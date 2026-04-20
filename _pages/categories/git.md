@@ -2,6 +2,7 @@
 title: "Git"
 layout: archive
 permalink: categories/git
+sitemap: false
 ---
 
 {% assign posts = site.categories.Git %}

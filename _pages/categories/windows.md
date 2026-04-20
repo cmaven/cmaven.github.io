@@ -3,6 +3,7 @@ title: "Windows"
 layout: archive
 permalink: categories/windows
 author_profile: true
+sitemap: false
 ---
 
 {% assign posts = site.categories.Windows %}

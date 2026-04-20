@@ -1,5 +1,7 @@
 ---
 title: "Claude Code Multi-Agent (2부): 자동화, 소통 전략, 실전 예제"
+description: "Multi-Agent 환경의 자동화 스크립트, Agent 간 소통 전략, 풀스택 실전 예제와 FAQ를 다루는 2부 가이드입니다."
+excerpt: "Multi-Agent 환경의 자동화 스크립트, Agent 간 소통 전략, 풀스택 실전 예제와 FAQ를 다루는 2부 가이드입니다."
 date: 2026-03-13
 categories: Claude
 tags: [Claude Code, Multi-Agent, tmux, git worktree, Orchestrator]

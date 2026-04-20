@@ -1,5 +1,7 @@
 ---
 title: "Pip Error-ERROR: No moudle named pip"
+description: "pip 업그레이드 중 'No module named pip' 오류가 발생했을 때 get-pip.py로 pip를 재설치하여 해결하는 방법을 안내합니다."
+excerpt: "pip 업그레이드 중 'No module named pip' 오류가 발생했을 때 get-pip.py로 pip를 재설치하여 해결하는 방법을 안내합니다."
 date: 2022-02-16
 categories: Python
 tags: [Error, Pip, Venv]

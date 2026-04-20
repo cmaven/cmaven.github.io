@@ -2,6 +2,7 @@
 title: "CSS"
 layout: archive
 permalink: categories/css
+sitemap: false
 ---
 
 {% assign posts = site.categories.CSS %}

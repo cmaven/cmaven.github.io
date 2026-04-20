@@ -2,6 +2,7 @@
 title: "Github_Blog"
 layout: archive
 permalink: categories/github_blog
+sitemap: false
 ---
 
 {% assign posts = site.categories.Github_Blog %}

@@ -2,6 +2,7 @@
 title: "Docker"
 layout: archive
 permalink: categories/docker
+sitemap: false
 ---
 
 {% assign posts = site.categories.Docker %}

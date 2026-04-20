@@ -3,6 +3,7 @@ title: "VScode"
 layout: archive
 permalink: categories/vscode
 author_profile: true
+sitemap: false
 ---
 
 {% assign posts = site.categories.VScode %}

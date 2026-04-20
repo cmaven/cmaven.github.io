@@ -1,5 +1,7 @@
 ---
 title: "장고 관리자 페이지 패스워드 간단하게 만들기"
+description: "Django 관리자 페이지에서 패스워드 검증을 비활성화하여 간단한 비밀번호를 사용할 수 있도록 설정하는 방법을 설명합니다."
+excerpt: "Django 관리자 페이지에서 패스워드 검증을 비활성화하여 간단한 비밀번호를 사용할 수 있도록 설정하는 방법을 설명합니다."
 date: 2022-12-08
 categories: Python
 tags: [Django, Password]

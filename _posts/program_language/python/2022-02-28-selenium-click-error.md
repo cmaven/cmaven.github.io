@@ -1,5 +1,7 @@
 ---
 title: "Selenium Error-</button> is not clickable at point"
+description: "Selenium에서 'element is not clickable at point' 오류 발생 시 maximize_window()로 해결하는 방법을 안내합니다."
+excerpt: "Selenium에서 'element is not clickable at point' 오류 발생 시 maximize_window()로 해결하는 방법을 안내합니다."
 date: 2022-02-28
 categories: Python
 tags: [Crawling, Selenium, Error]

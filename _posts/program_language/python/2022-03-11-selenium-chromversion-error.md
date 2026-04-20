@@ -1,5 +1,7 @@
 ---
 title: "Selenium Error-SessionNotCreatedException-version of chromeDriver"
+description: "Selenium에서 ChromeDriver 버전 불일치로 SessionNotCreatedException 발생 시 webdriver-manager로 해결하는 방법입니다."
+excerpt: "Selenium에서 ChromeDriver 버전 불일치로 SessionNotCreatedException 발생 시 webdriver-manager로 해결하는 방법입니다."
 date: 2022-03-11
 categories: Python
 tags: [Error, Selenium, ChromeDriverManager, Webdrivermanager]

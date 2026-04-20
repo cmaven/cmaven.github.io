@@ -1,5 +1,7 @@
 ---
 title: "Claude Code Multi-Agent (1부): 개념과 실전 구성"
+description: "Claude Code CLI에서 tmux와 git worktree를 활용해 여러 Agent를 동시에 실행하는 Multi-Agent 개념과 실전 구성 방법을 설명합니다."
+excerpt: "Claude Code CLI에서 tmux와 git worktree를 활용해 여러 Agent를 동시에 실행하는 Multi-Agent 개념과 실전 구성 방법을 설명합니다."
 date: 2026-03-13
 categories: Claude
 tags: [Claude Code, Multi-Agent, tmux, git worktree, Orchestrator]
