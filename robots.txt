@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://cmaven.github.io/sitemap.xml
+Sitemap: https://cmaven.github.io/sitemap-posts.xml
