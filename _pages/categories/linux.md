@@ -1,9 +1,10 @@
----
+﻿---
 title: "Linux"
 layout: archive
 permalink: categories/linux
 author_profile: true
 sitemap: false
+noindex: true
 ---
 
 {% assign posts = site.categories.Linux %}

@@ -13,9 +13,9 @@ main:
   - title: "Home"
     url: /
   - title: "Categories"
-    url: /categories
+    url: /categories/
   - title: "Tags"
-    url: /tags
+    url: /tags/
 
 # cmaven links
 cmaven_sidebar:

@@ -1,14 +1,20 @@
 ---
-title: "Jekyll 블로그 포스트 Google 검색 유입 최적화 (SEO)"
-description: "Jekyll 기반 GitHub 블로그에서 Google 검색 유입을 높이기 위한 SEO 설정 가이드"
-excerpt: "frontmatter 최적화, jekyll-seo-tag 플러그인, 태그 전략 등 Jekyll 블로그 SEO 실전 적용법"
+title: "Jekyll 블로그 SEO 시리즈 (1편) — 포스트 단위 frontmatter·메타태그 최적화"
+description: "Jekyll 기반 GitHub 블로그에서 포스트 하나 단위로 Google 검색 유입을 높이기 위한 frontmatter·jekyll-seo-tag·permalink 설정 가이드"
+excerpt: "SEO 시리즈 1편. description/excerpt/tags frontmatter, jekyll-seo-tag 플러그인, permalink·파일명 등 포스트 단위에서 끝낼 수 있는 SEO 기본기"
 date: 2026-03-16
 categories: Github_Blog
-tags: [SEO, Google-Search, Jekyll, frontmatter, sitemap, jekyll-seo-tag]
+tags: [SEO, Google-Search, Jekyll, frontmatter, sitemap, jekyll-seo-tag, SEO-시리즈-1편]
 ---
 
-:bulb: Jekyll 기반 GitHub 블로그에서 포스트를 작성할 때, Google 검색에 잘 노출되도록 하는 SEO(Search Engine Optimization) 설정 방법을 정리합니다.
+:bulb: Jekyll 기반 GitHub 블로그의 SEO를 **3편 시리즈**로 정리한다. 이 글(1편)은 **포스트 한 개 단위에서 끝낼 수 있는 frontmatter·메타태그 최적화**를 다룬다. 같은 글에서 매번 챙기면 검색 유입이 가장 빠르게 늘어나는 영역이다.
 {: .notice--info}
+
+:bulb: **SEO 시리즈 구성**
+- **1편 (이 글)** — 포스트 단위 SEO: frontmatter, `jekyll-seo-tag`, permalink·파일명
+- **[2편](/github_blog/jekyll-sitemap-seo-audit-fix/)** — 사이트 단위 SEO 감사: sitemap 품질, 검증 메타태그, 누락 description 일괄 보강, 404/아카이브 정리
+- **[3편](/github_blog/search-console-noindex-redirect-cleanup/)** — Google Search Console 잔여 이슈 정리: 404·리디렉션·"크롤링됨-색인 안 됨" 분류 진단과 `noindex` 메타태그 적용
+{: .notice}
 
 # [01] SEO란?
 
@@ -248,3 +254,16 @@ permalink: /:categories/:title/
 
 :star: frontmatter의 `description`과 `tags` 보강만으로도 검색 유입이 크게 개선될 수 있습니다. `jekyll-seo-tag` 플러그인까지 적용하면 Open Graph, canonical URL 등이 자동으로 생성되어 SEO 효과가 극대화됩니다.
 {: .notice--info}
+
+---
+
+# [07] 다음 편 예고
+
+1편은 **포스트 한 개 단위**에서 끝낼 수 있는 SEO만 다뤘다. 하지만 사이트가 어느 정도 쌓이면 다음과 같은 **사이트 전체 차원의 문제**가 드러난다.
+
+- sitemap에 카테고리/태그/pagination 같은 저가치 URL이 함께 들어가서 sitemap 품질이 떨어진다
+- `_config.yml`의 검증 메타태그가 비어 있어 인증이 불완전하다
+- 과거 포스트 다수에 `description`이 누락돼 Google 스니펫이 generic하게 표시된다
+- 잘못된 URL 접근 시 GitHub Pages 기본 404가 노출되어 UX가 나쁘다
+
+[2편](/github_blog/jekyll-sitemap-seo-audit-fix/) 에서는 **저장소 전체를 SEO 감사**하면서 발견한 이런 문제들과 일괄 수정 방법을 정리한다. 그 후 [3편](/github_blog/search-console-noindex-redirect-cleanup/) 은 이 모든 작업을 마친 뒤 **Google Search Console에 여전히 남는 4가지 분류의 이슈**를 어떻게 해석하고 정리하는지 다룬다.

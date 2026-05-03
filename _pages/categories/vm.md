@@ -1,8 +1,9 @@
----
+﻿---
 title: "VM"
 layout: archive
 permalink: categories/vm
 sitemap: false
+noindex: true
 ---
 
 {% assign posts = site.categories.VM %}

@@ -1,16 +1,25 @@
 ---
-title: "Jekyll 블로그 SEO 감사 — sitemap 품질 개선과 Google 색인 최적화 (2편)"
-description: "sitemap에 저가치 URL 혼재, 검증 메타태그 누락, description 미설정 등 Google Search Console 등록 시 발견한 문제와 해결 방법"
-excerpt: "sitemap에 카테고리/태그/pagination 페이지가 섞여 있으면 Google이 sitemap 전체를 저품질로 판단한다. 실제 감사 결과와 수정 방법 정리"
+title: "Jekyll 블로그 SEO 시리즈 (2편) — 사이트 단위 SEO 감사와 sitemap 품질 개선"
+description: "1편의 포스트 단위 SEO를 마친 뒤 저장소 전체를 감사하면서 발견한 sitemap 저가치 URL 혼재, 검증 메타태그 누락, description 미설정, 404 페이지 부재 문제와 일괄 해결 방법"
+excerpt: "SEO 시리즈 2편. sitemap에 카테고리/태그/pagination이 섞여 있으면 Google이 sitemap 전체를 저품질로 판단한다. 사이트 단위 감사 결과와 수정 방법 정리"
 date: 2026-04-20
 categories: Github_Blog
-tags: [Jekyll, sitemap, SEO, Google-Search-Console, sitemap-false, description, 메타태그, 404, canonical, 색인최적화]
+tags: [Jekyll, sitemap, SEO, Google-Search-Console, sitemap-false, description, 메타태그, 404, canonical, 색인최적화, SEO-시리즈-2편]
 ---
 
-:bulb: [1편](/github_blog/jekyll-sitemap-google-indexing-fix/)에서 `_config.yml`의 `url`, `future`, `timezone` 누락 문제를 다뤘다. 이 글은 그 이후 **전체 저장소를 SEO 감사**하면서 발견한 추가 문제들과 해결 방법을 정리한다.
+:bulb: SEO 시리즈 2편. **[1편](/github_blog/gitblog-seo-google-search/)** 에서 포스트 한 개 단위의 frontmatter·`jekyll-seo-tag`·permalink 최적화를 다뤘다. 1편을 모든 새 포스트에 적용해도 사이트가 일정 규모 이상 쌓이면 **사이트 전체 차원의 SEO 문제**가 드러난다. 이 글은 그 시점에 저장소 전체를 SEO 감사하면서 발견한 5가지 문제와 일괄 수정 방법을 정리한다.
 {: .notice--info}
 
+:bulb: **SEO 시리즈 구성**
+- **[1편](/github_blog/gitblog-seo-google-search/)** — 포스트 단위 SEO: frontmatter, `jekyll-seo-tag`, permalink·파일명
+- **2편 (이 글)** — 사이트 단위 SEO 감사: sitemap 품질, 검증 메타태그, 누락 description 일괄 보강, 404/아카이브 정리
+- **[3편](/github_blog/search-console-noindex-redirect-cleanup/)** — Google Search Console 잔여 이슈 정리: 404·리디렉션·"크롤링됨-색인 안 됨" 분류 진단과 `noindex` 메타태그 적용
+{: .notice}
+
 **환경**: Jekyll 3.x + minimal-mistakes + GitHub Pages + jekyll-sitemap 플러그인
+
+:memo: 이 시리즈와는 별도로, sitemap의 `Last read`가 갱신되지 않는 진단 과정은 [Jekyll 블로그 sitemap 미갱신·색인 누락 원인 진단과 해결](/github_blog/jekyll-sitemap-google-indexing-fix/) 글에 정리해 두었다. 이 시리즈가 다루는 내용과 보완적으로 함께 읽으면 도움이 된다.
+{: .notice--warning}
 
 ---
 
@@ -305,5 +314,17 @@ graph LR
 | 404 페이지 | 존재하지 않는 URL 접속 | 커스텀 404 표시 |
 | Open Graph | 포스트 소스 → `og:title`, `og:description` 검색 | 각 포스트별 고유 값 |
 
-:bulb: 1편의 `url`, `future`, `timezone` 설정과 이 글의 sitemap 품질 개선을 모두 적용하면, Google이 sitemap을 신뢰하고 정기적으로 재읽기할 가능성이 크게 높아진다.
+:bulb: 1편의 포스트 단위 SEO와 이 글의 sitemap 품질 개선을 모두 적용하면, Google이 sitemap을 신뢰하고 정기적으로 재읽기할 가능성이 크게 높아진다.
 {: .notice--info}
+
+---
+
+# [10] 다음 편 예고
+
+여기까지 적용해서 Search Console에 sitemap을 등록·재제출하면 며칠~몇 주 뒤 색인 보고서에 결과가 쌓이기 시작한다. 그러면 이번에는 **"Google이 본 우리 사이트의 잔여 이슈"** 가 새로 보이게 된다.
+
+- **찾을 수 없음(404)** — 옛 글이 삭제됐는데 Google 인덱스에는 아직 남아 있는 URL
+- **리디렉션이 포함된 페이지** — 내부 링크가 trailing slash 없이 걸려 있어 GitHub Pages가 301로 응답
+- **크롤링됨 - 현재 색인이 생성되지 않음** — Google이 내용은 봤지만 색인은 안 한 카테고리/태그/pagination 같은 저가치 페이지
+
+[3편](/github_blog/search-console-noindex-redirect-cleanup/) 에서는 이 4가지 분류를 어떻게 해석하고, **`noindex` 메타태그 자동 출력**과 **navigation trailing slash 정리**로 깔끔하게 마무리하는 과정을 다룬다.

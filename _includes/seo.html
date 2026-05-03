@@ -50,6 +50,19 @@
 <title>{{ seo_title | default: site.title }}{% if paginator %}{% unless paginator.page == 1 %} {{ title_separator }} {{ site.data.ui-text[site.locale].page | default: "Page" }} {{ paginator.page }}{% endunless %}{% endif %}</title>
 <meta name="description" content="{{ seo_description }}">
 
+{%- comment -%}
+  Emit noindex for archive/pagination pages so Google stops listing them as
+  "Crawled - currently not indexed" or "Page with redirect" in Search Console.
+  Real posts (page.noindex unset) remain indexable.
+{%- endcomment -%}
+{% assign is_noindex = false %}
+{% if page.noindex %}{% assign is_noindex = true %}{% endif %}
+{% if page.url == "/404.html" %}{% assign is_noindex = true %}{% endif %}
+{% if paginator.page and paginator.page != 1 %}{% assign is_noindex = true %}{% endif %}
+{% if is_noindex %}
+<meta name="robots" content="noindex,follow">
+{% endif %}
+
 {% if author.name %}
   <meta name="author" content="{{ author.name | default: author }}">
   {% if og_type == "article" %}
