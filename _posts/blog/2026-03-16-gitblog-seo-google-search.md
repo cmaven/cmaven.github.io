@@ -4,16 +4,17 @@ description: "Jekyll 기반 GitHub 블로그에서 포스트 하나 단위로 Go
 excerpt: "SEO 시리즈 1편. description/excerpt/tags frontmatter, jekyll-seo-tag 플러그인, permalink·파일명 등 포스트 단위에서 끝낼 수 있는 SEO 기본기"
 date: 2026-03-16
 categories: Github_Blog
-tags: [SEO, Google-Search, Jekyll, frontmatter, sitemap, jekyll-seo-tag, SEO-시리즈-1편]
+tags: [SEO, Google-Search, Jekyll, frontmatter, sitemap, jekyll-seo-tag, SEO-시리즈-1편, SEO-시리즈]
 ---
 
-:bulb: Jekyll 기반 GitHub 블로그의 SEO를 **3편 시리즈**로 정리한다. 이 글(1편)은 **포스트 한 개 단위에서 끝낼 수 있는 frontmatter·메타태그 최적화**를 다룬다. 같은 글에서 매번 챙기면 검색 유입이 가장 빠르게 늘어나는 영역이다.
+:bulb: Jekyll 기반 GitHub 블로그의 SEO를 **4편 시리즈**로 정리한다. 이 글(1편)은 **포스트 한 개 단위에서 끝낼 수 있는 frontmatter·메타태그 최적화**를 다룬다. 같은 글에서 매번 챙기면 검색 유입이 가장 빠르게 늘어나는 영역이다.
 {: .notice--info}
 
 :bulb: **SEO 시리즈 구성**
 - **1편 (이 글)** — 포스트 단위 SEO: frontmatter, `jekyll-seo-tag`, permalink·파일명
-- **[2편](/github_blog/jekyll-sitemap-seo-audit-fix/)** — 사이트 단위 SEO 감사: sitemap 품질, 검증 메타태그, 누락 description 일괄 보강, 404/아카이브 정리
-- **[3편](/github_blog/search-console-noindex-redirect-cleanup/)** — Google Search Console 잔여 이슈 정리: 404·리디렉션·"크롤링됨-색인 안 됨" 분류 진단과 `noindex` 메타태그 적용
+- **[2편](/github_blog/jekyll-sitemap-google-indexing-fix/)** — sitemap이 제대로 갱신되도록: `_config.yml`의 url·future·timezone 3줄 진단·수정
+- **[3편](/github_blog/jekyll-sitemap-seo-audit-fix/)** — 사이트 단위 SEO 감사: sitemap 품질, 검증 메타태그, 누락 description 일괄 보강, 404/아카이브 정리
+- **[4편](/github_blog/search-console-noindex-redirect-cleanup/)** — Google Search Console 잔여 이슈 정리: 404·리디렉션·"크롤링됨-색인 안 됨" 분류 진단과 `noindex` 메타태그 적용
 {: .notice}
 
 # [01] SEO란?
@@ -259,11 +260,8 @@ permalink: /:categories/:title/
 
 # [07] 다음 편 예고
 
-1편은 **포스트 한 개 단위**에서 끝낼 수 있는 SEO만 다뤘다. 하지만 사이트가 어느 정도 쌓이면 다음과 같은 **사이트 전체 차원의 문제**가 드러난다.
+1편은 **포스트 한 개 단위**에서 끝낼 수 있는 SEO만 다뤘다. 그런데 새 글을 push해도 **Google Search Console의 sitemap `Last read`가 갱신되지 않고 새 글이 색인되지 않는 문제**가 종종 발생한다. 일반론적인 원인(크롤링 예산, 콘텐츠 품질) 이전에 `_config.yml` 설정 누락이라는 명확한 코드 문제일 수 있다.
 
-- sitemap에 카테고리/태그/pagination 같은 저가치 URL이 함께 들어가서 sitemap 품질이 떨어진다
-- `_config.yml`의 검증 메타태그가 비어 있어 인증이 불완전하다
-- 과거 포스트 다수에 `description`이 누락돼 Google 스니펫이 generic하게 표시된다
-- 잘못된 URL 접근 시 GitHub Pages 기본 404가 노출되어 UX가 나쁘다
+[2편](/github_blog/jekyll-sitemap-google-indexing-fix/) 에서는 **`_config.yml`의 `url`·`future`·`timezone` 3줄 누락**을 sitemap 미갱신·색인 누락의 실제 원인으로 짚어내는 진단 과정과 수정 방법을 정리한다.
 
-[2편](/github_blog/jekyll-sitemap-seo-audit-fix/) 에서는 **저장소 전체를 SEO 감사**하면서 발견한 이런 문제들과 일괄 수정 방법을 정리한다. 그 후 [3편](/github_blog/search-console-noindex-redirect-cleanup/) 은 이 모든 작업을 마친 뒤 **Google Search Console에 여전히 남는 4가지 분류의 이슈**를 어떻게 해석하고 정리하는지 다룬다.
+이어 [3편](/github_blog/jekyll-sitemap-seo-audit-fix/) 에서는 sitemap이 제대로 갱신되기 시작했으니 **sitemap 자체의 품질**(저가치 URL 제거, 검증 메타태그, 누락 description 보강, 404 페이지 등)을 사이트 단위 감사로 끌어올린다. [4편](/github_blog/search-console-noindex-redirect-cleanup/) 은 sitemap 등록 이후 Search Console에 남는 4가지 분류의 잔여 이슈를 `noindex`/trailing slash로 마무리한다.
