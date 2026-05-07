@@ -1,5 +1,5 @@
 ---
-title: "우분투(Ubuntu)가 데스크탑(Desktop), 서버(Server) 중 어느 버전으로 설치되었는지 확인하기"
+title: "Ubuntu Desktop/Server 설치 버전 확인 방법"
 description: "설치된 Ubuntu가 Desktop인지 Server인지 확인하는 방법과 운영체제 버전, 커널 버전 확인 명령어"
 excerpt: "dpkg -l ubuntu-desktop 명령으로 Ubuntu Desktop/Server 구분 및 운영체제, 커널 버전 확인법"
 categories: Linux

@@ -1,5 +1,5 @@
 ---
-title: "Jekyll 블로그 SEO 시리즈 (4편) — Search Console 잔여 이슈 정리: 404·리디렉션·noindex"
+title: "Jekyll SEO 4편 — Search Console 이슈 정리 (404·redirect·noindex)"
 description: "1~3편을 적용하고 sitemap을 등록한 뒤 Google Search Console에 남는 4가지 분류(찾을 수 없음, 리디렉션 포함, 크롤링됨-색인 안 됨, 신규 미색인)를 케이스별로 진단하고 noindex 메타태그·navigation trailing slash로 정리하는 방법"
 excerpt: "SEO 시리즈 4편. Search Console에 남는 잔여 이슈를 4가지 분류로 진단하고, seo.html에 noindex 자동 출력 로직과 navigation trailing slash 수정으로 깔끔하게 마무리한다"
 date: 2026-05-03

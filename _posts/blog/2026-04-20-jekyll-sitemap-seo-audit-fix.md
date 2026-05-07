@@ -1,5 +1,5 @@
 ---
-title: "Jekyll 블로그 SEO 시리즈 (3편) — 사이트 단위 SEO 감사와 sitemap 품질 개선"
+title: "Jekyll SEO 3편 — 사이트 단위 sitemap 품질 감사·개선"
 description: "2편의 _config.yml 3줄 수정으로 sitemap이 갱신되기 시작한 뒤 저장소 전체를 감사하면서 발견한 sitemap 저가치 URL 혼재, 검증 메타태그 누락, description 미설정, 404 페이지 부재 문제와 일괄 해결 방법"
 excerpt: "SEO 시리즈 3편. sitemap에 카테고리/태그/pagination이 섞여 있으면 Google이 sitemap 전체를 저품질로 판단한다. 사이트 단위 감사 결과와 수정 방법 정리"
 date: 2026-04-20

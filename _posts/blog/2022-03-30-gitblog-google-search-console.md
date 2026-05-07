@@ -1,5 +1,5 @@
 ---
-title: "Github Blog 구글 검색 엔진에 노출시키기 (Google Search Console)"
+title: "Github Blog Google 검색 노출 — Search Console 등록"
 description: "GitHub 블로그를 Google Search Console에 등록하고 sitemap.xml, robots.txt를 설정하여 검색 노출시키는 방법"
 excerpt: "Google Search Console 등록, sitemap.xml 생성, robots.txt 설정으로 GitHub 블로그 검색 엔진 노출시키기"
 date: 2022-03-30

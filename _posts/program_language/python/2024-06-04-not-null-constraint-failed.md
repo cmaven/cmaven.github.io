@@ -1,5 +1,5 @@
 ---
-title: "장고(Django)에서 Serializer 활용 시, Not null constraint failed 오류"
+title: "Django Serializer Not null constraint failed 오류 해결"
 description: "Django Serializer에서 ForeignKey 값이 NULL로 인식되어 Not null constraint failed 오류가 발생하는 원인과 해결 방법입니다."
 excerpt: "Django Serializer에서 ForeignKey 값이 NULL로 인식되어 Not null constraint failed 오류가 발생하는 원인과 해결 방법입니다."
 date: 2024-06-04

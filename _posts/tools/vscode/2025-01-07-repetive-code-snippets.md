@@ -1,5 +1,5 @@
 ---
-title: "반복적인 구문 입력을 간편하게(repetive code-snippets)"
+title: "VSCode 반복 구문 자동 입력 — Code Snippets 활용"
 description: "VSCode Snippets 기능으로 반복 구문을 단축키 하나로 자동 입력하는 설정 방법"
 excerpt: "VSCode snippets로 prefix + Tab 키를 활용한 반복 구문 자동완성 설정하기"
 date: 2025-01-07

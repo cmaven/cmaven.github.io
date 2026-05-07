@@ -1,5 +1,5 @@
 ---
-title: "GitHub Actions 워크플로 라인 단위 가이드 — deploy.yml(push로 빌드·배포)과 stale.yml(schedule로 이슈·PR 정리) 비교 학습"
+title: "GitHub Actions 워크플로 가이드 — deploy.yml·stale.yml 라인 단위 해부"
 description: "GitHub Actions 핵심 5개 용어(workflow/event/job/step/action) 정리 후, push 트리거로 사이트를 빌드·배포하는 deploy.yml과 schedule cron으로 비활성 이슈·PR을 자동 정리하는 stale.yml 두 워크플로를 한 줄씩 해부해 동작 원리를 비교하며 학습한다"
 excerpt: "단순한 봇 워크플로(stale.yml)부터 다중 잡 빌드/배포 워크플로(deploy.yml)까지, 같은 5개 용어로 표현되는 GitHub Actions의 동작 모델을 두 가지 실제 YAML로 라인 단위 분석"
 date: 2026-05-07

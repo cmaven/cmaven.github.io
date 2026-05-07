@@ -1,5 +1,5 @@
 ---
-title: "서버에 장착된 CPU,메모리,디스크,네트워크 장치 상태(슬롯별 용량,제조사 등) 확인하기"
+title: "Linux 서버 하드웨어 정보 확인 — CPU·메모리·디스크·네트워크"
 description: "Ubuntu 서버에서 CPU, 메모리, 디스크, 네트워크, GPU 등 하드웨어 정보를 확인하는 명령어 모음"
 excerpt: "dmidecode, lscpu, lshw, lsblk 등을 활용한 Linux 서버 하드웨어 정보 확인 방법"
 categories: Linux

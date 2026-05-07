@@ -1,5 +1,5 @@
 ---
-title: "docker compose down 완전 삭제 가이드 — 컨테이너, 볼륨, 이미지 단계별 정리"
+title: "docker compose down 완전 삭제 — 컨테이너·볼륨·이미지 정리"
 description: "docker compose up -d로 띄운 환경을 단계별로 깨끗하게 삭제하는 방법과 각 옵션(-v, --rmi all, --remove-orphans)의 차이 정리"
 excerpt: "docker compose down만으로는 볼륨과 이미지가 남는다 — 상황별 삭제 옵션과 완전 초기화 방법"
 date: 2026-04-21

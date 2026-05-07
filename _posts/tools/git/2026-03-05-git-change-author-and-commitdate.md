@@ -1,5 +1,5 @@
 ---
-title: "Git History에서 Author 변경 및 CommitDate를 AuthorDate로 맞추기"
+title: "Git History Author 변경 + CommitDate 동기화"
 description: "git rebase, filter-branch, filter-repo를 사용하여 커밋 Author를 변경하고 CommitDate를 AuthorDate로 동기화하는 방법"
 excerpt: "기존 Git 커밋의 Author 변경 및 CommitDate를 AuthorDate에 맞추는 다양한 방법 가이드"
 date: 2026-03-05

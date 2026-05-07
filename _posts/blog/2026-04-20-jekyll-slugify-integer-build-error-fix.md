@@ -1,5 +1,5 @@
 ---
-title: "Jekyll 빌드 에러: undefined method gsub for an instance of Integer — slugify 오류 해결"
+title: "Jekyll 빌드 에러 — slugify Integer gsub 오류 해결"
 description: "GitHub Pages Jekyll 빌드 시 slugify 필터에 Integer가 전달되어 발생하는 gsub NoMethodError의 원인과 append '' 방어 코드 해결법"
 excerpt: "Liquid Exception: undefined method gsub for an instance of Integer — slugify 앞에 append '' 한 줄 추가로 해결"
 date: 2026-04-20

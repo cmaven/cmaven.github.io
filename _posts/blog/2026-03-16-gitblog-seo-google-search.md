@@ -1,5 +1,5 @@
 ---
-title: "Jekyll 블로그 SEO 시리즈 (1편) — 포스트 단위 frontmatter·메타태그 최적화"
+title: "Jekyll SEO 1편 — 포스트 frontmatter·메타태그 최적화"
 description: "Jekyll 기반 GitHub 블로그에서 포스트 하나 단위로 Google 검색 유입을 높이기 위한 frontmatter·jekyll-seo-tag·permalink 설정 가이드"
 excerpt: "SEO 시리즈 1편. description/excerpt/tags frontmatter, jekyll-seo-tag 플러그인, permalink·파일명 등 포스트 단위에서 끝낼 수 있는 SEO 기본기"
 date: 2026-03-16

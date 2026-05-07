@@ -1,5 +1,5 @@
 ---
-title: "Fatal error in launcher-Unable to create process using"
+title: "Python Fatal error in launcher — Unable to create process"
 description: "Python venv 가상환경을 다른 머신에서 사용할 때 발생하는 경로 오류 해결 방법"
 excerpt: "venv 환경을 git clone으로 다른 머신에서 사용 시 Unable to create process using 오류 해결법"
 date: 2022-05-02

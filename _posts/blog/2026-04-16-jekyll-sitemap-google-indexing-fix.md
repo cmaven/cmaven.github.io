@@ -1,5 +1,5 @@
 ---
-title: "Jekyll 블로그 SEO 시리즈 (2편) — sitemap 미갱신·색인 누락 진단과 _config.yml 3줄 수정"
+title: "Jekyll SEO 2편 — sitemap 미갱신 진단과 _config.yml 수정"
 description: "Google Search Console에서 sitemap Last read가 갱신되지 않고 새 포스트가 색인되지 않는 문제의 실제 원인(url/future/timezone 누락) 진단과 _config.yml 수정 가이드"
 excerpt: "SEO 시리즈 2편. url 비어있음 → canonical 누락, future: false → 오늘 작성 포스트 빌드 제외, timezone 누락 → KST 날짜 경계 오판. _config.yml 3줄로 해결"
 date: 2026-04-16

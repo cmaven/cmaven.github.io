@@ -1,5 +1,5 @@
 ---
-title: "docker-compose 명령어 수행 시, docker-compose.yml is unsupported"
+title: "docker-compose.yml is unsupported 오류 해결"
 description: "docker-compose up 실행 시 Version is unsupported 오류의 원인과 최신 버전 재설치로 해결하는 방법"
 excerpt: "docker-compose.yml version unsupported 오류 원인 및 재설치 해결 방법"
 date: 2023-01-06

@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes 업데이트 전략 종합 정리 — Rolling Update, Blue/Green, Canary와 K8s native strategy"
+title: "Kubernetes 업데이트 전략 정리 — Rolling/Blue-Green/Canary"
 description: "Rolling Update, Blue/Green, Canary 배포 패턴과 K8s API의 RollingUpdate/Recreate/OnDelete 전략의 차이, 두 추상화 층위 구분, NVIDIA Driver Operator 케이스 분석"
 excerpt: "K8s 업데이트는 두 층위로 분리해서 봐야 한다 — API 차원의 strategy(A)와 배포 패턴(B). Rolling/Blue-Green/Canary 비교부터 NVIDIA driver 같은 host kernel 결합 워크로드 실무 적용까지"
 date: 2026-05-06

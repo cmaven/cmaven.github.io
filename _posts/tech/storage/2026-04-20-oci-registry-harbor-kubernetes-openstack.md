@@ -1,5 +1,5 @@
 ---
-title: "OCI Registry와 Harbor — Kubernetes/OpenStack 환경의 컨테이너 이미지 관리"
+title: "OCI Registry와 Harbor — 컨테이너 이미지 관리 (K8s·OpenStack)"
 description: "OCI Registry 개념, Harbor의 역할과 주요 기능, Kubernetes/OpenStack에서의 활용, Glance와의 차이점, Nexus/KubeKey 비교 정리"
 excerpt: "Harbor는 Enterprise급 Private OCI Registry — Kubernetes와 OpenStack에서 컨테이너 이미지를 표준 방식으로 push/pull하는 저장소"
 date: 2026-04-20
