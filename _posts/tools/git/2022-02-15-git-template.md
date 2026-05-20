@@ -5,6 +5,7 @@ excerpt: "Git 관련 기술 정리"
 date: 2022-02-15
 categories: Git
 tags: [Git, Template]
+ref: git-template
 ---
 
 :bulb: Git 기술에 대한 정리

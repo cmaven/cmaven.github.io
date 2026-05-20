@@ -52,6 +52,12 @@ cmaven_sidebar_en:
         category: "Git"
         url: /en/categories/git
         lang: en
+  - title: "AI"
+    children:
+      - title: "Claude_E"
+        category: "Claude"
+        url: /en/categories/claude
+        lang: en
   - title: "OS"
     children:
       - title: "Windows_E"

@@ -5,6 +5,7 @@ excerpt: "git shortlog --since --before 옵션으로 기간별 커밋 통계를 
 date: 2022-10-31
 categories: Git
 tags: [Git, shortlog, commit, 커밋통계, Contributor, 기간별커밋]
+ref: git-commit-count
 ---
 
 :bulb: Git Commit 결과를 일정 시간 범위로 확인하는 방법을 작성한다.

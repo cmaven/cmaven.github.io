@@ -5,6 +5,7 @@ excerpt: "기존 Git 커밋의 Author 변경 및 CommitDate를 AuthorDate에 맞
 date: 2026-03-05
 categories: Git
 tags: [Git, author, rebase, filter-branch, filter-repo, CommitDate, AuthorDate, git-history]
+ref: git-change-author-and-commitdate
 ---
 
 :bulb: 기존 git history(log)가 있을 때, 커밋 작성자(author)를 변경하고, CommitDate를 AuthorDate에 맞추는 방법을 작성한다.

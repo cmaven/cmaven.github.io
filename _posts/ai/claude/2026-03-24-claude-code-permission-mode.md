@@ -5,6 +5,7 @@ excerpt: "Claude Code 권한 모드 5단계 비교, 실행 방법, 실제 사고
 date: 2026-03-24
 categories: Claude
 tags: [Claude Code, permission, YOLO, bypassPermissions, Docker, 권한모드, 자동승인, 안전사용]
+ref: claude-code-permission-mode
 ---
 
 :bulb: Claude Code는 5가지 권한 모드를 제공한다. 작업 성격에 따라 적절한 모드를 선택하면 생산성과 안전성을 동시에 확보할 수 있다.

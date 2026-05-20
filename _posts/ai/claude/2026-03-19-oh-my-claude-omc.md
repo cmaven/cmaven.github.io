@@ -5,6 +5,7 @@ excerpt: "Claude Code에서 복잡한 작업을 자동으로 전문 에이전트
 date: 2026-03-19
 categories: Claude
 tags: [Claude Code, omc, Oh-My-Claude, Multi-Agent, autopilot, team, ralph, deep-interview, 플러그인, 오케스트레이션]
+ref: oh-my-claude-omc
 ---
 
 :bulb: Claude Code에서 복잡한 작업을 여러 전문 에이전트에게 자동 분배하는 **oh-my-claudecode(omc)** 플러그인의 설치, 명령어, 활용법을 정리한다.

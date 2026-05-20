@@ -5,6 +5,7 @@ excerpt: "Windows와 Linux 간 줄바꿈 문자(LF/CRLF) 차이로 인한 Git wa
 date: 2026-03-18
 categories: Git
 tags: [Git, CRLF, LF, gitattributes, autocrlf, 줄바꿈, line-ending, Windows, Linux]
+ref: git-lf-crlf-warning
 ---
 
 :bulb: Git에서 파일을 add할 때 발생하는 `LF will be replaced by CRLF` 경고의 원인과 해결 방법을 작성한다.

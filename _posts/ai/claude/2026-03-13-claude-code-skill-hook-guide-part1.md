@@ -3,6 +3,7 @@ title: "Claude Code 완벽 가이드 (1부): CLAUDE.md, Skill, Hook 이해하기
 date: 2026-03-13
 categories: Claude
 tags: [Claude Code, Skill, Hook, CLAUDE.md, Agent]
+ref: claude-code-skill-hook-guide-part1
 ---
 
 :bulb: Claude Code로 개발할 때, 대화로 전달한 규칙이 컨텍스트에서 밀려나는 문제를 CLAUDE.md, Skill, Hook 세 가지 레이어로 해결하는 방법을 작성한다. 1부에서는 각 레이어의 개념과 사용법, 최적 조합까지 다룬다.

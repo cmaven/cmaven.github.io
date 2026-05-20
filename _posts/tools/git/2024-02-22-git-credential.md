@@ -5,6 +5,7 @@ excerpt: "SSH Key 생성/등록, git config credential.helper store/cache로 Git
 date: 2024-02-22
 categories: Git
 tags: [Git, SSH, Credential, 인증, Token, credential-helper, ssh-keygen]
+ref: git-credential
 ---
 
 :bulb: 본 문서는 Git 작업 수행에 필요한 credential(인증)에 대해 정리한다.  
