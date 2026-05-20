@@ -5,6 +5,7 @@ excerpt: "인벤토리 등록, SSH/sudo 설정, scale.yml --limit 실행, fact c
 date: 2026-04-22
 categories: K8s
 tags: [Kubernetes, Kubespray, scale.yml, 워커노드, 클러스터확장, Ansible, fact-cache, APT, containerd, Calico]
+ref: kubespray-add-worker-node
 ---
 
 :bulb: 운영 중인 Kubernetes 클러스터에 노드가 부족할 때, Kubespray의 `scale.yml` 플레이북으로 워커 노드를 추가하는 표준 절차와 실전 트러블슈팅을 정리한다.

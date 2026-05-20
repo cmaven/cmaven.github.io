@@ -5,6 +5,7 @@ excerpt: "OS에 보이는 디스크는 Virtual Disk일 수 있다 — RAID Contr
 date: 2026-05-06
 categories: Storage
 tags: [Ubuntu, RAID, MegaRAID, smartctl, smartmontools, SSD, lsblk, lspci, RAID1, SMART, Physical-Disk]
+ref: ubuntu-raid-disk-check-megaraid
 ---
 
 :bulb: Ubuntu 서버 환경에서 디스크 장치, RAID Controller, 그리고 RAID 뒤에 숨겨진 Physical Disk의 상태(SMART)를 확인하는 방법을 정리한다.

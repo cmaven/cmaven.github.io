@@ -5,6 +5,7 @@ excerpt: "SEO 시리즈 4편. Search Console에 남는 잔여 이슈를 4가지 
 date: 2026-05-03
 categories: Github_Blog
 tags: [Jekyll, SEO, Google-Search-Console, noindex, robots-meta, redirect, 404, trailing-slash, minimal-mistakes, SEO-시리즈-4편, SEO-시리즈]
+ref: search-console-noindex-redirect-cleanup
 ---
 
 :bulb: SEO 시리즈 4편. **[1편](/github_blog/gitblog-seo-google-search/)** 의 포스트 단위 SEO, **[2편](/github_blog/jekyll-sitemap-google-indexing-fix/)** 의 `_config.yml` 3줄 수정으로 sitemap 갱신 확보, **[3편](/github_blog/jekyll-sitemap-seo-audit-fix/)** 의 사이트 단위 sitemap 감사를 모두 적용해도 Google Search Console의 색인 보고서에는 여전히 **이슈로 분류되는 URL**이 남는다. 이 글은 그 잔여 이슈를 4가지 분류로 진단하고, **`noindex` 메타태그 자동 출력**과 **navigation trailing slash 정리**로 마무리하는 과정을 정리한다.

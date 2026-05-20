@@ -5,6 +5,7 @@ excerpt: "wsl -u root로 root 접속 후 passwd 명령어로 비밀번호 재설
 date: 2026-04-21
 categories: Windows
 tags: [WSL, Ubuntu, 비밀번호, passwd, root, Windows11, 비밀번호재설정]
+ref: wsl-password-reset
 ---
 
 :bulb: WSL에서 사용자 비밀번호를 잊어버린 경우, root 계정으로 접속하여 비밀번호를 재설정하는 방법을 정리한다.

@@ -5,6 +5,7 @@ excerpt: "AI 모델을 Docker처럼 다루기 — OCI Artifacts로 Docker Hub, H
 date: 2026-05-06
 categories: Docker
 tags: [Docker, OCI, OCI-Artifacts, AI, ModelPack, ModelRunner, LLM, modctl, Modelfile, GGUF, ContainerRegistry, AI-패키징]
+ref: docker-oci-artifacts-ai-model-packaging
 ---
 
 :bulb: Docker가 AI 모델 패키징을 위해 **OCI Artifacts**를 채택했다. 컨테이너 이미지처럼 모델을 다루는 새로운 표준 **ModelPack**과 그 기술적 배경을 정리한다.

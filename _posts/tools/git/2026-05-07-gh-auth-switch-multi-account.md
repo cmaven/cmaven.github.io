@@ -5,6 +5,7 @@ excerpt: "gh auth switch 한 줄로 git push의 인증 주체가 바뀐다. cred
 date: 2026-05-07
 categories: Git
 tags: [GitHub, gh-cli, gh-auth-switch, gh-auth-login, Git, Authentication, credential-helper, PAT, Personal-Access-Token, multi-account, OAuth, HTTPS, GCM, osxkeychain, libsecret]
+ref: gh-auth-switch-multi-account
 ---
 
 :bulb: 직장 계정과 개인 계정, organization별 봇 계정 — 한 머신에서 여러 GitHub 계정을 다뤄야 하는 상황은 의외로 흔하다. 문제는 `git push` 가 일어날 때 git이 **누구의 자격증명**을 보내느냐다. **`gh` CLI를 credential helper로 쓰면 `gh auth switch` 한 줄로 push 주체가 바뀐다.** 이 글은 그 원리와 함정을 정리한다.
