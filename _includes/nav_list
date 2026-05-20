@@ -1,33 +1,47 @@
 {% assign navigation = site.data.navigation[include.nav] %}
-{% comment %} cmaven: 3 {% endcomment %}
-{% assign sum = site.posts | size %}
+{% comment %} cmaven: 3 - 언어별 전체 글 수 카운트 {% endcomment %}
+{% if page.lang == "en" %}
+  {% assign sum_posts = site.posts | where: "lang", "en" %}
+  {% assign sum = sum_posts | size %}
+  {% assign total_label = "Total posts" %}
+{% else %}
+  {% assign sum = site.posts | size %}
+  {% assign total_label = "전체 글 수" %}
+{% endif %}
 
-<nav class="nav__list">  
+<nav class="nav__list">
   {% comment %} cmaven: 6-9 {% endcomment %}
   <li>
-    <span class="nav__total-title">&#128210; 전체 글 수 {{sum}} 개</span>    
-  </li>  
+    <span class="nav__total-title">&#128210; {{ total_label }} {{sum}} {% if page.lang == "en" %}{% else %}개{% endif %}</span>
+  </li>
   {% if page.sidebar.title %}<h3 class="nav__title" style="padding-left: 0;">{{ page.sidebar.title }}</h3>{% endif %}
   <input id="ac-toc" name="accordion-toc" type="checkbox" />
   <label for="ac-toc">{{ site.data.ui-text[site.locale].menu_label | default: "Toggle Menu" }}</label>
   <ul class="nav__items">
     {% for nav in navigation %}
       <li>
-        {% if nav.url %}          
+        {% if nav.url %}
           <a href="{{ nav.url | relative_url }}"><span class="nav__sub-title">{{ nav.title }}</span></a>
-        {% else %}                    
-          <span class="nav__sub-title">{{ nav.title }}</span>            
+        {% else %}
+          <span class="nav__sub-title">{{ nav.title }}</span>
         {% endif %}
 
         {% if nav.children != null %}
         <ul>
           {% for child in nav.children %}
-            {% comment %} cmaven: 25-29 {% endcomment %}
+            {% comment %} cmaven: 25-29 - child.category가 있으면 그것으로 매칭, 없으면 child.title로 매칭. child.lang이 있으면 해당 언어 포스트만 카운트 {% endcomment %}
+            {% assign match_name = child.category | default: child.title %}
             {% for category in site.categories %}
-              {% if category[0] == child.title %}
-                <li><a href="{{ child.url | relative_url }}"{% if child.url == page.url %} class="active"{% endif %}>{{ child.title }} ({{category[1].size}})</a></li>
+              {% if category[0] == match_name %}
+                {% if child.lang %}
+                  {% assign filtered = category[1] | where: "lang", child.lang %}
+                  {% assign child_size = filtered | size %}
+                {% else %}
+                  {% assign child_size = category[1].size %}
+                {% endif %}
+                <li><a href="{{ child.url | relative_url }}"{% if child.url == page.url %} class="active"{% endif %}>{{ child.title }} ({{ child_size }})</a></li>
               {% endif %}
-            {% endfor %}               
+            {% endfor %}
           {% endfor %}
         </ul>
         {% endif %}

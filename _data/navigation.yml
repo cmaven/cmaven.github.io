@@ -18,33 +18,52 @@ main:
     url: /tags/
 
 # English sidebar (영문 페이지 전용 - 영문 콘텐츠 있는 카테고리만 표시)
+# category: 매핑은 실제 site.categories 키와 일치해야 함 (post frontmatter의 categories 값)
 cmaven_sidebar_en:
   - title: "Tech"
     children:
       - title: "Kubernetes_E"
+        category: "K8s"
         url: /en/categories/k8s
+        lang: en
       - title: "Docker_E"
+        category: "Docker"
         url: /en/categories/docker
+        lang: en
       - title: "VM_E"
+        category: "VM"
         url: /en/categories/vm
+        lang: en
       - title: "Storage_E"
+        category: "Storage"
         url: /en/categories/storage
+        lang: en
       - title: "Network_E"
+        category: "Network"
         url: /en/categories/network
+        lang: en
       - title: "Etc_E"
+        category: "Etc"
         url: /en/categories/etc
+        lang: en
   - title: "Tools"
     children:
       - title: "Git_E"
+        category: "Git"
         url: /en/categories/git
+        lang: en
   - title: "OS"
     children:
       - title: "Windows_E"
+        category: "Windows"
         url: /en/categories/windows
+        lang: en
   - title: "Blog"
     children:
       - title: "Github_Blog_E"
+        category: "Github_Blog"
         url: /en/categories/github_blog
+        lang: en
 
 # cmaven links
 cmaven_sidebar:
