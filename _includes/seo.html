@@ -127,6 +127,21 @@
 
 <link rel="canonical" href="{{ canonical_url }}">
 
+{% comment %}
+  hreflang 태그 — 같은 ref 값을 가진 한글/영문 포스트를 상호 연결
+  포스트 frontmatter에 `ref: some-key`를 한글과 영문 양쪽에 동일하게 적어두면 자동 연결됨
+{% endcomment %}
+{% if page.ref %}
+  {% assign translations = site.posts | where: "ref", page.ref %}
+  {% for translation in translations %}
+    <link rel="alternate" hreflang="{{ translation.lang | default: 'ko' }}" href="{{ translation.url | absolute_url }}" />
+  {% endfor %}
+  {% assign default_translation = translations | where: "lang", "ko" | first %}
+  {% if default_translation %}
+    <link rel="alternate" hreflang="x-default" href="{{ default_translation.url | absolute_url }}" />
+  {% endif %}
+{% endif %}
+
 {% if paginator.previous_page %}
   <link rel="prev" href="{{ paginator.previous_page_path | absolute_url }}">
 {% endif %}

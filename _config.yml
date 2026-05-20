@@ -283,7 +283,7 @@ compress_html:
 
 # Defaults
 defaults:
-  # _posts
+  # _posts (모든 포스트 기본값 - 한글)
   - scope:
       path: ""
       #type: posts
@@ -299,4 +299,21 @@ defaults:
       #classes: wide
       toc: true
       toc_sticky: true
+      lang: ko
+  # 영문 포스트 (_posts/en/* 하위) - 별도 permalink + 영문 사이드바
+  - scope:
+      path: "_posts/en"
+      type: posts
+    values:
+      lang: en
+      permalink: /en/:categories/:title/
+      sidebar:
+        nav: "cmaven_sidebar_en"
+  # 영문 페이지 (_pages/en/* 하위)
+  - scope:
+      path: "_pages/en"
+    values:
+      lang: en
+      sidebar:
+        nav: "cmaven_sidebar_en"
 

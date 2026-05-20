@@ -17,6 +17,29 @@ main:
   - title: "Tags"
     url: /tags/
 
+# English sidebar (영문 페이지 전용 - 영문 콘텐츠 있는 카테고리만 표시)
+cmaven_sidebar_en:
+  - title: "Tech"
+    children:
+      - title: "Kubernetes"
+        url: /en/categories/k8s
+      - title: "Docker"
+        url: /en/categories/docker
+      - title: "Storage"
+        url: /en/categories/storage
+  - title: "Tools"
+    children:
+      - title: "Git"
+        url: /en/categories/git
+  - title: "OS"
+    children:
+      - title: "Windows"
+        url: /en/categories/windows
+  - title: "Blog"
+    children:
+      - title: "Github_Blog"
+        url: /en/categories/github_blog
+
 # cmaven links
 cmaven_sidebar:
   - title: "운영체제"
