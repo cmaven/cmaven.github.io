@@ -1,5 +1,5 @@
 ---
-title: "Storage (English)"
+title: "Storage_E"
 layout: archive
 permalink: /en/categories/storage
 author_profile: true

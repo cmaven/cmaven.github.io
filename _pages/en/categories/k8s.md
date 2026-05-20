@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes (English)"
+title: "Kubernetes_E"
 layout: archive
 permalink: /en/categories/k8s
 author_profile: true

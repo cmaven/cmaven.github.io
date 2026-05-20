@@ -1,5 +1,5 @@
 ---
-title: "Git (English)"
+title: "Git_E"
 layout: archive
 permalink: /en/categories/git
 author_profile: true

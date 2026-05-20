@@ -1,5 +1,5 @@
 ---
-title: "Windows (English)"
+title: "Windows_E"
 layout: archive
 permalink: /en/categories/windows
 author_profile: true

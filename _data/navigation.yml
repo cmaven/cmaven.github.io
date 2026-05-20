@@ -21,23 +21,23 @@ main:
 cmaven_sidebar_en:
   - title: "Tech"
     children:
-      - title: "Kubernetes"
+      - title: "Kubernetes_E"
         url: /en/categories/k8s
-      - title: "Docker"
+      - title: "Docker_E"
         url: /en/categories/docker
-      - title: "Storage"
+      - title: "Storage_E"
         url: /en/categories/storage
   - title: "Tools"
     children:
-      - title: "Git"
+      - title: "Git_E"
         url: /en/categories/git
   - title: "OS"
     children:
-      - title: "Windows"
+      - title: "Windows_E"
         url: /en/categories/windows
   - title: "Blog"
     children:
-      - title: "Github_Blog"
+      - title: "Github_Blog_E"
         url: /en/categories/github_blog
 
 # cmaven links

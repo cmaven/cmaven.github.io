@@ -1,5 +1,5 @@
 ---
-title: "Docker (English)"
+title: "Docker_E"
 layout: archive
 permalink: /en/categories/docker
 author_profile: true
