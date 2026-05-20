@@ -5,6 +5,7 @@ excerpt: "일반 포맷으로는 SSD 데이터가 복구 가능하다 — Secure
 date: 2026-04-20
 categories: Storage
 tags: [SSD, Secure-Erase, Windows11, Samsung-Magician, Rufus, DiskPart, 데이터삭제, Frozen, UEFI, 보안삭제]
+ref: ssd-secure-erase-windows11
 ---
 
 :bulb: Windows 11 환경에서 SSD를 복구 불가능 수준으로 완전히 삭제하는 Secure Erase의 개념과 실행 방법을 정리한다.

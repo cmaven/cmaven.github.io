@@ -5,6 +5,7 @@ excerpt: "virt-manager에서 virtiofs로 Host-VM 공유폴더 생성 및 마운�
 date: 2023-09-06
 categories: VM
 tags: [VM, KVM, QEMU, virt-manager, 공유폴더, virtiofs, Shared-Folder, Ubuntu]
+ref: vm-shared-folder
 ---
 
 :bulb: 가상머신(VM)에 Host와 공유폴더를 생성하는 방법을 작성한다.

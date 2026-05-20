@@ -5,6 +5,7 @@ excerpt: "iptables NAT/FORWARD 규칙으로 호스트 서버의 VM에 외부 접
 date: 2024-05-13
 categories: VM
 tags: [VM, KVM, QEMU, iptables, NAT, 포트포워딩, Nginx, virbr0, virt-manager]
+ref: vm-outbound-access
 ---
 
 :bulb: VM 환경(Qemu, KVM) 환경에서 생성한 Ubuntu VM에 접근하는 방법을 작성한다.  

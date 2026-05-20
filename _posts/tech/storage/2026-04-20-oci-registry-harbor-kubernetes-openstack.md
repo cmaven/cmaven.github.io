@@ -5,6 +5,7 @@ excerpt: "Harbor는 Enterprise급 Private OCI Registry — Kubernetes와 OpenSta
 date: 2026-04-20
 categories: Storage
 tags: [OCI, Harbor, Registry, Kubernetes, OpenStack, Glance, Docker, 컨테이너이미지, Nexus, CI-CD]
+ref: oci-registry-harbor-kubernetes-openstack
 ---
 
 :bulb: 컨테이너 이미지를 표준 방식으로 관리하는 OCI Registry의 개념과, 대표적 구현체인 Harbor의 역할, Kubernetes/OpenStack에서의 활용 방법을 정리한다.

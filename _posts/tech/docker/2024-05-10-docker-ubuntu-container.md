@@ -5,6 +5,7 @@ excerpt: "Dockerfile 작성, 이미지 빌드, 컨테이너 실행, Nginx 포트
 date: 2024-05-10
 categories: Docker
 tags: [Docker, Dockerfile, Ubuntu, Nginx, 컨테이너, 포트포워딩, docker-build, docker-run]
+ref: docker-ubuntu-container
 ---
 
 :bulb: Docker 환경에서 Ubuntu 컨테이너를 Dockerfile로 생성하고, 실행하는 방법을 작성한다.  

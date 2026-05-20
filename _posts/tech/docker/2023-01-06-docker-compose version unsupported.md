@@ -5,6 +5,7 @@ excerpt: "docker-compose.yml version unsupported 오류 원인 및 재설치 해
 date: 2023-01-06
 categories: Docker
 tags: [Docker, Docker-compose, 버전오류, Ubuntu, 재설치, troubleshooting]
+ref: docker-compose-version-unsupported
 ---
 
 :bulb: docker-compose 명령어 수행 시, version ... is unsupported 해결 방법을 작성한다.

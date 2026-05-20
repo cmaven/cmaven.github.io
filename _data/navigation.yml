@@ -25,8 +25,14 @@ cmaven_sidebar_en:
         url: /en/categories/k8s
       - title: "Docker_E"
         url: /en/categories/docker
+      - title: "VM_E"
+        url: /en/categories/vm
       - title: "Storage_E"
         url: /en/categories/storage
+      - title: "Network_E"
+        url: /en/categories/network
+      - title: "Etc_E"
+        url: /en/categories/etc
   - title: "Tools"
     children:
       - title: "Git_E"

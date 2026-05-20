@@ -5,6 +5,7 @@ excerpt: "VM Clone 후 DHCP IP 할당 실패 원인(machine-id)과 해결 방법
 date: 2024-02-29
 categories: VM
 tags: [VM, KVM, QEMU, Clone, DHCP, machine-id, IP충돌, virt-manager]
+ref: vm-clone-ip-share
 ---
 
 :bulb: Ubuntu, KVM, Virt-manager를 사용하는 환경에서, 기존의 가상머신을 복제(Clone)할 경우, DHCP 서버에서 IP를 할당 받지 못하는 문제가 발생한다.  

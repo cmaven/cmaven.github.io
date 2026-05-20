@@ -5,6 +5,7 @@ excerpt: "Error: cannot open display: localhost:10.0 — Snap Firefox의 XAUTHOR
 date: 2026-04-15
 categories: Etc
 tags: [MobaXterm, X11, Firefox, Snap, xauth, XAUTHORITY, Ubuntu, cannot-open-display, 원격데스크톱, 한글폰트]
+ref: mobaxterm-firefox-x11-forwarding
 ---
 
 :bulb: Windows MobaXterm에서 SSH + X11 포워딩으로 Ubuntu 서버의 Snap Firefox를 실행하면서 겪은 인증 오류와 해결 과정을 정리한다.
