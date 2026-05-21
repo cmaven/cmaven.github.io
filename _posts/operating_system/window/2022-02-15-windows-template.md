@@ -5,6 +5,7 @@ excerpt: "Windows 관련 기술 정리"
 date: 2022-02-15
 categories: Windows
 tags: [Windows, Template]
+ref: windows-template
 ---
 
 :bulb: Windows 기술에 대한 정리

@@ -48,9 +48,17 @@ cmaven_sidebar_en:
         lang: en
   - title: "Tools"
     children:
+      - title: "VScode_E"
+        category: "VScode"
+        url: /en/categories/vscode
+        lang: en
       - title: "Git_E"
         category: "Git"
         url: /en/categories/git
+        lang: en
+      - title: "Excel_E"
+        category: "Excel"
+        url: /en/categories/excel
         lang: en
   - title: "Programming"
     children:

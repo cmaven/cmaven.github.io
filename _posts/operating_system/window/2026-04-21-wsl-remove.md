@@ -5,6 +5,7 @@ excerpt: "wsl --unregister로 배포판 삭제, wsl --uninstall로 전체 제거
 date: 2026-04-21
 categories: Windows
 tags: [WSL, Ubuntu, 삭제, unregister, uninstall, Windows11, 초기화, 재설치]
+ref: wsl-remove
 ---
 
 :bulb: WSL 삭제는 특정 배포판만 삭제하는 것과 WSL 기능 자체를 제거하는 것으로 구분된다. 각 방법을 정리한다.

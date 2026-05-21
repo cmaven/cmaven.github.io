@@ -1,24 +1,24 @@
 ---
-title: "Visual Studio Code(VS Code) 파일 분할 컴파일"
-description: "VS Code tasks.json에서 Variables Reference를 활용하여 동일 디렉토리 내 분할된 C/C++ 파일을 컴파일하는 방법"
-excerpt: "VS Code tasks.json으로 같은 디렉토리의 분할 파일을 한 번에 컴파일하기"
+title: "Visual Studio Code (VS Code) — Multi-File Compilation"
+description: "How to compile split C/C++ files within the same directory using Variables Reference in VS Code tasks.json"
+excerpt: "Compile all files in the same directory at once using VS Code tasks.json"
 date: 2018-06-18
 categories: VScode
-tags: [VSCode, tasks.json, C++, gcc, g++, 분할컴파일, Variables-Reference]
+tags: [VSCode, tasks.json, C++, gcc, g++, multi-file-compile, Variables-Reference]
 ref: VS-Code-Multi-Compile
 ---
 
-:bulb: Visual Studio Code에서 동일 디렉토리 내의 분할된 파일 컴파일에 대해 정리한다.
+:bulb: This post covers how to compile split source files within the same directory in Visual Studio Code.
 {: .notice--info}
 
 # [01] Variables Reference
 
-- VS Code의 tasks.json 내부에 작성 가능한 Variables Reference
+- Variables Reference that can be used inside VS Code's tasks.json
   - [VS Code Variables Reference](https://code.visualstudio.com/docs/editor/variables-reference){:target="_blank"}
 
-# [02] tasks.json 작성
+# [02] Writing tasks.json
 
-- 핵심: `"${fileDirname}/*${fileExtname}"`으로 동일 디렉토리의 같은 확장자 파일을 모두 포함
+- Key idea: `"${fileDirname}/*${fileExtname}"` includes every file with the same extension in the same directory
 
 ```json
 {
@@ -28,7 +28,7 @@ ref: VS-Code-Multi-Compile
     "echoCommand": true,
     "presentation" : { "reveal": "always" },
     "tasks": [
-          //C++ 컴파일 - groups
+          //C++ compile - groups
           {
             "label": "save_and_compile_for_C++-groups",
             "command": "g++",
@@ -53,7 +53,7 @@ ref: VS-Code-Multi-Compile
                 }
             }
         },
-          //C++ 컴파일 - single
+          //C++ compile - single
           {
             "label": "save_and_compile_for_C++-single",
             "command": "g++",
@@ -78,7 +78,7 @@ ref: VS-Code-Multi-Compile
                 }
             }
         },
-        //C 컴파일
+        //C compile
         {
             "label": "save_and_compile_for_C",
             "command": "gcc",
@@ -103,7 +103,7 @@ ref: VS-Code-Multi-Compile
                 }
             }
         },
-        // 바이너리 실행
+        // Run the binary
         {
             "label": "execute",
             "command": "cmd",

@@ -5,6 +5,7 @@ excerpt: "\\wsl$, /mnt/c 경로부터 네트워크 드라이브 매핑, VS Code 
 date: 2026-03-26
 categories: Windows
 tags: [WSL, WSL2, 파일접근, 디렉토리, mnt, wsl$, VS-Code, 네트워크드라이브, explorer]
+ref: wsl-directory-access-guide
 ---
 
 :bulb: WSL Ubuntu의 파일을 Windows에서 찾고, 반대로 Ubuntu에서 Windows 파일에 접근하는 양방향 경로와 실전 활용법을 정리한다.

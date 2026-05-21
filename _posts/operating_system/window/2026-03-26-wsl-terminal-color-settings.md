@@ -5,6 +5,7 @@ excerpt: "WSL 프로필과 Ubuntu 프로필의 색 구성표 차이를 이해하
 date: 2026-03-26
 categories: Windows
 tags: [WSL, Windows-Terminal, 색상설정, Ubuntu, Color-Scheme, settings.json, 터미널]
+ref: wsl-terminal-color-settings
 ---
 
 :bulb: Windows Terminal에서 WSL을 열었을 때 검은 화면이 나오는 원인과, Ubuntu 보라색 배경 테마를 적용하는 방법을 정리한다.
