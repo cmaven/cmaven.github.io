@@ -1,7 +1,12 @@
+{% assign t_lang = page.lang | default: 'ko-KR' %}
+{% if t_lang == 'en' %}{% assign t_locale = 'en' %}{% else %}{% assign t_locale = 'ko-KR' %}{% endif %}
+{% assign ui = site.data.ui-text[t_locale] %}
+{% if page.lang == 'en' %}{% assign site_name_localized = "Blog" %}{% else %}{% assign site_name_localized = site.name | default: site.title %}{% endif %}
+
 <div class="page__footer-follow">
   <ul class="social-icons">
-    {% if site.data.ui-text[site.locale].follow_label %}
-      <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
+    {% if ui.follow_label %}
+      <li><strong>{{ ui.follow_label }}</strong></li>
     {% endif %}
 
     {% if site.footer.links %}
@@ -13,9 +18,9 @@
     {% endif %}
 
     {% unless site.atom_feed.hide %}
-      <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | relative_url }}{% endif %}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
+      <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | relative_url }}{% endif %}"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> {{ ui.feed_label | default: "Feed" }}</a></li>
     {% endunless %}
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. {{ site.data.ui-text[site.locale].powered_by | default: "Powered by" }} <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; {{ site.time | date: '%Y' }} {{ site_name_localized }}. {{ ui.powered_by | default: "Powered by" }} <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>

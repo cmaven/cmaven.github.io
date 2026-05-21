@@ -2,6 +2,10 @@
 layout: default
 ---
 
+{% assign t_lang = page.lang | default: 'ko-KR' %}
+{% if t_lang == 'en' %}{% assign t_locale = 'en' %}{% else %}{% assign t_locale = 'ko-KR' %}{% endif %}
+{% assign ui = site.data.ui-text[t_locale] %}
+
 {% if page.header.overlay_color or page.header.overlay_image or page.header.image %}
   {% include page__hero.html %}
 {% elsif page.header.video.id and page.header.video.provider %}
@@ -51,18 +55,18 @@ layout: default
         {% if page.toc %}
           <aside class="sidebar__right {% if page.toc_sticky %}sticky{% endif %}">
             <nav class="toc">
-              <header><h4 class="nav__title"><i class="fas fa-{{ page.toc_icon | default: 'file-alt' }}"></i> {{ page.toc_label | default: site.data.ui-text[site.locale].toc_label | default: "On this page" }}</h4></header>
+              <header><h4 class="nav__title"><i class="fas fa-{{ page.toc_icon | default: 'file-alt' }}"></i> {{ page.toc_label | default: ui.toc_label | default: "On this page" }}</h4></header>
               {% include toc.html sanitize=true html=content h_min=1 h_max=6 class="toc__menu" skip_no_ids=true %}
             </nav>
           </aside>
         {% endif %}
         {{ content }}
-        {% if page.link %}<div><a href="{{ page.link }}" class="btn btn--primary">{{ site.data.ui-text[site.locale].ext_link_label | default: "Direct Link" }}</a></div>{% endif %}
+        {% if page.link %}<div><a href="{{ page.link }}" class="btn btn--primary">{{ ui.ext_link_label | default: "Direct Link" }}</a></div>{% endif %}
       </section>
 
       <footer class="page__meta">
-        {% if site.data.ui-text[site.locale].meta_label %}
-          <h4 class="page__meta-title">{{ site.data.ui-text[site.locale].meta_label }}</h4>
+        {% if ui.meta_label %}
+          <h4 class="page__meta-title">{{ ui.meta_label }}</h4>
         {% endif %}
         {% include page__taxonomy.html %}
         {% include page__date.html %}
@@ -79,11 +83,13 @@ layout: default
   </article>
 
   {% comment %}<!-- only show related on a post page when `related: true` -->{% endcomment %}
-  {% if page.id and page.related and site.related_posts.size > 0 %}
+  {% assign lang_related_posts = site.posts | where: "lang", page.lang %}
+  {% if page.id and page.related and lang_related_posts.size > 0 %}
     <div class="page__related">
-      <h2 class="page__related-title">{{ site.data.ui-text[site.locale].related_label | default: "You May Also Enjoy" }}</h2>
+      <h2 class="page__related-title">{{ ui.related_label | default: "You May Also Enjoy" }}</h2>
       <div class="grid__wrapper">
-        {% for post in site.related_posts limit:4 %}
+        {% for post in lang_related_posts limit:4 %}
+          {% if post.id == page.id %}{% continue %}{% endif %}
           {% include archive-single.html type="grid" %}
         {% endfor %}
       </div>
@@ -91,7 +97,7 @@ layout: default
   {% comment %}<!-- otherwise show recent posts if no related when `related: true` -->{% endcomment %}
   {% elsif page.id and page.related %}
     <div class="page__related">
-      <h2 class="page__related-title">{{ site.data.ui-text[site.locale].related_label | default: "You May Also Enjoy" }}</h2>
+      <h2 class="page__related-title">{{ ui.related_label | default: "You May Also Enjoy" }}</h2>
       <div class="grid__wrapper">
         {% for post in site.posts limit:4 %}
           {% if post.id == page.id %}

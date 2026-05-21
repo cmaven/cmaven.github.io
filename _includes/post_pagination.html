@@ -1,5 +1,9 @@
+{% assign t_lang = page.lang | default: 'ko-KR' %}
+{% if t_lang == 'en' %}{% assign t_locale = 'en' %}{% else %}{% assign t_locale = 'ko-KR' %}{% endif %}
+{% assign ui = site.data.ui-text[t_locale] %}
+
 {% assign cat = page.categories[0] %}
-{% assign cat_list = site.categories[cat] %}
+{% assign cat_list = site.categories[cat] | where: "lang", page.lang %}
 {% for post in cat_list %}
   {% if post.url == page.url %}
   	{% assign prevIndex = forloop.index0 | minus: 1 %}
@@ -17,14 +21,14 @@
 {% if prev_post or next_post %}
   <nav class="pagination_prev_next">
     {% if prev_post %}
-      <a href="{{ prev_post.url }}" class="pagination_prev_next--pager"><span class="prev_next" style="color:black">이전 글 </span>{{ prev_post.title }}</a>
+      <a href="{{ prev_post.url }}" class="pagination_prev_next--pager"><span class="prev_next" style="color:black">{% if t_lang == 'en' %}{{ ui.pagination_previous | default: "Previous" }} {% else %}이전 글 {% endif %}</span>{{ prev_post.title }}</a>
     {% else %}
-      <a href="#" class="pagination_prev_next--pager disabled">첫 번째 글입니다</a>
+      <a href="#" class="pagination_prev_next--pager disabled">{% if t_lang == 'en' %}First post{% else %}첫 번째 글입니다{% endif %}</a>
     {% endif %}
     {% if next_post %}
-      <a href="{{ next_post.url }}" class="pagination_prev_next--pager"><span class="prev_next" style="color:black">다음 글 </span>{{ next_post.title }}</a>
+      <a href="{{ next_post.url }}" class="pagination_prev_next--pager"><span class="prev_next" style="color:black">{% if t_lang == 'en' %}{{ ui.pagination_next | default: "Next" }} {% else %}다음 글 {% endif %}</span>{{ next_post.title }}</a>
     {% else %}
-      <a href="#" class="pagination_prev_next--pager disabled">가장 최근 글입니다</a>
+      <a href="#" class="pagination_prev_next--pager disabled">{% if t_lang == 'en' %}Latest post{% else %}가장 최근 글입니다{% endif %}</a>
     {% endif %}
   </nav>
 {% endif %}
