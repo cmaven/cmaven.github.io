@@ -5,6 +5,7 @@ excerpt: "Kubernetes 관련 기술 정리"
 date: 2022-02-15
 categories: K8s
 tags: [Kubernetes, K8s, Container, Template]
+ref: k8s-template
 ---
 
 :bulb: Kubernetes 기술에 대한 정리

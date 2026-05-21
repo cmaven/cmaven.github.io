@@ -11,7 +11,7 @@ ref: claude-code-skill-hook-guide-part1
 :bulb: When coding with Claude Code, rules conveyed only through chat tend to fall out of the context window. This post explains how to solve that with three layers — CLAUDE.md, Skill, and Hook. Part 1 covers the concept and usage of each layer, plus the optimal combination.
 {: .notice--info}
 
-:bulb: Project application, verification methods, advanced structures, Agent Team collaboration, and FAQ are covered in [Part 2](/claude/claude-code-skill-hook-guide-part2/).
+:bulb: Project application, verification methods, advanced structures, Agent Team collaboration, and FAQ are covered in [Part 2](/en/claude/claude-code-skill-hook-guide-part2/).
 {: .notice}
 
 # [01] Why Is This Needed?
@@ -432,5 +432,5 @@ Why all three?
 
 ---
 
-:bulb: Project application, verification, advanced structures, Agent Team collaboration, and FAQ continue in [Part 2](/claude/claude-code-skill-hook-guide-part2/).
+:bulb: Project application, verification, advanced structures, Agent Team collaboration, and FAQ continue in [Part 2](/en/claude/claude-code-skill-hook-guide-part2/).
 {: .notice}

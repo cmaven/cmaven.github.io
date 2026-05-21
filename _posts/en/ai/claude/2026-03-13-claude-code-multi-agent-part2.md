@@ -11,7 +11,7 @@ ref: claude-code-multi-agent-part2
 :bulb: This post covers automation scripts, inter-agent communication strategies, a full-stack hands-on example, and an FAQ for the Multi-Agent environment.
 {: .notice--info}
 
-:bulb: For the Multi-Agent concept, core tools (tmux, git worktree), and practical setup, see [Part 1](/claude/claude-code-multi-agent-part1/).
+:bulb: For the Multi-Agent concept, core tools (tmux, git worktree), and practical setup, see [Part 1](/en/claude/claude-code-multi-agent-part1/).
 {: .notice}
 
 ---

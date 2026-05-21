@@ -13,9 +13,9 @@ ref: gitblog-seo-google-search
 
 :bulb: **SEO series overview**
 - **Part 1 (this post)** — Per-post SEO: frontmatter, `jekyll-seo-tag`, permalink and filenames
-- **[Part 2](/github_blog/jekyll-sitemap-google-indexing-fix/)** — Making sure the sitemap updates properly: diagnosing and fixing 3 missing lines in `_config.yml` (`url`, `future`, `timezone`)
-- **[Part 3](/github_blog/jekyll-sitemap-seo-audit-fix/)** — Site-wide SEO audit: sitemap quality, verification meta tags, bulk-filling missing descriptions, 404 and archive cleanup
-- **[Part 4](/github_blog/search-console-noindex-redirect-cleanup/)** — Clearing remaining Google Search Console issues: diagnosing 404, redirect, and "Crawled - currently not indexed" buckets and applying `noindex` meta tags
+- **[Part 2](/en/github_blog/jekyll-sitemap-google-indexing-fix/)** — Making sure the sitemap updates properly: diagnosing and fixing 3 missing lines in `_config.yml` (`url`, `future`, `timezone`)
+- **[Part 3](/en/github_blog/jekyll-sitemap-seo-audit-fix/)** — Site-wide SEO audit: sitemap quality, verification meta tags, bulk-filling missing descriptions, 404 and archive cleanup
+- **[Part 4](/en/github_blog/search-console-noindex-redirect-cleanup/)** — Clearing remaining Google Search Console issues: diagnosing 404, redirect, and "Crawled - currently not indexed" buckets and applying `noindex` meta tags
 {: .notice}
 
 # [01] What is SEO?
@@ -263,6 +263,6 @@ When writing a new post, going through this list will boost search traffic from 
 
 Part 1 covered only what you can finish at the **per-post level**. However, you may notice that pushing new posts does **not refresh the sitemap `Last read` in Google Search Console and new posts go un-indexed**. Before chasing generic causes (crawl budget, content quality), this can be a concrete code-level issue: missing `_config.yml` settings.
 
-In [Part 2](/github_blog/jekyll-sitemap-google-indexing-fix/), I walk through the diagnosis and fix for **3 missing lines in `_config.yml`** (`url`, `future`, `timezone`) that turn out to be the real cause of stale sitemaps and missing indexing.
+In [Part 2](/en/github_blog/jekyll-sitemap-google-indexing-fix/), I walk through the diagnosis and fix for **3 missing lines in `_config.yml`** (`url`, `future`, `timezone`) that turn out to be the real cause of stale sitemaps and missing indexing.
 
-Then [Part 3](/github_blog/jekyll-sitemap-seo-audit-fix/) raises **sitemap quality** itself site-wide (removing low-value URLs, verification meta tags, filling missing descriptions, 404 pages, etc.) now that the sitemap actually updates. [Part 4](/github_blog/search-console-noindex-redirect-cleanup/) wraps up the 4 remaining Search Console issue categories with `noindex` and trailing-slash cleanup.
+Then [Part 3](/en/github_blog/jekyll-sitemap-seo-audit-fix/) raises **sitemap quality** itself site-wide (removing low-value URLs, verification meta tags, filling missing descriptions, 404 pages, etc.) now that the sitemap actually updates. [Part 4](/en/github_blog/search-console-noindex-redirect-cleanup/) wraps up the 4 remaining Search Console issue categories with `noindex` and trailing-slash cleanup.

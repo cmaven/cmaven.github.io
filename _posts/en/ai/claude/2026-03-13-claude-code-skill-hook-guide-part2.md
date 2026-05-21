@@ -11,7 +11,7 @@ ref: claude-code-skill-hook-guide-part2
 :bulb: This post covers how to apply CLAUDE.md, Skill, and Hook to real projects, advanced skill structures, Agent Team collaboration, and FAQ.
 {: .notice--info}
 
-:bulb: For the concepts and usage of the 3 layers, see [Part 1](/claude/claude-code-skill-hook-guide-part1/).
+:bulb: For the concepts and usage of the 3 layers, see [Part 1](/en/claude/claude-code-skill-hook-guide-part1/).
 {: .notice}
 
 # [08] Applying to a Project (Step by Step)

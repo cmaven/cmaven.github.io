@@ -11,7 +11,7 @@ ref: claude-code-multi-agent-part1
 :bulb: This post explains how to run multiple agents in parallel within a single project using the Claude Code CLI. Part 1 covers the Multi-Agent concept, the core tools, and the practical setup.
 {: .notice--info}
 
-:bulb: Automation scripts, inter-agent communication strategies, hands-on examples, and FAQ are covered in [Part 2](/claude/claude-code-multi-agent-part2/).
+:bulb: Automation scripts, inter-agent communication strategies, hands-on examples, and FAQ are covered in [Part 2](/en/claude/claude-code-multi-agent-part2/).
 {: .notice}
 
 ---
@@ -144,7 +144,7 @@ Ctrl+b  q  number    # Jump to a pane by number
 tmux attach -t multi-agent
 ```
 
-:bulb: For detailed tmux usage, see this separate post: [tmux basic usage](/linux/2026-03-06-tmux-basic/)
+:bulb: For detailed tmux usage, see this separate post: [tmux basic usage](/en/linux/tmux-basic/)
 {: .notice--info}
 
 ### Section Summary
@@ -469,5 +469,5 @@ tmux kill-session -t multi-agent
 
 ---
 
-:bulb: Automation scripts, inter-agent communication strategies, hands-on examples, and FAQ continue in [Part 2](/claude/claude-code-multi-agent-part2/).
+:bulb: Automation scripts, inter-agent communication strategies, hands-on examples, and FAQ continue in [Part 2](/en/claude/claude-code-multi-agent-part2/).
 {: .notice}

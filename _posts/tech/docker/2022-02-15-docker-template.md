@@ -5,6 +5,7 @@ excerpt: "Docker 관련 기술 정리"
 date: 2022-02-15
 categories: Docker
 tags: [Docker, Container, Template]
+ref: docker-template
 ---
 
 :bulb: Docker 기술에 대한 정리

@@ -3,7 +3,7 @@ title: "MDX vs MD 기반 블로그: 렌더링 성능 차이와 선택 기준"
 description: "MDX 기반 문서 포털의 느린 렌더링 원인을 분석하고, MD 기반 솔루션과의 성능 차이, VitePress 등 대안을 비교 정리"
 excerpt: "MDX 빌드 파이프라인 15~30초 vs MD 렌더링 수백ms — 왜 이렇게 차이가 나는지, 어떤 상황에 무엇을 선택해야 하는지"
 date: 2026-04-08
-categories: Blog
+categories: Github_Blog
 tags: [MDX, Markdown, VitePress, Fumadocs, Next.js, 렌더링성능, SSG, Docker, MkDocs, Hugo]
 ref: mdx-vs-md-blog-rendering-performance
 ---

@@ -144,7 +144,7 @@ Ctrl+b  q  번호     # 번호로 패널 이동
 tmux attach -t multi-agent
 ```
 
-:bulb: tmux 상세 사용법은 별도 포스트를 참고: [tmux 기본 사용법](/linux/2026-03-06-tmux-basic/)
+:bulb: tmux 상세 사용법은 별도 포스트를 참고: [tmux 기본 사용법](/linux/tmux-basic/)
 {: .notice--info}
 
 ### 절 요약
