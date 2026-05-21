@@ -1,19 +1,19 @@
 ---
-title: "우분투(Linux)에서 하드디스크(HDD) 완전 삭제"
-description: "Ubuntu에서 shred, badblocks, dd 명령어를 사용하여 하드디스크를 완전 삭제(로우 포맷)하는 방법"
-excerpt: "shred, badblocks, dd를 활용한 Linux 하드디스크 완전 삭제(데이터 복구 불가) 방법"
-categories: Linux
-tags: [Ubuntu, shred, badblocks, dd, HDD, 디스크삭제, 로우포맷, 데이터삭제]
+title: "Securely Erasing a Hard Disk (HDD) on Ubuntu (Linux)"
+description: "How to securely erase a hard disk (low-level format) on Ubuntu using shred, badblocks, and dd"
+excerpt: "How to securely erase a Linux hard disk (unrecoverable) using shred, badblocks, and dd"
 date: 2023-01-02
+categories: Linux
+tags: [Ubuntu, shred, badblocks, dd, HDD, disk-erase, low-level-format, data-wipe]
 ref: ubuntu-disk-erase
 ---
 
-:bulb: 우분투에서 하드디스크를 완전 삭제(데이터 복구 불가)하는 방법을 작성한다.
+:bulb: This guide describes how to securely erase a hard disk on Ubuntu (so the data cannot be recovered).
 {: .notice--info}
 
-📘 Ubuntu 24.04 기준
+Based on Ubuntu 24.04.
 
-# [01] 요약
+# [01] Summary
 
 ```shell
 sudo shred -v -z -n3 /dev/sdx
@@ -23,22 +23,22 @@ dd if=/dev/urandom of=/dev/sdx bs=1M
 
 # [02] shred
 
-> 데이터 복구가 어렵도록, 실제 데이터를 쓰고/지우는 것을 반복하는(default 3) 명령어
+> A command that repeatedly writes and erases real data (3 passes by default) to make data recovery difficult.
 
-## 2-1. 설치
+## 2-1. Install
 
 ```shell
 apt-get install coreutils
 ```
 
-## 2-2. 디스크 삭제 준비
+## 2-2. Prepare the Disk for Erasure
 
-디스크 확인:
+Check the disks:
 
 ```shell
 lsblk
 
-# ex) sdg, sdf 를 삭제하고자 함
+# ex) Targeting sdg and sdf for erasure
 root@gedgem01:~# lsblk
 NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 loop0                       7:0    0  55.6M  1 loop /snap/core18/2654
@@ -59,16 +59,16 @@ sdf                         8:80   0   1.8T  0 disk
 sdg                         8:96   0   1.8T  0 disk
 ```
 
-파티션이 존재하면 삭제:
+If partitions exist, delete them first:
 
 ```shell
-# sdx는 삭제하려는 파티션이 존재하는 디스크
+# sdx is the disk holding the partitions you want to remove
 fdisk /dev/sdx
 
 # ex)
-# 파티션 확인 command (p)
-# 파티션 삭제 command (d)
-# 실행 내용 저장 command (w)
+# Print partitions command (p)
+# Delete partition command (d)
+# Save changes command (w)
 root@gedgem01:~# fdisk /dev/sdf
 
 Welcome to fdisk (util-linux 2.34).
@@ -125,42 +125,42 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 ```
 
-## 2-3. 디스크 삭제
+## 2-3. Erase the Disk
 
-- `-v` : 진행사항을 보여줌
-- `-n1` : 반복하여 쓰기/지우기를 수행할 횟수(default 3)
-- `-z` : 마지막 쓰기 시, Zero 값으로 덮어쓰기
+- `-v` : show progress
+- `-n1` : number of write/erase iterations to perform (default is 3)
+- `-z` : overwrite with zeros on the final pass
 
 ```shell
 sudo shred -v -z -n3 /dev/sdx
 ```
 
-:small_blue_diamond:참조: [How can I securely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){:target="_blank"}
-:small_blue_diamond:참조: [shred - Linux man page](https://linux.die.net/man/1/shred){:target="_blank"}
+:small_blue_diamond:Reference: [How can I securely erase a hard drive?](https://askubuntu.com/questions/17640/how-can-i-securely-erase-a-hard-drive){:target="_blank"}
+:small_blue_diamond:Reference: [shred - Linux man page](https://linux.die.net/man/1/shred){:target="_blank"}
 
 # [03] badblocks
 
-> 디스크의 배드블럭(물리적으로 손상된 부분)을 찾을 때 사용하는 명령어. 랜덤 값을 디스크에 쓰면서 배드블럭 여부를 확인하는 기능을 활용한다.
+> A command used to find bad blocks (physically damaged areas) on a disk. It writes random values to the disk and reads them back to detect bad blocks, and we leverage that behavior for secure erasure.
 
-## 3-1. 설치
+## 3-1. Install
 
 ```shell
 apt-get install e2fsprogs
 ```
 
-## 3-2. 디스크 삭제
+## 3-2. Erase the Disk
 
-- `-w` : 랜덤 값(0xaa, 0x55, 0xff, 0x00)을 장치의 모든 블럭에 쓰고(Write) 읽은 후, 서로 비교하여 배드블럭 유무를 판단
-- `-c` : 한 번에 테스트할 블럭의 크기 (default 64)
+- `-w` : write random values (0xaa, 0x55, 0xff, 0x00) to every block on the device, read them back, and compare to determine whether bad blocks exist
+- `-c` : the number of blocks tested at once (default is 64)
 
 ```shell
-# block size는 512, 4096, 32768 등
+# Typical block sizes are 512, 4096, 32768, etc.
 sudo badblocks -w -c 600 /dev/sdx
 ```
 
 # [04] dd
 
-> 일반적으로 리눅스 환경에서 로우 포맷용으로 활용. random 쓰기로 장치에 입력한다.
+> Commonly used on Linux for low-level formatting. Writes random data to the device.
 
 ```shell
 dd if=/dev/urandom of=/dev/sdx bs=1M

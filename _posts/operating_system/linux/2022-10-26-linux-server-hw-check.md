@@ -5,6 +5,7 @@ excerpt: "dmidecode, lscpu, lshw, lsblk 등을 활용한 Linux 서버 하드웨�
 categories: Linux
 tags: [Ubuntu, CPU, Memory, Disk, Network, GPU, dmidecode, lscpu, lshw, 하드웨어확인]
 date: 2022-10-26
+ref: linux-server-hw-check
 ---
 
 :bulb: 서버에 장착된 CPU, Memory, Disk, Network Interface Card, GPU 등 하드웨어 정보를 확인하는 방법을 작성한다.

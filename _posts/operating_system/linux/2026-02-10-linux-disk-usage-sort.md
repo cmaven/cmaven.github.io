@@ -5,6 +5,7 @@ excerpt: "du -h --max-depth=1 | sort -hr 명령어로 디렉토리 용량을 한
 date: 2026-02-10
 categories: Linux
 tags: [Linux, Ubuntu, du, sort, 디스크용량, 디렉토리, 용량확인]
+ref: linux-disk-usage-sort
 ---
 
 :bulb: Linux 서버에서 디스크 용량이 부족할 때, 어느 디렉토리가 큰지 빠르게 파악하는 `du` + `sort` 조합을 정리한다.

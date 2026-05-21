@@ -1,22 +1,22 @@
 ---
-title: "Ubuntu Desktop/Server 설치 버전 확인 방법"
-description: "설치된 Ubuntu가 Desktop인지 Server인지 확인하는 방법과 운영체제 버전, 커널 버전 확인 명령어"
-excerpt: "dpkg -l ubuntu-desktop 명령으로 Ubuntu Desktop/Server 구분 및 운영체제, 커널 버전 확인법"
+title: "How to Tell If Ubuntu Is Desktop or Server"
+description: "Commands to check whether the installed Ubuntu is Desktop or Server, plus how to check OS and kernel versions"
+excerpt: "Use dpkg -l ubuntu-desktop to distinguish Ubuntu Desktop from Server, and inspect the OS and kernel versions"
 categories: Linux
-tags: [Ubuntu, Desktop, Server, dpkg, uname, 버전확인]
+tags: [Ubuntu, Desktop, Server, dpkg, uname, version-check]
 date: 2022-10-27
 ref: ubuntu-desktop-server-check
 ---
 
-:bulb: 설치된 우분투 버전과 해당 버전이 Ubuntu-Desktop인지, Ubuntu-Server인지 확인하는 방법을 작성한다.
+:bulb: This post describes how to check the installed Ubuntu version and whether it is Ubuntu Desktop or Ubuntu Server.
 {: .notice--info}
 
-# [01] Ubuntu Desktop / Server 확인
+# [01] Check Ubuntu Desktop vs. Server
 
 ```shell
 dpkg -l ubuntu-desktop
 
-# ubuntu-desktop일 경우
+# When it is ubuntu-desktop
 root@gedgeworker1:~# dpkg -l ubuntu-desktop
 Desired=Unknown/Install/Remove/Purge/Hold
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
@@ -25,7 +25,7 @@ Desired=Unknown/Install/Remove/Purge/Hold
 +++-==============-============-============-=================================
 ii  ubuntu-desktop 1.450.2      amd64        The Ubuntu desktop system
 
-# ubuntu-server일 경우
+# When it is ubuntu-server
 root@gedgemaster:~# dpkg -l ubuntu-desktop
 dpkg-query: no packages found matching ubuntu-desktop
 ```
@@ -34,12 +34,12 @@ dpkg-query: no packages found matching ubuntu-desktop
 
 ![2022-10-27 13 55 07](https://user-images.githubusercontent.com/76153041/198195542-2f340929-f0a7-404b-828d-aeb6ea75fd71.png)
 
-# [02] 설치된 운영체제 확인
+# [02] Check the Installed OS
 
 ```shell
 cat /etc/*release
 
-# 출력 예
+# Sample output
 root@gedgeworker1:~# cat /etc/*release
 DISTRIB_ID=Ubuntu
 DISTRIB_RELEASE=24.04
@@ -59,12 +59,12 @@ VERSION_CODENAME=noble
 UBUNTU_CODENAME=noble
 ```
 
-# [03] 설치된 커널 버전 확인
+# [03] Check the Kernel Version
 
 ```shell
 uname -a
 
-# 출력 예
+# Sample output
 root@gedgeworker1:~# uname -a
 Linux gedgeworker1 5.4.0-125-generic #141-Ubuntu SMP Wed Aug 10 13:42:03 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
 ```

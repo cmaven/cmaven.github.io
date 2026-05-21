@@ -74,6 +74,10 @@ cmaven_sidebar_en:
         lang: en
   - title: "OS"
     children:
+      - title: "Linux_E"
+        category: "Linux"
+        url: /en/categories/linux
+        lang: en
       - title: "Windows_E"
         category: "Windows"
         url: /en/categories/windows

@@ -5,6 +5,7 @@ excerpt: "hostnamectl set-hostname 명령으로 Ubuntu 호스트 이름을 변�
 categories: Linux
 tags: [Ubuntu, hostname, hostnamectl, 호스트이름변경]
 date: 2022-11-02
+ref: ubuntu-hostname
 ---
 
 :bulb: 우분투의 호스트 이름(hostname)을 변경하는 방법을 작성한다.

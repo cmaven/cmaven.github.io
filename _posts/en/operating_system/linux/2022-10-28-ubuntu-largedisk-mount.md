@@ -1,22 +1,22 @@
 ---
-title: "우분투(Linux)에서 대용량 디스크 마운트하기"
-description: "Ubuntu에서 2TB 이상 대용량 디스크를 parted로 GPT 파티션 생성 후 마운트하는 방법"
-excerpt: "fdisk 대신 parted를 사용하여 2TB 이상 디스크를 GPT 파티션으로 포맷하고 마운트하는 방법"
+title: "Mounting a Large Disk on Ubuntu (Linux)"
+description: "How to create a GPT partition with parted and mount a disk larger than 2TB on Ubuntu"
+excerpt: "Use parted instead of fdisk to format disks larger than 2TB as GPT and mount them"
 categories: Linux
-tags: [Ubuntu, parted, GPT, mount, fstab, 대용량디스크, 디스크마운트]
+tags: [Ubuntu, parted, GPT, mount, fstab, large-disk, disk-mount]
 date: 2022-10-28
 ref: ubuntu-largedisk-mount
 ---
 
-:bulb: 우분투 환경에서 2TB 이상의 디스크를 포맷하고 마운트하는 방법을 작성한다.
+:bulb: This post describes how to format and mount a disk larger than 2TB on Ubuntu.
 {: .notice--info}
 
-:warning: 일반적인 `fdisk` 명령어로 포맷 및 마운트 시, `2TB`까지만 인식된다. 2TB 이상은 `parted`를 사용해야 한다.
+:warning: The traditional `fdisk` command only recognizes up to `2TB`. For disks larger than 2TB you must use `parted`.
 {: .notice--warning}
 
-# [01] 디스크 정보 확인
+# [01] Check the Disk
 
-아래 시스템에서, 3.7TB로 인식되는 디스크를 포맷하고 마운트한다.
+On the following system, we will format and mount a disk reported as 3.7TB.
 
 ```shell
 root@test:~# lsblk
@@ -33,12 +33,12 @@ sdc                         8:32   0   3.7T  0 disk
 sdd                         8:48   0   3.7T  0 disk
 ```
 
-# [02] parted - 파티션 설정
+# [02] parted - Partition Setup
 
-parted는 디스크 파티션 및 파티션 재설정 프로그램이다.
+`parted` is a disk partitioning and re-partitioning utility.
 
 ```shell
-# (parted) 엔터 혹은 명령어 입력
+# At the (parted) prompt, press Enter or type commands
 # mklabel gpt - yes - mkpart - (enter) - ext4 - 1 - 3.7TB - q
 root@test:~# parted /dev/sdd
 GNU Parted 3.3
@@ -57,11 +57,11 @@ End? 3.7TB
 Information: You may need to update /etc/fstab.
 ```
 
-파티션 생성 후:
+After creating the partition:
 
-![fdisk-01(자르기)](https://user-images.githubusercontent.com/76153041/199198008-4bcc8161-fd47-4b7e-a6a2-7f5c614501c1.png)
+![fdisk-01](https://user-images.githubusercontent.com/76153041/199198008-4bcc8161-fd47-4b7e-a6a2-7f5c614501c1.png)
 
-# [03] mkfs - 포맷
+# [03] mkfs - Format
 
 ```shell
 root@test:~# mkfs.ext4 /dev/sdd1
@@ -82,20 +82,20 @@ Creating journal (262144 blocks): done
 Writing superblocks and filesystem accounting information: done
 ```
 
-# [04] 마운트
+# [04] Mount
 
 ```shell
-# 마운트 위치 생성
+# Create the mount point
 root@test:~# mkdir /mnt/sdd
-# 마운트
+# Mount
 root@test:~# mount /dev/sdd1 /mnt/sdd
-# 마운트된 디렉토리 읽기,쓰기 권한 설정
+# Set read/write permissions on the mounted directory
 root@test:~# chmod 775 /mnt/sdd
 ```
 
-마운트 완료 후, 결과 확인:
+After mounting, verify the result:
 
-- `/dev/sdd1` 이 2TB 넘는 용량으로 `/mnt/sdd` 에 마운트 됨을 확인
+- `/dev/sdd1` is mounted at `/mnt/sdd` with a capacity larger than 2TB
 
 ```shell
 root@test:~# df -h
@@ -114,9 +114,9 @@ tmpfs                              4.7G     0  4.7G   0% /run/user/0
 /dev/sdd1                          3.6T   28K  3.4T   1% /mnt/sdd
 ```
 
-# [05] 부팅 시 자동 마운트
+# [05] Auto-mount at Boot
 
-`/etc/fstab` 파일에 아래와 같이 추가한다.
+Add the following line to `/etc/fstab`.
 
 ```shell
 # /etc/fstab

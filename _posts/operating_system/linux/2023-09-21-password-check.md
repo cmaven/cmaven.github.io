@@ -5,6 +5,7 @@ excerpt: "pwquality.conf의 usercheck 설정으로 패스워드 검증 정책을
 categories: Linux
 tags: [Ubuntu, password, pwquality, pam, 패스워드정책, 보안설정]
 date: 2023-09-21
+ref: password-check
 ---
 
 :bulb: Linux(Ubuntu)에서 Password 입력 시 `BAD PASSWORD: The password contains the user name in some form` 오류로 원하는 Password로 설정이 불가능할 때의 우회 방법을 작성한다.

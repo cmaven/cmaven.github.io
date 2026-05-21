@@ -1,17 +1,17 @@
 ---
-title: "Ubuntu 시간 설정(time, date)"
-description: "Ubuntu에서 timedatectl, ln, NTP를 사용하여 시간대(Timezone)를 변경하고 시간을 동기화하는 방법"
-excerpt: "Ubuntu Timezone을 Asia/Seoul로 변경하고 NTP로 시간 동기화하는 방법"
-categories: Linux
-tags: [Ubuntu, timezone, timedatectl, NTP, 시간설정, 시간동기화, Asia-Seoul]
+title: "Configuring Time and Date on Ubuntu"
+description: "How to change the timezone and synchronize time on Ubuntu using timedatectl, ln, and NTP"
+excerpt: "How to change the Ubuntu timezone to Asia/Seoul and synchronize time via NTP"
 date: 2023-02-20
+categories: Linux
+tags: [Ubuntu, timezone, timedatectl, NTP, time-config, time-sync, Asia-Seoul]
 ref: ubuntu-time-and-date
 ---
 
-:bulb: Ubuntu 시간대(Timezone) 변경 및 NTP를 활용한 시간 동기화 방법을 작성한다.
+:bulb: This guide covers how to change the timezone on Ubuntu and synchronize time using NTP.
 {: .notice--info}
 
-# [01] 현재 시간 및 날짜 확인
+# [01] Check the Current Time and Date
 
 ```shell
 date
@@ -21,17 +21,17 @@ root@worker:~# date
 Mon Feb 20 08:32:53 AM UTC 2023
 ```
 
-# [02] 시간 (Timezone) 변경
+# [02] Change the Timezone
 
-시간은 `Asia/Seoul`을 기준으로 한다.
+This guide uses `Asia/Seoul` as the example timezone.
 
-## 2-1. `ln` 명령어를 활용하여 변경
+## 2-1. Change with the `ln` Command
 
 ```shell
 sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 ```
 
-## 2-2. `timedatectl` 명령어를 활용하여 변경
+## 2-2. Change with the `timedatectl` Command
 
 ```shell
 sudo timedatectl set-timezone 'Asia/Seoul'
@@ -44,28 +44,28 @@ root@worker:~# date
 Mon Feb 20 05:36:03 PM KST 2023
 ```
 
-# [03] NTP를 활용한 시간 동기화
+# [03] Time Synchronization with NTP
 
-Timezone을 변경하였지만 정확한 시간이 반영되지 않을 수 있다.
+Even after changing the timezone, the exact time may still not be accurate.
 
 ```shell
-# ex) 현재 시각은 Mon Feb 20 05:36:03 PM KST 2023
-# 약 2분 정도의 시간 차이가 있음
+# ex) The current time shows as Mon Feb 20 05:36:03 PM KST 2023
+# There is about a 2-minute time drift
 root@worker:~# date
 Mon Feb 20 05:36:03 PM KST 2023
 ```
 
-## 3-1. NTP 설치 및 실행
+## 3-1. Install and Start NTP
 
-> NTP(Network Time Protocol): 네트워크를 통해 시스템의 시간을 동기화하는 프로토콜
+> NTP (Network Time Protocol): a protocol for synchronizing system time over a network.
 
 ```shell
 sudo apt-get install -y ntp
 
-# 설치 후, 실행 확인
+# After installation, verify it is running
 systemctl status ntp
 
-# ex) 정확한 숫자는 다소 차이가 있을 수 있음
+# ex) Exact numbers may vary
 root@worker:/etc/apt# sudo systemctl status ntp
 ● ntp.service - Network Time Service
      Loaded: loaded (/lib/systemd/system/ntp.service; enabled; vendor preset: enabled)
@@ -86,6 +86,6 @@ Jan 01 10:25:17 worker ntpd[781126]: Soliciting pool server 121.162.54.1
 Jan 01 10:25:17 worker ntpd[781126]: Soliciting pool server 106.247.248.106
 ```
 
-## 3-2. 시간 동기화 확인
+## 3-2. Verify Time Synchronization
 
-설치 및 실행 후, 다시 Timezone 설정을 해주면 동기화된 시간을 확인할 수 있다.
+After installing and starting NTP, reapply the timezone setting to see the synchronized time.

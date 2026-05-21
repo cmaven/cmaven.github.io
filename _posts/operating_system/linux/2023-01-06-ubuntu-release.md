@@ -5,6 +5,7 @@ excerpt: "Ubuntu LTS 2년 주기 릴리즈, 5년 기본 지원, ESM 10년 보안
 categories: Linux
 tags: [Ubuntu, LTS, ESM, Release, 릴리즈, 보안패치, 버전관리]
 date: 2023-01-06
+ref: ubuntu-release
 ---
 
 :bulb: Ubuntu Release 주기, LTS와 interim의 차이, ESM(확장 보안 유지보수)에 대해 정리한다.

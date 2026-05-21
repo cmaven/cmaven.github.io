@@ -5,6 +5,7 @@ excerpt: "Ubuntu 24.04 LTS에서 adduser를 이용한 사용자 계정 생성, s
 date: 2026-03-18
 categories: Linux
 tags: [Ubuntu, Ubuntu-24.04, adduser, useradd, deluser, sudo, 사용자계정, 계정생성, 계정삭제, 사용자관리]
+ref: ubuntu-2404-user-account
 ---
 
 :bulb: Ubuntu 환경에서 새로운 사용자 계정을 생성하고, 관리자 권한을 부여하며, 계정을 삭제하는 방법을 작성한다. Ubuntu Server와 Desktop 모두에 적용 가능하다.

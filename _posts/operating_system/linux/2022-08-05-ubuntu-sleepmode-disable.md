@@ -5,6 +5,7 @@ excerpt: "systemctl mask 명령으로 Ubuntu의 절전모드(Suspend/Sleep/Hiber
 categories: Linux
 tags: [Ubuntu, Suspend, Sleep, 절전모드, SSH, systemctl, Power-Management]
 date: 2022-08-05
+ref: ubuntu-sleepmode-disable
 ---
 
 :bulb: Ubuntu Server/Desktop 사용 시, Suspend, Sleep Mode로 진입하는 현상을 방지하는 방법을 작성한다.
