@@ -5,6 +5,7 @@ excerpt: "Google Search Console 등록, sitemap.xml 생성, robots.txt 설정으
 date: 2022-03-30
 categories: Github_Blog
 tags: [GoogleSearchConsole, sitemap, robots.txt, SEO, Jekyll, 검색엔진, 크롤링]
+ref: gitblog-google-search-console
 ---
 
 :bulb: Github 블로그의 글을 구글 검색 엔진에 노출시키는 방법을 정리한다.

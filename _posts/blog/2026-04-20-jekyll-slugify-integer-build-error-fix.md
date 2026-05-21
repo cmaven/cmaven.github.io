@@ -5,6 +5,7 @@ excerpt: "Liquid Exception: undefined method gsub for an instance of Integer —
 date: 2026-04-20
 categories: Github_Blog
 tags: [Jekyll, Liquid, slugify, gsub, Integer, GitHub-Pages, 빌드에러, frontmatter, YAML, troubleshooting]
+ref: jekyll-slugify-integer-build-error-fix
 ---
 
 :bulb: GitHub Pages에서 Jekyll 빌드 시 `undefined method 'gsub' for an instance of Integer` 에러가 발생하여 사이트가 배포되지 않는 문제의 원인과 해결 방법을 정리한다.

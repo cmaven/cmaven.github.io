@@ -5,6 +5,7 @@ excerpt: "SEO 시리즈 2편. url 비어있음 → canonical 누락, future: fal
 date: 2026-04-16
 categories: Github_Blog
 tags: [Jekyll, GitHub-Pages, sitemap, jekyll-sitemap, Google-Search-Console, SEO, 색인, indexing, canonical, timezone, future-posts, _config.yml, SEO-시리즈-2편, SEO-시리즈]
+ref: jekyll-sitemap-google-indexing-fix
 ---
 
 :bulb: SEO 시리즈 2편. **[1편](/github_blog/gitblog-seo-google-search/)** 에서 포스트 한 개 단위의 frontmatter·`jekyll-seo-tag`·permalink 최적화를 다뤘다. 그런데 그 이후 새 글을 여러 개 push 했는데도 Google Search Console에서 `sitemap.xml`의 **마지막 읽은 날짜(Last read)** 가 몇 주째 갱신되지 않고, 새 포스트가 색인에 잡히지 않는 문제가 발생했다. 일반론(크롤링 예산, 콘텐츠 품질) 이전에 이 저장소에는 **`_config.yml` 설정 누락이라는 명확한 코드 문제**가 있었다. 진단 과정과 해결 방법을 정리한다.

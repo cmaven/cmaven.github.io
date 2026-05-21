@@ -5,6 +5,7 @@ excerpt: "Ubuntu에서 Ruby, Jekyll 설치 후 GitHub 블로그를 로컬 서버
 date: 2022-06-16
 categories: Github_Blog
 tags: [Jekyll, Ubuntu, Ruby, GEM, Bundler, 로컬서버, 블로그미리보기]
+ref: gitblog-ubuntu-serve
 ---
 
 :bulb: 작성한 블로그를 Ubuntu 환경에서 Local 또는 외부 접근(동일 네트워크 망)에서 확인하는 방법을 작성한다.

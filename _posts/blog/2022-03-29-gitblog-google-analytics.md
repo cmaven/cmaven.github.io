@@ -5,6 +5,7 @@ excerpt: "Google Analytics GA4 가입, 측정 ID 생성, Jekyll 블로그 _confi
 date: 2022-03-29
 categories: Github_Blog
 tags: [GoogleAnalytics, GA4, Jekyll, 방문자통계, 트래픽분석, Minimal-Mistakes]
+ref: gitblog-google-analytics
 ---  
 
 

@@ -5,6 +5,7 @@ excerpt: "SEO 시리즈 1편. description/excerpt/tags frontmatter, jekyll-seo-t
 date: 2026-03-16
 categories: Github_Blog
 tags: [SEO, Google-Search, Jekyll, frontmatter, sitemap, jekyll-seo-tag, SEO-시리즈-1편, SEO-시리즈]
+ref: gitblog-seo-google-search
 ---
 
 :bulb: Jekyll 기반 GitHub 블로그의 SEO를 **4편 시리즈**로 정리한다. 이 글(1편)은 **포스트 한 개 단위에서 끝낼 수 있는 frontmatter·메타태그 최적화**를 다룬다. 같은 글에서 매번 챙기면 검색 유입이 가장 빠르게 늘어나는 영역이다.
