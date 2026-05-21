@@ -5,6 +5,7 @@ excerpt: "runserver 대신 Gunicorn, systemd 자동 실행, DDNS/포트포워딩
 date: 2026-03-25
 categories: Python
 tags: [Django, Gunicorn, Nginx, systemd, DDNS, 포트포워딩, 홈서버, 배포, ufw, 방화벽, WSGI]
+ref: django-home-server-deployment
 ---
 
 :bulb: 개발 완료된 Django 프로젝트를 직접 사용하는 PC를 사용해서 실제로 외부 접근 가능하게 만드는 전체 과정을 정리한다.

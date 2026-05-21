@@ -5,6 +5,7 @@ excerpt: "venv 환경을 git clone으로 다른 머신에서 사용 시 Unable t
 date: 2022-05-02
 categories: Python
 tags: [Python, Error, Venv, 가상환경, pip, Fatal-error]
+ref: python-error-unable-to-create-process-using
 ---
 
 :bulb: Python 또는 Pip 명령어 실행 시, Process 경로 오류로 실행되지 않을 때의 해결 방법을 작성한다.

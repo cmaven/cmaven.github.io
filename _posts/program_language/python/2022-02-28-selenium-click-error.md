@@ -5,6 +5,7 @@ excerpt: "Selenium에서 'element is not clickable at point' 오류 발생 시 m
 date: 2022-02-28
 categories: Python
 tags: [Crawling, Selenium, Error]
+ref: selenium-click-error
 ---
 
 Selenium 사용 시, 버튼 클릭 오류

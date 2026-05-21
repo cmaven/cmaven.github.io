@@ -5,6 +5,7 @@ excerpt: "Selenium에서 ChromeDriver 버전 불일치로 SessionNotCreatedExcep
 date: 2022-03-11
 categories: Python
 tags: [Error, Selenium, ChromeDriverManager, Webdrivermanager]
+ref: selenium-chromversion-error
 ---
 
 Selenium 에서 ChromeWebDriver 실행 시, 지원하지 않는 버전 오류가 발생 시

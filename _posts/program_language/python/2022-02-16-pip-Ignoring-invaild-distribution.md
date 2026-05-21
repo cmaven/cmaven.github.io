@@ -5,6 +5,7 @@ excerpt: "pip 실행 시 'Ignoring invalid distribution -ip' 경고가 발생하
 date: 2022-02-16
 categories: Python
 tags: [Error, Pip, Venv]
+ref: pip-Ignoring-invaild-distribution
 ---
 
 Pip 명령어 실행 시, `Ignoring invaild distribution -ip` 경고문 없애기

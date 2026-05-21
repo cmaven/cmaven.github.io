@@ -5,6 +5,7 @@ excerpt: "Django Serializer에서 ForeignKey 값이 NULL로 인식되어 Not nul
 date: 2024-06-04
 categories: Python
 tags: [Django, Serializer]
+ref: not-null-constraint-failed
 ---
 
 

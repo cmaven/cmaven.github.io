@@ -5,6 +5,7 @@ excerpt: "Linux, PowerShell, BashShell 환경별 FLASK_APP 환경 변수 설정 
 date: 2022-05-02
 categories: Python
 tags: [Python, Flask, FLASK_APP, 환경변수, 웹서버]
+ref: python-flask-set-env
 ---
 
 :bulb: Flask 실행을 위한 FLASK_APP 환경 변수 설정 방법을 작성한다.

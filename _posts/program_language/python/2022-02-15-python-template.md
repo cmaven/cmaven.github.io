@@ -5,6 +5,7 @@ excerpt: "Python 관련 기술 정리"
 date: 2022-02-15
 categories: Python
 tags: [Python, Template]
+ref: python-template
 ---
 
 :bulb: Python 기술에 대한 정리

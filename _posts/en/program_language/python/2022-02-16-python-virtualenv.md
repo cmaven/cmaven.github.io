@@ -1,17 +1,17 @@
 ---
-title: "Python 가상 환경(Virtual Environment)"
-description: "Python 가상 환경을 pipenv, venv로 구성하는 방법 (Linux, Windows)"
-excerpt: "pipenv, venv를 사용한 Python 가상 환경 구성 및 활성화 방법"
+title: "Python Virtual Environment"
+description: "How to set up a Python virtual environment with pipenv and venv (Linux, Windows)."
+excerpt: "How to create and activate a Python virtual environment using pipenv and venv."
 date: 2022-02-16
 categories: Python
-tags: [Python, Pipenv, Venv, Virtualenv, 가상환경]
+tags: [Python, Pipenv, Venv, Virtualenv, virtual-environment]
 ref: python-virtualenv
 ---
 
-:bulb: Python 가상 환경(Virtual Environment)을 구성하는 방법을 작성한다.
+:bulb: This post covers how to set up a Python virtual environment.
 {: .notice--info}
 
-:triangular_flag_on_post: 작성 중
+:triangular_flag_on_post: Work in progress
 {: .notice--warning}
 
 # [01] pipenv
