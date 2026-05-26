@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: Github_Blog
 tags: [Template, GithubBlog, Markdown, Jekyll, blog-writing, code-block, image-insertion]
 ref: gitblog-template
+sitemap: false
+noindex: true
 ---
 
 :triangular_flag_on_post: Updated 2024-02-20

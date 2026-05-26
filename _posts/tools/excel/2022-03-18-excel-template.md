@@ -6,6 +6,8 @@ date: 2022-03-18
 categories: Excel
 tags: [Excel, Template]
 ref: excel-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Excel에 대한 정리

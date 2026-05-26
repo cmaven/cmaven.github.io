@@ -6,6 +6,8 @@ date: 2022-02-15
 categories: Windows
 tags: [Windows, Template]
 ref: windows-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Windows 기술에 대한 정리

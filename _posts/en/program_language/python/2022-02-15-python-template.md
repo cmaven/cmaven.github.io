@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: Python
 tags: [Python, Template]
 ref: python-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Notes on Python technologies

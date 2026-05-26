@@ -6,6 +6,8 @@ date: 2022-02-15
 categories: Github_Blog
 tags: [Template, GithubBlog, Markdown, Jekyll, 마크다운, 블로그작성법, 코드블록, 이미지삽입]
 ref: gitblog-template
+sitemap: false
+noindex: true
 ---
 
 :triangular_flag_on_post: 2024-02-20 수정

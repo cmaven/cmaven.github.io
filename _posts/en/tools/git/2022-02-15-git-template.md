@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: Git
 tags: [Git, Template]
 ref: git-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: A collection of notes on Git techniques.

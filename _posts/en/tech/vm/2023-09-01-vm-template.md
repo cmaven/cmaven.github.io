@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: VM
 tags: [VM, KVM, QEMU, virt-manager, Template]
 ref: vm-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Notes on VM technologies

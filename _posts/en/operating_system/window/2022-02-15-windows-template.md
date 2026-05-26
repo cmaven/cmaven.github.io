@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: Windows
 tags: [Windows, Template]
 ref: windows-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Notes on Windows technologies.

@@ -6,6 +6,8 @@ date: 2022-02-15
 categories: K8s
 tags: [Kubernetes, K8s, Container, Template]
 ref: k8s-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Kubernetes 기술에 대한 정리

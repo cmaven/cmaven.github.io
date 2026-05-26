@@ -6,6 +6,8 @@ date: 2022-02-15
 categories: Python
 tags: [Python, Template]
 ref: python-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Python 기술에 대한 정리

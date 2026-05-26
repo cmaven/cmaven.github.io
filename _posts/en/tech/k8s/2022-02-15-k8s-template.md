@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: K8s
 tags: [Kubernetes, K8s, Container, Template]
 ref: k8s-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Notes on Kubernetes technologies

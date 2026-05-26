@@ -7,6 +7,8 @@ last_modified_at: 2026-05-26
 categories: Excel
 tags: [Excel, Template]
 ref: excel-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: Notes on Excel

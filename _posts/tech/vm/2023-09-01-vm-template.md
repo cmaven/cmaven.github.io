@@ -6,6 +6,8 @@ date: 2023-09-01
 categories: VM
 tags: [VM, KVM, QEMU, virt-manager, Template]
 ref: vm-template
+sitemap: false
+noindex: true
 ---
 
 :bulb: VM 기술에 대한 정리
