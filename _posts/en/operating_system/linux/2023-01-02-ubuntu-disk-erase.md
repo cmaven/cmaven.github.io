@@ -3,6 +3,7 @@ title: "Securely Erasing a Hard Disk (HDD) on Ubuntu (Linux)"
 description: "How to securely erase a hard disk (low-level format) on Ubuntu using shred, badblocks, and dd"
 excerpt: "How to securely erase a Linux hard disk (unrecoverable) using shred, badblocks, and dd"
 date: 2023-01-02
+last_modified_at: 2026-05-26
 categories: Linux
 tags: [Ubuntu, shred, badblocks, dd, HDD, disk-erase, low-level-format, data-wipe]
 ref: ubuntu-disk-erase

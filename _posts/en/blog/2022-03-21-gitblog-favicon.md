@@ -3,6 +3,7 @@ title: "Creating and Applying a Favicon to Your GitHub Blog"
 description: "Guide to generating a favicon and applying it to a GitHub blog running the Minimal Mistakes Jekyll theme"
 excerpt: "Generate a favicon with favicon-generator and apply it to a Jekyll blog"
 date: 2022-03-21
+last_modified_at: 2026-05-26
 categories: Github_Blog
 tags: [Favicon, Jekyll, Minimal-Mistakes, blog-setup]
 ref: gitblog-favicon

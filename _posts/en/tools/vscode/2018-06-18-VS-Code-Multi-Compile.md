@@ -3,6 +3,7 @@ title: "Visual Studio Code (VS Code) — Multi-File Compilation"
 description: "How to compile split C/C++ files within the same directory using Variables Reference in VS Code tasks.json"
 excerpt: "Compile all files in the same directory at once using VS Code tasks.json"
 date: 2018-06-18
+last_modified_at: 2026-05-26
 categories: VScode
 tags: [VSCode, tasks.json, C++, gcc, g++, multi-file-compile, Variables-Reference]
 ref: VS-Code-Multi-Compile

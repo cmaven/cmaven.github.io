@@ -3,6 +3,7 @@ title: "Creating a Git Remote Repository from a Local Host"
 description: "How to create a remote repository from the local CLI using curl and the GitHub API"
 excerpt: "How to create a remote repository from the CLI using the GitHub API and a Personal Access Token"
 date: 2022-08-25
+last_modified_at: 2026-05-26
 categories: Git
 tags: [Git, GitHub-API, curl, Remote-Repository, Token, create-remote-repository]
 ref: git-remoterepo-by-local

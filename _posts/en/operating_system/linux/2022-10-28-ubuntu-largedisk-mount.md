@@ -5,6 +5,7 @@ excerpt: "Use parted instead of fdisk to format disks larger than 2TB as GPT and
 categories: Linux
 tags: [Ubuntu, parted, GPT, mount, fstab, large-disk, disk-mount]
 date: 2022-10-28
+last_modified_at: 2026-05-26
 ref: ubuntu-largedisk-mount
 ---
 

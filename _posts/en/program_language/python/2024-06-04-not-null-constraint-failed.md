@@ -3,6 +3,7 @@ title: "Fixing the Django Serializer Not null constraint failed Error"
 description: "Cause and fix for the Not null constraint failed error in a Django Serializer where a ForeignKey value is treated as NULL."
 excerpt: "Cause and fix for the Not null constraint failed error in a Django Serializer where a ForeignKey value is treated as NULL."
 date: 2024-06-04
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Django, Serializer]
 ref: not-null-constraint-failed

@@ -3,6 +3,7 @@ title: "Fix: 'permission denied' when running Docker commands"
 description: "Cause of permission denied error when running Docker as a non-root user, and how to fix it by adding the user to the docker group"
 excerpt: "Resolve the docker.sock permission denied error by adding your user to the docker group with usermod"
 date: 2023-01-06
+last_modified_at: 2026-05-26
 categories: Docker
 tags: [Docker, Permission, docker.sock, usermod, permission-error, Ubuntu, troubleshooting]
 ref: docker-permission-denied

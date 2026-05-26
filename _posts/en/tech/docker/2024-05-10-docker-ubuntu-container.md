@@ -3,6 +3,7 @@ title: "Create an Ubuntu Container in Docker and Access an Nginx Server"
 description: "How to build an Ubuntu 24.04 container with a Dockerfile, run Nginx, and access it externally"
 excerpt: "Walk through writing a Dockerfile, building the image, running the container, and forwarding the Nginx port"
 date: 2024-05-10
+last_modified_at: 2026-05-26
 categories: Docker
 tags: [Docker, Dockerfile, Ubuntu, Nginx, container, port-forwarding, docker-build, docker-run]
 ref: docker-ubuntu-container

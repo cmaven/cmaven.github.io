@@ -3,6 +3,7 @@ title: "Object Storage"
 description: "Concept of object storage, its advantages (scalability/efficiency/availability), and how IDA distributed storage works"
 excerpt: "Object storage concept and operation, suited for unstructured data"
 date: 2018-02-23
+last_modified_at: 2026-05-26
 categories: Storage
 tags: [Object-Storage, storage, IDA, unstructured-data, distributed-storage, cloud-storage]
 ref: object-storage

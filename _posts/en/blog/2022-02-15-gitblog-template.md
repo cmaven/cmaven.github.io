@@ -3,6 +3,7 @@ title: "How to Write a GitHub Blog Post"
 description: "Guide to writing posts on a Jekyll-based GitHub blog — markdown syntax, image insertion, code blocks, and emoji usage"
 excerpt: "A reference for markdown syntax, image uploads, code blocks, links, and emoji when writing GitHub blog posts"
 date: 2022-02-15
+last_modified_at: 2026-05-26
 categories: Github_Blog
 tags: [Template, GithubBlog, Markdown, Jekyll, blog-writing, code-block, image-insertion]
 ref: gitblog-template

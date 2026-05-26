@@ -3,6 +3,7 @@ title: "Ubuntu Release (LTS, ESM)"
 description: "An overview of the Ubuntu release cycle, the difference between LTS and interim releases, and ESM (Extended Security Maintenance)"
 excerpt: "Ubuntu LTS releases every 2 years with 5 years of standard support and up to 10 years of security maintenance via ESM"
 date: 2023-01-06
+last_modified_at: 2026-05-26
 categories: Linux
 tags: [Ubuntu, LTS, ESM, Release, release-cycle, security-patches, version-management]
 ref: ubuntu-release

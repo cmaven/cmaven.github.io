@@ -3,6 +3,7 @@ title: "Using a Simple Password on the Django Admin Page"
 description: "How to disable password validation on the Django admin page so you can use a simple password."
 excerpt: "How to disable password validation on the Django admin page so you can use a simple password."
 date: 2022-12-08
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Django, Password]
 ref: django-simple-password

@@ -3,6 +3,7 @@ title: "Resolving IP Conflicts Between Cloned VMs"
 description: "How to resolve the IP conflict caused by identical machine-ids when cloning a VM in a KVM/QEMU environment"
 excerpt: "After VM clone, DHCP fails because of duplicate machine-id — fix by regenerating /etc/machine-id"
 date: 2024-02-29
+last_modified_at: 2026-05-26
 categories: VM
 tags: [VM, KVM, QEMU, Clone, DHCP, machine-id, IP-conflict, virt-manager]
 ref: vm-clone-ip-share

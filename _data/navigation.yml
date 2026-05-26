@@ -16,6 +16,8 @@ main:
     url: /categories/
   - title: "Tags"
     url: /tags/
+  - title: "EN"
+    url: /en/
 
 # English sidebar (영문 페이지 전용 - 영문 콘텐츠 있는 카테고리만 표시)
 # category: 매핑은 실제 site.categories 키와 일치해야 함 (post frontmatter의 categories 값)

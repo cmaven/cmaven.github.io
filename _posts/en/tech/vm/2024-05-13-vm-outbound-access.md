@@ -3,6 +3,7 @@ title: "Accessing a Host-Server VM from Outside"
 description: "How to enable external access to a VM behind KVM/QEMU NAT using iptables port forwarding"
 excerpt: "Configure iptables NAT/FORWARD rules to expose a VM running on a host server to outside clients"
 date: 2024-05-13
+last_modified_at: 2026-05-26
 categories: VM
 tags: [VM, KVM, QEMU, iptables, NAT, port-forwarding, Nginx, virbr0, virt-manager]
 ref: vm-outbound-access

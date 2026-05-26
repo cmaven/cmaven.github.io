@@ -3,6 +3,7 @@ title: "Pip WARNING — Resolving 'Ignoring invalid distribution -ip'"
 description: "Explains why pip emits the 'Ignoring invalid distribution -ip' warning and how to resolve it by deleting the leftover temporary directory."
 excerpt: "Explains why pip emits the 'Ignoring invalid distribution -ip' warning and how to resolve it by deleting the leftover temporary directory."
 date: 2022-02-16
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Error, Pip, Venv]
 ref: pip-Ignoring-invaild-distribution

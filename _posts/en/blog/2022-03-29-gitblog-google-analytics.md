@@ -3,6 +3,7 @@ title: "Tracking Visitors on a GitHub Blog with Google Analytics (GA4)"
 description: "Guide to applying Google Analytics GA4 to a GitHub blog to track visitor statistics"
 excerpt: "From signing up for Google Analytics GA4 to creating a Measurement ID and wiring it into the Jekyll _config.yml"
 date: 2022-03-29
+last_modified_at: 2026-05-26
 categories: Github_Blog
 tags: [GoogleAnalytics, GA4, Jekyll, visitor-stats, traffic-analysis, Minimal-Mistakes]
 ref: gitblog-google-analytics

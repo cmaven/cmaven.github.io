@@ -3,6 +3,7 @@ title: "Configuring Time and Date on Ubuntu"
 description: "How to change the timezone and synchronize time on Ubuntu using timedatectl, ln, and NTP"
 excerpt: "How to change the Ubuntu timezone to Asia/Seoul and synchronize time via NTP"
 date: 2023-02-20
+last_modified_at: 2026-05-26
 categories: Linux
 tags: [Ubuntu, timezone, timedatectl, NTP, time-config, time-sync, Asia-Seoul]
 ref: ubuntu-time-and-date

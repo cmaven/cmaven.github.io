@@ -5,6 +5,7 @@ excerpt: "Use systemctl mask to disable Ubuntu's power-saving modes (Suspend/Sle
 categories: Linux
 tags: [Ubuntu, Suspend, Sleep, power-saving, SSH, systemctl, Power-Management]
 date: 2022-08-05
+last_modified_at: 2026-05-26
 ref: ubuntu-sleepmode-disable
 ---
 

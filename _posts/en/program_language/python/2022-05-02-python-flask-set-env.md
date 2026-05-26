@@ -3,6 +3,7 @@ title: "Setting the Flask ENV Variable"
 description: "How to set the FLASK_APP environment variable so Flask runs the file you want"
 excerpt: "How to set the FLASK_APP environment variable on Linux, PowerShell, and Bash"
 date: 2022-05-02
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Python, Flask, FLASK_APP, environment-variable, web-server]
 ref: python-flask-set-env

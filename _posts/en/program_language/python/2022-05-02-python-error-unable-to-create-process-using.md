@@ -3,6 +3,7 @@ title: "Python Fatal error in launcher — Unable to create process"
 description: "How to fix the path error that occurs when using a Python venv virtual environment on a different machine"
 excerpt: "How to fix the Unable to create process using error when reusing a venv environment cloned from git on another machine"
 date: 2022-05-02
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Python, Error, Venv, virtual-environment, pip, Fatal-error]
 ref: python-error-unable-to-create-process-using

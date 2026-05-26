@@ -3,6 +3,7 @@ title: "Getting a GitHub Blog Indexed by Google — Search Console Registration"
 description: "Register your GitHub blog with Google Search Console and configure sitemap.xml and robots.txt to make it discoverable in search results"
 excerpt: "Register with Google Search Console, generate sitemap.xml, and configure robots.txt to expose your GitHub blog to search engines"
 date: 2022-03-30
+last_modified_at: 2026-05-26
 categories: Github_Blog
 tags: [GoogleSearchConsole, sitemap, robots.txt, SEO, Jekyll, search-engine, crawling]
 ref: gitblog-google-search-console

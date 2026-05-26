@@ -5,6 +5,7 @@ excerpt: "How to resolve the NVIDIA driver version mismatch caused by unattended
 categories: Linux
 tags: [Ubuntu, NVIDIA, nvidia-smi, GPU, driver-error, unattended-upgrade, version-mismatch]
 date: 2022-03-24
+last_modified_at: 2026-05-26
 ref: nvidia-smi-error-version
 ---
 

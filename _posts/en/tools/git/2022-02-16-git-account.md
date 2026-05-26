@@ -3,6 +3,7 @@ title: "Changing Git Account (User) in a Local Shell Environment"
 description: "How to view and change the Git user name and email in a local environment using the git config command"
 excerpt: "How to change your Git account (user.name, user.email) with git config --global"
 date: 2022-02-16
+last_modified_at: 2026-05-26
 categories: Git
 tags: [Git, git-config, User, account-switch, user.name, user.email]
 ref: git-account

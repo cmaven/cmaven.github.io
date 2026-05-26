@@ -3,6 +3,7 @@ title: "Serving a Jekyll-based GitHub Blog from Ubuntu"
 description: "Install Ruby and Jekyll on Ubuntu, then preview a GitHub blog locally or expose it on the local network"
 excerpt: "Install Ruby and Jekyll on Ubuntu, then run a GitHub blog as a local server to preview it"
 date: 2022-06-16
+last_modified_at: 2026-05-26
 categories: Github_Blog
 tags: [Jekyll, Ubuntu, Ruby, GEM, Bundler, local-server, blog-preview]
 ref: gitblog-ubuntu-serve

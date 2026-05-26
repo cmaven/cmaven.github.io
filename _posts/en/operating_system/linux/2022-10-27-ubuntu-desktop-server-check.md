@@ -5,6 +5,7 @@ excerpt: "Use dpkg -l ubuntu-desktop to distinguish Ubuntu Desktop from Server, 
 categories: Linux
 tags: [Ubuntu, Desktop, Server, dpkg, uname, version-check]
 date: 2022-10-27
+last_modified_at: 2026-05-26
 ref: ubuntu-desktop-server-check
 ---
 

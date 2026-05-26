@@ -3,6 +3,7 @@ title: "Running Git Pull, Commit, Push Without Re-authenticating (SSH, Credentia
 description: "How to register an SSH key or configure Git Credential so that Git operations run without re-authentication every time"
 excerpt: "How to simplify Git authentication via ssh-keygen / SSH key registration and git config credential.helper store/cache"
 date: 2024-02-22
+last_modified_at: 2026-05-26
 categories: Git
 tags: [Git, SSH, Credential, Authentication, Token, credential-helper, ssh-keygen]
 ref: git-credential

@@ -1,0 +1,27 @@
+<!-- _pages/en/index.html: English landing page for cmaven blog (lang=en) | 생성일: 2026-05-26 -->
+---
+title: "Blog"
+layout: archive
+permalink: /en/
+author_profile: true
+lang: en
+sitemap: true
+description: "English posts on Linux, Python, Docker, VM, Excel, Git, VS Code, and Jekyll/SEO troubleshooting"
+sidebar:
+  nav: "cmaven_sidebar_en"
+---
+
+<p>Welcome. This is the English section of the blog. Browse recent posts below, or use the sidebar to jump to a category.</p>
+
+<h3 class="archive__subtitle">Recent Posts</h3>
+
+{% assign en_posts = site.posts | where: "lang", "en" %}
+<div class="entries-list">
+  {% for post in en_posts limit: 30 %}
+    {% include archive-single.html type="list" %}
+  {% endfor %}
+</div>
+
+{% if en_posts.size > 30 %}
+<p><a href="/en/categories/">Browse all English posts by category &raquo;</a></p>
+{% endif %}

@@ -3,6 +3,7 @@ title: "Creating a Shared Folder Between Host and VM"
 description: "How to set up a shared folder between Host and VM using virtiofs in a KVM/QEMU virt-manager environment"
 excerpt: "Create and mount a Host-VM shared folder via virtiofs in virt-manager"
 date: 2023-09-06
+last_modified_at: 2026-05-26
 categories: VM
 tags: [VM, KVM, QEMU, virt-manager, shared-folder, virtiofs, Shared-Folder, Ubuntu]
 ref: vm-shared-folder

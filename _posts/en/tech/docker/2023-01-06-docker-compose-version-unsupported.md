@@ -3,6 +3,7 @@ title: "Fix: docker-compose.yml is unsupported error"
 description: "Cause and resolution of 'Version is unsupported' error when running docker-compose up, fixed by reinstalling the latest version"
 excerpt: "Reinstall docker-compose to the latest version to fix the 'version is unsupported' error"
 date: 2023-01-06
+last_modified_at: 2026-05-26
 categories: Docker
 tags: [Docker, Docker-compose, version-error, Ubuntu, reinstall, troubleshooting]
 ref: docker-compose-version-unsupported

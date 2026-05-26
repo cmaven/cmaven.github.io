@@ -5,6 +5,7 @@ excerpt: "How to inspect Linux server hardware using dmidecode, lscpu, lshw, lsb
 categories: Linux
 tags: [Ubuntu, CPU, Memory, Disk, Network, GPU, dmidecode, lscpu, lshw, hardware-check]
 date: 2022-10-26
+last_modified_at: 2026-05-26
 ref: linux-server-hw-check
 ---
 

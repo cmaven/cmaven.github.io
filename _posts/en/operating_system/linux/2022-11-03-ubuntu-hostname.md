@@ -3,6 +3,7 @@ title: "Changing the Hostname on Ubuntu (Linux)"
 description: "How to change the hostname on Ubuntu using the hostnamectl command"
 excerpt: "How to change an Ubuntu hostname with the hostnamectl set-hostname command"
 date: 2022-11-02
+last_modified_at: 2026-05-26
 categories: Linux
 tags: [Ubuntu, hostname, hostnamectl, change-hostname]
 ref: ubuntu-hostname

@@ -3,6 +3,7 @@ title: "Pip Error — ERROR: No module named pip"
 description: "How to recover when 'No module named pip' appears during a pip upgrade — reinstall pip using get-pip.py."
 excerpt: "How to recover when 'No module named pip' appears during a pip upgrade — reinstall pip using get-pip.py."
 date: 2022-02-16
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Error, Pip, Venv]
 ref: pip-error-no-module

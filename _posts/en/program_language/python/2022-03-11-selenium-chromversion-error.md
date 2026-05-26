@@ -3,6 +3,7 @@ title: "Selenium SessionNotCreatedException — ChromeDriver Version Error"
 description: "How to fix Selenium's SessionNotCreatedException caused by a ChromeDriver version mismatch using webdriver-manager."
 excerpt: "How to fix Selenium's SessionNotCreatedException caused by a ChromeDriver version mismatch using webdriver-manager."
 date: 2022-03-11
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Error, Selenium, ChromeDriverManager, Webdrivermanager]
 ref: selenium-chromversion-error

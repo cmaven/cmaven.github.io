@@ -3,6 +3,7 @@ title: "Switching Branches in a Repository Cloned Locally with git clone"
 description: "How to view, create, switch, and merge branches into main in a remote repository fetched via git clone"
 excerpt: "How to create/switch branches with git branch and git checkout, then merge them into main"
 date: 2022-07-20
+last_modified_at: 2026-05-26
 categories: Git
 tags: [Git, branch, checkout, merge, clone, branch-switch, branch-create]
 ref: git-branch-usage

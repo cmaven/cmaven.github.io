@@ -3,6 +3,7 @@ title: "Viewing git commit Results Split by Time Range"
 description: "How to use git shortlog to view per-contributor and total commit counts within a given period"
 excerpt: "How to check period-based commit statistics with the git shortlog --since / --before options"
 date: 2022-10-31
+last_modified_at: 2026-05-26
 categories: Git
 tags: [Git, shortlog, commit, commit-statistics, Contributor, period-based-commits]
 ref: git-commit-count

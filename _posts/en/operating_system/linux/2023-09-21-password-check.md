@@ -3,6 +3,7 @@ title: "Bypassing BAD PASSWORD: contains the user name"
 description: "How to bypass the BAD PASSWORD error in Ubuntu and set a password containing the user name (pwquality.conf)"
 excerpt: "How to change the password validation policy via the usercheck setting in pwquality.conf"
 date: 2023-09-21
+last_modified_at: 2026-05-26
 categories: Linux
 tags: [Ubuntu, password, pwquality, pam, password-policy, security-config]
 ref: password-check

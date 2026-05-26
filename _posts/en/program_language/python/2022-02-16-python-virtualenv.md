@@ -3,6 +3,7 @@ title: "Python Virtual Environment"
 description: "How to set up a Python virtual environment with pipenv and venv (Linux, Windows)."
 excerpt: "How to create and activate a Python virtual environment using pipenv and venv."
 date: 2022-02-16
+last_modified_at: 2026-05-26
 categories: Python
 tags: [Python, Pipenv, Venv, Virtualenv, virtual-environment]
 ref: python-virtualenv
