@@ -1,7 +1,7 @@
 ---
 title: "Running Git Pull, Commit, Push Without Re-authenticating (SSH, Credential)"
-description: "How to register an SSH key or configure Git Credential so that Git operations run without re-authentication every time"
-excerpt: "How to simplify Git authentication via ssh-keygen / SSH key registration and git config credential.helper store/cache"
+description: "How to register an SSH key or configure Git Credential Helper so that Git operations run without re-authentication on every command"
+excerpt: "Streamline Git authentication with ssh-keygen SSH key registration or git config credential.helper store/cache"
 date: 2024-02-22
 last_modified_at: 2026-05-26
 categories: Git
@@ -9,80 +9,100 @@ tags: [Git, SSH, Credential, Authentication, Token, credential-helper, ssh-keyge
 ref: git-credential
 ---
 
-:bulb: This note summarizes the credentials (authentication) needed for Git operations.  
-Typically `pull`, `commit`, and `push` prompt for a user ID and password (or token); here we look at how to streamline that process.
+:bulb: Every `pull`, `commit`, and `push` prompts for credentials by default — configure SSH keys or a credential helper once to eliminate repeated authentication.
 {: .notice--info}
 
-# [01]  Ways to Store User Credentials in the Local Git
+# [01] Two Ways to Store Git Credentials
 
-1. Using an SSH key
-   - Generate an SSH key on the development machine and register it with Git.
-   - Use repositories via SSH.
-2. Using Git Config (Credential)
-   - Permanent storage on the system.
-   - Cache-based storage for a limited time.
+| Method | How it works | Best for |
+|--------|-------------|---------|
+| **SSH Key** | Generate a key pair; register the public key with Git host | Permanent, passwordless auth per machine |
+| **Git Credential Helper** | Cache credentials after first login | HTTPS-based workflows; temporary or permanent storage |
 
+# [02] Register and Use an SSH Key
 
-# [02]  Register and Use an SSH Key  
-
-## 2-1. Generate an SSH Key
+## 2-1. Generate an SSH key
 
 ```bash
-# Accept the defaults (Enter) for any prompts.
+# Accept the defaults (press Enter for each prompt)
 ssh-keygen -t rsa -C "Git" -b 4096
 
-# Copy and paste the printed key into the SSH Key field on GitLab.
+# Print the public key to copy
 cat ~/.ssh/id_rsa.pub
+```
 
-# Sample output
+Sample output:
+
+```text
 root@cmaven:~# cat ~/.ssh/id_rsa.pub
 ssh-rsa AAAA124123QABAAACAQCbKx1YXw8bUIWUb39eLkm7+AMVT92PhMCo...
-```  
+```
 
-## 2-2. Register the SSH Key with Git  
+Copy the entire line starting with `ssh-rsa`.
 
-Profile :arrow_right: Settings :arrow_right: SSH and GPG Keys  :arrow_right:  New SSH Key  :arrow_right:  Paste the key  :arrow_right:  Add SSH Key  
+## 2-2. Register the SSH key with your Git host
 
-![figure1](https://github.com/cmaven/cmaven.github.io/assets/76153041/cb7654b1-1c4e-4522-8144-2f1d2905902a)  
+Navigate to: **Profile → Settings → SSH and GPG Keys → New SSH Key → Paste the key → Add SSH Key**
 
-![figure2](https://github.com/cmaven/cmaven.github.io/assets/76153041/bf6d3bc7-4b6f-4de3-ad09-1289cd56f9d1)  
+*Figure 1. SSH Keys settings page*
 
+![figure1](https://github.com/cmaven/cmaven.github.io/assets/76153041/cb7654b1-1c4e-4522-8144-2f1d2905902a)
 
+*Figure 2. Adding a new SSH key*
 
-## 2-3. Clone the target repository over SSH  
+![figure2](https://github.com/cmaven/cmaven.github.io/assets/76153041/bf6d3bc7-4b6f-4de3-ad09-1289cd56f9d1)
 
-![2024-02-22 13 52 04](https://github.com/cmaven/cmaven.github.io/assets/76153041/8fdfd3d3-5f26-4a44-8258-ec53188b365e)  
+## 2-3. Clone the repository over SSH
 
-From this point onward, Pull/Commit/Push run without authentication prompts.
+When cloning, use the SSH URL (starts with `git@`) instead of HTTPS:
 
+*Figure 3. Selecting the SSH clone URL*
 
-# [03]  Using Git Config (Credential)  
+![2024-02-22 13 52 04](https://github.com/cmaven/cmaven.github.io/assets/76153041/8fdfd3d3-5f26-4a44-8258-ec53188b365e)
 
-- Run from the Git repository on the development machine.  
-- Apply one of the methods below and authenticate once with your ID and password (or token); subsequent Pull/Commit/Push operations run without re-authentication.
+From this point onward, `pull`, `commit`, and `push` run without authentication prompts.
 
-## 3-1. Permanent storage  
+> If your repository was already cloned via HTTPS, update the remote URL: `git remote set-url origin git@github.com:<user>/<repo>.git`
+
+# [03] Using Git Config (Credential Helper)
+
+Run these commands from inside any Git repository on your development machine. Authenticate once with your ID and password (or token); subsequent operations run without re-authentication.
+
+## 3-1. Permanent storage
+
+Credentials are saved in plain text to `~/.git-credentials`.
 
 ```bash
 git config credential.helper store
 
-# verify changes
+# Verify the change
 git config --list
-```  
+```
 
-## 3-2. Cache storage  
+## 3-2. Cache storage (time-limited)
+
+Credentials are held in memory only — nothing written to disk.
 
 ```bash
-# default 15 minutes
+# Default: 15 minutes
 git config credential.helper cache
 
-# specify time (timeout 3600 sec = 1 hour)
-git config credential.helper `cache --timeout=3600`
-```  
+# Custom timeout (e.g., 1 hour = 3600 seconds)
+git config credential.helper "cache --timeout=3600"
+```
 
-
-## 3-3. Apply to all projects  
+## 3-3. Apply globally to all projects
 
 ```bash
 git config credential.helper store --global
 ```
+
+## 3-4. Comparison
+
+| Helper | Storage location | Expires | Security |
+|--------|-----------------|---------|---------|
+| `store` | `~/.git-credentials` (plain text) | Never | Lower |
+| `cache` | Memory (tmpfs socket) | After timeout | Higher |
+| SSH key | `~/.ssh/` (key file) | Never | Highest |
+
+> On macOS, use `osxkeychain` as the credential helper to store credentials in the system Keychain: `git config --global credential.helper osxkeychain`. On Windows, `wincred` or the Git Credential Manager (GCM) is recommended.
