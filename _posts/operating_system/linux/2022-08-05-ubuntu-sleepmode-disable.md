@@ -5,6 +5,7 @@ excerpt: "systemctl mask 명령으로 Ubuntu의 절전모드(Suspend/Sleep/Hiber
 categories: Linux
 tags: [Ubuntu, Suspend, Sleep, 절전모드, SSH, systemctl, Power-Management]
 date: 2022-08-05
+last_modified_at: 2026-05-26
 ref: ubuntu-sleepmode-disable
 ---
 
@@ -28,6 +29,8 @@ sudo systemctl status sleep.target suspend.target hibernate.target hybrid-sleep.
 
 ![power management-sleep enable 상태](https://user-images.githubusercontent.com/76153041/183005465-418ea20e-4229-4e70-9838-447938d540d5.png)
 
+*그림 1. 절전모드 활성화 상태*
+
 # [03] 해결방안
 
 관련 Service를 모두 중단시킨다.
@@ -38,6 +41,8 @@ sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.ta
 
 ![power management-sleep disable 로 변경하기](https://user-images.githubusercontent.com/76153041/183005473-63e6011d-c292-4269-b30c-492421716a7f.png)
 
+*그림 2. 절전모드 비활성화(mask) 적용 결과*
+
 # [04] 기타
 
 해당 기능을 다시 활성화(재시작)하려면:
@@ -47,3 +52,5 @@ sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.
 ```
 
 ![power management-sleep enable 로 변경하기](https://user-images.githubusercontent.com/76153041/183005471-63c1ffe9-ee7d-47fd-bcd6-f57c585722f8.png)
+
+*그림 3. 절전모드 재활성화(unmask) 적용 결과*
