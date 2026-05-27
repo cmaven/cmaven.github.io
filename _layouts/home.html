@@ -1,22 +1,21 @@
 ---
 layout: archive
 ---
+<!-- _layouts/home.html: 한글 포스트만 노출하는 홈 레이아웃 (영문은 /en에서) | 수정일: 2026-05-27 -->
 
 {{ content }}
 
 <h3 class="archive__subtitle">{{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}</h3>
 
-{% if paginator %}
-  {% assign posts = paginator.posts %}
-{% else %}
-  {% assign posts = site.posts %}
-{% endif %}
+{% assign ko_posts = site.posts | where_exp: "p", "p.lang != 'en'" %}
 
 {% assign entries_layout = page.entries_layout | default: 'list' %}
 <div class="entries-{{ entries_layout }}">
-  {% for post in posts %}
+  {% for post in ko_posts limit: 30 %}
     {% include archive-single.html type=entries_layout %}
   {% endfor %}
 </div>
 
-{% include paginator.html %}
+{% if ko_posts.size > 30 %}
+<p><a href="/categories/">카테고리별 전체 글 보기 &raquo;</a></p>
+{% endif %}
