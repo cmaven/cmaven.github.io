@@ -2,7 +2,7 @@
 title: "Complete Guide to File Compression on Ubuntu — zip and tar (gzip/bzip2)"
 description: "A full guide to compressing and extracting files and directories on Ubuntu/Linux with zip and tar. Covers zip/unzip installation, recursive compression (-r), including hidden files, and a tar.gz vs tar.bz2 comparison with option reference"
 excerpt: "Use zip -r for multiple files and tar -czvf to bundle directories. Learn the difference between gzip and bzip2 with hands-on examples"
-date: 2025-10-15
+date: 2026-05-28
 categories: Linux
 tags: [Ubuntu, Linux, zip, unzip, tar, gzip, bzip2, compression, extract, tar-gz, tar-bz2, command-line, terminal]
 ref: ubuntu-file-compression-zip-tar

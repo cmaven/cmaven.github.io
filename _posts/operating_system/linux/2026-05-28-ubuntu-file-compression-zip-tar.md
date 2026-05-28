@@ -2,7 +2,7 @@
 title: "Ubuntu 파일 압축·해제 완전 정리 — zip과 tar(gzip/bzip2)"
 description: "Ubuntu/Linux에서 zip과 tar로 파일·디렉토리를 압축하고 해제하는 방법 총정리. zip/unzip 설치, 재귀 압축(-r), 숨김 파일 포함, tar.gz와 tar.bz2 비교 및 옵션 설명"
 excerpt: "여러 파일은 zip -r, 디렉토리 묶음은 tar -czvf. gzip과 bzip2의 차이와 압축/해제 명령을 예제로 정리"
-date: 2025-10-15
+date: 2026-05-28
 categories: Linux
 tags: [Ubuntu, Linux, zip, unzip, tar, gzip, bzip2, 압축, 압축해제, tar-gz, tar-bz2, 명령어, 터미널]
 ref: ubuntu-file-compression-zip-tar
