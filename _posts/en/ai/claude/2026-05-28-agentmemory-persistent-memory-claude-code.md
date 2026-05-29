@@ -152,9 +152,49 @@ Imported sessions can be replayed from the viewer's **Replay** tab — prompts, 
 
 ---
 
-# [05] How It Works
+# [05] Memory Scoping and Auto-Reference — A Common Misconception
 
-## 5-1. Memory Pipeline
+It's easy to assume that "memory is automatically separated per client server (A/B/C), and follow-up work automatically references the earlier task's context." **That's only partly true.** Here is how it actually works.
+
+## 5-1. The Boundary Is project + AGENT_ID, Not the Host
+
+agentmemory does **not** automatically separate by physical client server. There are three scoping axes.
+
+| Scope axis | Description | Default |
+|------------|-------------|---------|
+| `project` (primary scope) | The primary namespace that groups memories (e.g., a task/project name) | Specified per call |
+| `AGENT_ID` (env) | Tags every write with a role (architect/dev, etc.) | No tag if unset |
+| `AGENTMEMORY_AGENT_SCOPE` | `shared` (tags only; recall sees everything) / `isolated` (only your own) | `shared` |
+
+:warning: If the MCP registration env only has URL and SECRET but no `AGENT_ID`, then when multiple clients write to the **same `project`, everything mixes into one store** (unscoped legacy — no tags, no filters). Server A's work and Server B's work are shared without separation.
+{: .notice--warning}
+
+To separate A/B/C, you must **explicitly specify a distinct value** per client/task.
+
+- **Per-task separation**: pass a different `project` when calling `memory_save`
+- **Per-server/role separation**: add `AGENT_ID=serverA` to the MCP env (and `AGENTMEMORY_AGENT_SCOPE=isolated` if needed)
+
+## 5-2. Does Follow-up Work Auto-Reference the Earlier Context? — Conditional YES
+
+Two conditions must both be met.
+
+**Condition ①: Auto-injection requires the plugin (SessionStart hook).** The auto-injection seen in [04] is handled by the `SessionStart` hook that the plugin registers. **If only the MCP is registered, no auto-injection happens.** In that case Claude must explicitly call `memory_recall` / `memory_smart_search` during the work to pull the earlier records.
+
+**Condition ②: You must query within the same scope.** The follow-up work must query with the **same `project` (or the same agent scope)** as the earlier work to hit the search. If you store under `project` A but query under `project` B, it may not match — and `isolated` mode is even stricter.
+
+| Expectation | Reality |
+|-------------|---------|
+| "Server A's work is auto-separated under A" | ❌ Not automatic. You must specify `project`/`AGENT_ID`; otherwise it mixes |
+| "Follow-up work auto-references the earlier context" | ⚠️ Conditional. Automatic with the plugin / explicit recall without it — and it must be the same scope |
+
+:bulb: To actually implement the picture you want ("separation per server/task + automatic follow-up reference") — ① set `AGENT_ID` in each client's MCP env and assign a consistent `project` per task, and ② install the **plugin (SessionStart hook)** if you want automatic context injection. With MCP only, you must recall manually at the start of each task.
+{: .notice--info}
+
+---
+
+# [06] How It Works
+
+## 6-1. Memory Pipeline
 
 ```text
 PostToolUse hook fires
@@ -176,7 +216,7 @@ SessionStart hook fires
   -> Inject into conversation
 ```
 
-## 5-2. 4-Tier Memory Consolidation
+## 6-2. 4-Tier Memory Consolidation
 
 Inspired by how the human brain consolidates memory during sleep.
 
@@ -191,7 +231,7 @@ Frequently accessed memories strengthen, stale ones auto-evict (Ebbinghaus forge
 
 ---
 
-# [06] Summary
+# [07] Summary
 
 | Item | Detail |
 |------|--------|
