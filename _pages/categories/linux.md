@@ -7,7 +7,7 @@ sitemap: false
 noindex: true
 ---
 
-{% assign posts = site.categories.Linux %}
+{% assign posts = site.categories.Linux | where: "lang", "ko" %}
 {% for post in posts %}
 {% include archive-single-cmaven.html %}
 {% endfor %}

@@ -7,7 +7,7 @@ sitemap: false
 noindex: true
 ---
 
-{% assign posts = site.categories.Windows %}
+{% assign posts = site.categories.Windows | where: "lang", "ko" %}
 {% for post in posts %}
 {% include archive-single-cmaven.html %}
 {% endfor %}

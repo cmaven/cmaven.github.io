@@ -8,7 +8,7 @@ sitemap: false
 noindex: true
 ---
 
-{% assign posts = site.categories.Excel %}
+{% assign posts = site.categories.Excel | where: "lang", "ko" %}
 {% for post in posts %}
 {% include archive-single-cmaven.html %}
 {% endfor %}

@@ -6,7 +6,7 @@ sitemap: false
 noindex: true
 ---
 
-{% assign posts = site.categories.Claude %}
+{% assign posts = site.categories.Claude | where: "lang", "ko" %}
 {% for post in posts %}
 {% include archive-single-cmaven.html %}
 {% endfor %}
