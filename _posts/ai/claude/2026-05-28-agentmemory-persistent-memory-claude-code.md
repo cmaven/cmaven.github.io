@@ -104,6 +104,52 @@ agentmemory connect claude-code --with-hooks
 :memo: 가능하면 `/plugin install` 경로가 권장된다. MCP만 직접 연결하면 업그레이드 시 훅 경로가 깨질 수 있다.
 {: .notice--warning}
 
+## 3-3. 로컬 서버 vs 원격 서버 — 데이터가 어디에 저장되나
+
+[02]·[03-1]은 모두 **로컬 서버**를 가정한다. 내 PC에서 `agentmemory`를 띄우면 메모리도 내 PC에 저장된다. 하지만 팀이 공용으로 쓰거나 여러 머신에서 같은 메모리를 공유하려면 **원격 서버**에 연결한다.
+
+| 모드 | 서버 위치 | 데이터 저장 위치 | 쓰는 상황 |
+|------|-----------|------------------|-----------|
+| 로컬 | 내 PC (`agentmemory` 직접 실행) | 내 PC | 혼자, 한 대에서 |
+| 원격 | 항상 켜진 별도 서버 (예: `10.0.0.10:3111`) | **그 원격 서버** | 팀 공용 / 여러 머신 공유 |
+
+원격 모드에서는 **내 PC에 데이터가 저장되지 않는다.** 로컬 `~/.agentmemory/`에는 *연결 정보만* 들어간다(`standalone.json`도 거의 빈 파일).
+
+```bash
+# ~/.agentmemory/.env — 연결 정보(데이터 아님)
+AGENTMEMORY_URL=http://10.0.0.10:3111   # 원격 서버 주소
+AGENTMEMORY_SECRET=<발급받은 시크릿>          # 인증 토큰
+AGENT_ID=alice-laptop                            # 이 클라이언트/역할 식별자
+AGENTMEMORY_AGENT_SCOPE=isolated              # isolated=내 것만 / shared=전체 공유
+```
+
+실제 관찰·세션·요약은 전부 원격 서버의 저장소(KV)에 쌓인다. 그래서 PC를 바꿔도 같은 `.env`만 있으면 동일한 메모리에 접근한다.
+
+### 원격 저장이 잘 되는지 확인하기
+
+**① 서버 연결(health) 확인** — `Authorization: Bearer`로 시크릿을 넘긴다.
+
+```bash
+source ~/.agentmemory/.env
+curl -s -H "Authorization: Bearer $AGENTMEMORY_SECRET" \
+  "$AGENTMEMORY_URL/agentmemory/health" | jq .status
+# "healthy" 가 나오면 원격 서버 정상 (jq가 없으면 응답 전체를 봐도 된다)
+```
+
+:warning: 시크릿 없이 `/agentmemory/health`를 치면 `{"error":"unauthorized"}`가 나온다. 인증 헤더는 반드시 `Authorization: Bearer <SECRET>` 형식이어야 한다 — `x-agentmemory-secret` 같은 헤더는 거부된다.
+{: .notice--warning}
+
+**② 실제 데이터가 쌓였는지 확인** — Claude Code 창에서 `/session-history`나 `/recall <키워드>`를 실행하면 원격에 저장된 세션이 돌아온다. REST로 직접 보려면:
+
+```bash
+curl -s -H "Authorization: Bearer $AGENTMEMORY_SECRET" \
+  "$AGENTMEMORY_URL/agentmemory/sessions?limit=5"
+# {"sessions":[...]} — 비어 있으면 이 스코프(AGENT_ID/SCOPE)로 저장된 게 아직 없다는 뜻
+```
+
+:bulb: `AGENTMEMORY_AGENT_SCOPE=isolated`면 **내 `AGENT_ID`로 저장한 것만** 조회된다. 분명히 작업했는데 `sessions`가 비어 보인다면 — ① 저장 때와 조회 때 `AGENT_ID`가 다르거나, ② 자동 캡처 훅(플러그인)이 안 붙어 애초에 저장이 안 된 경우다. 스코프 동작은 [05]에서 자세히 다룬다.
+{: .notice--info}
+
 ---
 
 # [04] 사용법
@@ -149,6 +195,68 @@ npx @agentmemory/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.
 ```
 
 가져온 세션은 뷰어의 **Replay** 탭에서 프롬프트·도구 호출·응답을 타임라인으로 재생(0.5×~4× 속도)할 수 있다.
+
+## 4-4. 슬래시 명령어 — 메모리를 직접 다루기
+
+자동 캡처는 백그라운드에서 알아서 돌지만, 메모리를 **직접 조회·저장·관리**하고 싶을 때를 위해 플러그인이 슬래시 명령어를 등록한다. 명령어를 직접 입력해도 되고, 표의 "트리거 표현"에 적힌 자연어("recall", "where were we" 등)를 말하면 Claude Code가 알아서 해당 명령을 호출한다.
+
+**① 조회·저장 — 일상적으로 가장 많이 쓰는 묶음**
+
+| 명령어 | 역할 | 언제 / 트리거 표현 |
+|--------|------|--------------------|
+| `/recall` | 특정 토픽에 대한 과거 관찰·세션·학습을 검색 | "recall", "remember", "what did we do" — 과거 세션 맥락이 필요할 때 |
+| `/remember` | 인사이트·결정·학습을 장기 저장소에 **명시적으로** 보관 | "remember this", "save this" — 다음 세션을 위해 지식을 남기고 싶을 때 |
+| `/recap` | 최근 N개 세션을 **날짜별로 묶어** 요약 | "recap", "this week", "today" — 최근 작업을 롤업하고 싶을 때 |
+| `/session-history` | 이 프로젝트의 최근 세션에서 무슨 일이 있었는지 개요 표시 | "what did we do last time", "past sessions" — 지난 작업 전반을 훑고 싶을 때 |
+| `/handoff` | 현재 작업 디렉토리의 **가장 최근 세션을 이어받아 재개** | "where were we", "resume", "pick up where I left off" — 새 컨텍스트 없이 시작할 때 |
+
+**② 삭제 — 프라이버시·정리용**
+
+| 명령어 | 역할 | 언제 / 트리거 표현 |
+|--------|------|--------------------|
+| `/forget` | 특정 관찰이나 세션을 메모리에서 삭제 | "forget this", "delete memory" — 프라이버시 등으로 특정 데이터를 지울 때 |
+
+**③ 커밋 ↔ 세션 추적 — 코드의 "왜"를 되짚는 묶음**
+
+| 명령어 | 역할 | 언제 / 트리거 표현 |
+|--------|------|--------------------|
+| `/commit-context` | 파일·함수·라인을 그 **현재 커밋을 만든 에이전트 세션**으로 역추적 | "이 코드가 왜 여기 있지", "바뀔 때 에이전트가 뭘 하고 있었지" — 특정 위치의 맥락이 궁금할 때 |
+| `/commit-history` | 에이전트 세션에 **연결된 최근 git 커밋** 목록 (브랜치·레포로 필터 가능) | "show agent commits", "에이전트가 뭘 배포했지" — 세션 맥락이 붙은 커밋 목록이 필요할 때 |
+
+:bulb: `/remember`(이 글의 명시 저장)와 [04-2]의 자동 캡처는 보완 관계다. 중요한 결정처럼 "반드시 남기고 싶은 것"은 `/remember`로 못 박고, 나머지 일상 작업은 훅이 알아서 쌓게 두면 된다.
+{: .notice--info}
+
+## 4-5. 실전 워크플로 — Claude Code 창에서 하루
+
+명령어를 따로따로 보면 와닿지 않으니, **실제 하루 작업 흐름**으로 엮어 본다. 대부분은 그냥 코딩하면 되고(자동 캡처), 굵게 표시한 순간에만 명령어를 친다.
+
+```text
+[아침] 어제 작업 이어가기
+  > /handoff
+  → "어제 auth 미들웨어 작업 중이었고, jose 도입까지 함" 맥락 복원
+     (또는 "지난주 우리 뭐 했지?" → /recap)
+
+[작업 중] 평소처럼 코딩
+  코드 작성·테스트·버그 수정 → 훅이 알아서 캡처 (할 일 없음)
+
+[결정한 순간] 꼭 남길 것만 못 박기
+  > /remember rate limiter는 Redis 대신 Upstash 사용 — 서버리스 호환 때문
+  → 장기 저장. 다음 세션이 이 결정 위에서 시작
+
+[막혔을 때] 과거 맥락 끌어오기
+  > /recall 우리 JWT 검증 어디서 했지
+  → src/middleware/auth.ts, test/auth.test.ts 위치와 당시 결정 반환
+
+[이 코드가 왜 이런지] 커밋 → 세션 역추적
+  > /commit-context src/middleware/auth.ts:42
+  → 이 줄을 만든 그 세션에서 에이전트가 뭘 하고 있었는지
+
+[정리] 민감하거나 불필요한 메모리 삭제
+  > /forget   (특정 관찰·세션 제거)
+```
+
+:bulb: 핵심은 "**평소엔 자동, 결정적 순간에만 수동**"이다. `/remember`로 못 박은 것과 훅의 자동 캡처가 합쳐져, 다음 세션의 `/handoff`·`/recall`이 더 풍부해진다.
+{: .notice--info}
 
 ---
 

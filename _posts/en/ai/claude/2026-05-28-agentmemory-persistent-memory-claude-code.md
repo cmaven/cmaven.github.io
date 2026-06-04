@@ -104,6 +104,52 @@ agentmemory connect claude-code --with-hooks
 :memo: The `/plugin install` path is recommended when possible. Wiring only MCP directly can break hook paths on upgrade.
 {: .notice--warning}
 
+## 3-3. Local vs Remote Server — Where Your Data Lives
+
+Sections [02] and [03-1] both assume a **local server**: run `agentmemory` on your own PC and memory is stored on that PC. But to share memory across a team, or across multiple machines, you connect to a **remote server** instead.
+
+| Mode | Server location | Where data is stored | When to use |
+|------|-----------------|----------------------|-------------|
+| Local | Your PC (`agentmemory` directly) | Your PC | Solo, single machine |
+| Remote | An always-on separate server (e.g. `10.0.0.10:3111`) | **That remote server** | Team-shared / multi-machine |
+
+In remote mode, **no data is stored on your PC.** Local `~/.agentmemory/` holds *connection info only* (even `standalone.json` stays nearly empty).
+
+```bash
+# ~/.agentmemory/.env — connection info (not data)
+AGENTMEMORY_URL=http://10.0.0.10:3111   # remote server address
+AGENTMEMORY_SECRET=<your issued secret>       # auth token
+AGENT_ID=alice-laptop                            # this client's/role's identifier
+AGENTMEMORY_AGENT_SCOPE=isolated              # isolated=only yours / shared=everyone
+```
+
+All observations, sessions, and summaries accumulate in the remote server's store (KV). So you can switch machines and still reach the same memory as long as you have the same `.env`.
+
+### Verifying Remote Storage Works
+
+**① Check the server connection (health)** — pass the secret via `Authorization: Bearer`.
+
+```bash
+source ~/.agentmemory/.env
+curl -s -H "Authorization: Bearer $AGENTMEMORY_SECRET" \
+  "$AGENTMEMORY_URL/agentmemory/health" | jq .status
+# "healthy" means the remote server is fine (no jq? just read the full response)
+```
+
+:warning: Hitting `/agentmemory/health` without the secret returns `{"error":"unauthorized"}`. The auth header must be `Authorization: Bearer <SECRET>` — headers like `x-agentmemory-secret` are rejected.
+{: .notice--warning}
+
+**② Check that data is actually accumulating** — in the Claude Code window, run `/session-history` or `/recall <keyword>` and stored sessions come back. To inspect via REST directly:
+
+```bash
+curl -s -H "Authorization: Bearer $AGENTMEMORY_SECRET" \
+  "$AGENTMEMORY_URL/agentmemory/sessions?limit=5"
+# {"sessions":[...]} — empty means nothing is stored under this scope (AGENT_ID/SCOPE) yet
+```
+
+:bulb: With `AGENTMEMORY_AGENT_SCOPE=isolated`, you only see what **your `AGENT_ID` saved**. If you clearly did work but `sessions` looks empty — ① the `AGENT_ID` differs between save and query, or ② the auto-capture hook (plugin) isn't wired so nothing was stored in the first place. Scope behavior is covered in [05].
+{: .notice--info}
+
 ---
 
 # [04] Usage
@@ -149,6 +195,68 @@ npx @agentmemory/agentmemory import-jsonl ~/.claude/projects/-my-project/abc123.
 ```
 
 Imported sessions can be replayed from the viewer's **Replay** tab — prompts, tool calls, and responses on a scrubbable timeline (0.5×–4× speed).
+
+## 4-4. Slash Commands — Working With Memory Directly
+
+Automatic capture runs in the background, but for the times you want to **query, save, or manage** memory yourself, the plugin registers a set of slash commands. You can type a command directly, or just say one of the natural-language triggers in the table (e.g., "recall", "where were we") and Claude Code invokes the matching command for you.
+
+**① Query & save — the everyday set you'll reach for most**
+
+| Command | Role | When / trigger phrases |
+|---------|------|------------------------|
+| `/recall` | Search past observations, sessions, and learnings about a topic | "recall", "remember", "what did we do" — when you need context from past sessions |
+| `/remember` | **Explicitly** save an insight, decision, or learning to long-term storage | "remember this", "save this" — when you want to preserve knowledge for future sessions |
+| `/recap` | Summarize the last N sessions, **grouped by date** | "recap", "this week", "today" — when you want a rollup of recent work |
+| `/session-history` | Show an overview of what happened in recent sessions on this project | "what did we do last time", "past sessions" — when you want a sweep of previous work |
+| `/handoff` | **Resume the most recent session** for the current working directory | "where were we", "resume", "pick up where I left off" — when starting with no fresh context |
+
+**② Delete — for privacy and cleanup**
+
+| Command | Role | When / trigger phrases |
+|---------|------|------------------------|
+| `/forget` | Delete specific observations or sessions from memory | "forget this", "delete memory" — when removing specific data for privacy |
+
+**③ Commit ↔ session tracing — for recovering the "why" behind code**
+
+| Command | Role | When / trigger phrases |
+|---------|------|------------------------|
+| `/commit-context` | Trace a file, function, or line back to the **agent session that produced its current commit** | "why is this code here", "what was the agent doing when this changed" — when you want context on a location |
+| `/commit-history` | List recent **git commits linked to agent sessions** (filterable by branch/repo) | "show agent commits", "what has the agent shipped" — when you want commits with their session context |
+
+:bulb: `/remember` (explicit save) and the automatic capture from [04-2] are complementary. Pin down must-keep items like key decisions with `/remember`, and let the hooks accumulate everything else from day-to-day work.
+{: .notice--info}
+
+## 4-5. A Day in the Claude Code Window — Real Workflow
+
+The commands don't click in isolation, so here they are woven into **an actual day of work**. Most of the time you just code (auto-capture); you only type a command at the moments in bold.
+
+```text
+[Morning] Pick up yesterday
+  > /handoff
+  -> Restores "was working on auth middleware, introduced jose" context
+     (or "what did we do last week?" -> /recap)
+
+[While working] Code as usual
+  Write code, run tests, fix bugs -> hooks capture it (nothing to do)
+
+[At a decision] Pin down only what matters
+  > /remember Using Upstash instead of Redis for the rate limiter — serverless compat
+  -> Long-term save. The next session starts on top of this decision
+
+[When stuck] Pull in past context
+  > /recall where did we do JWT validation
+  -> Returns src/middleware/auth.ts, test/auth.test.ts and the decisions made then
+
+[Why is this code like this] Trace commit -> session
+  > /commit-context src/middleware/auth.ts:42
+  -> What the agent was doing in the session that produced this line
+
+[Cleanup] Delete sensitive or unneeded memory
+  > /forget   (remove specific observations/sessions)
+```
+
+:bulb: The point is "**automatic by default, manual only at decisive moments**." `/remember` pins plus the hooks' auto-capture combine to make the next session's `/handoff` and `/recall` richer.
+{: .notice--info}
 
 ---
 
