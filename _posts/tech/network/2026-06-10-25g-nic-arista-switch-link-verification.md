@@ -114,6 +114,51 @@ Et1               connected    1        full   25G    25GBASE-CR
 sw-core-01# show interfaces status | include 25G
 ```
 
+**포트가 25G로 "설정"되어 있는지 확인 (협상 결과 ≠ 설정값):**
+
+`show interfaces ... status`의 `Speed`는 *협상된(negotiated)* 결과다. 포트에 어떤 속도가 *설정(configured)*되어 있는지는 running-config로 따로 확인해야 한다. 자동협상이 잘 안 붙는 환경에서는 포트를 25G로 **강제 고정**해 두는 것이 안전하다.
+
+```
+sw-core-01# show running-config interfaces Ethernet1
+```
+
+출력 예 (기본 — 자동협상):
+
+```
+interface Ethernet1
+   ! speed 설정 줄이 없으면 auto (자동협상)
+```
+
+출력 예 (25G 강제 설정):
+
+```
+interface Ethernet1
+   speed forced 25gfull
+```
+
+현재 동작 속도와 함께 보려면:
+
+```
+sw-core-01# show interfaces Ethernet1 status | include 25G
+sw-core-01# show interfaces Ethernet1 | include -i -E 'Speed|BW|bandwidth'
+```
+
+| 확인 | 의미 |
+|------|------|
+| running-config에 `speed` 줄 없음 | 자동협상(auto) — 트랜시버가 25G면 25G로 협상됨 |
+| `speed forced 25gfull` | 25G로 강제 고정 (자동협상 실패/플랫폼 호환성 이슈 시 사용) |
+| `status`의 Speed가 `25G` | 실제로 25G로 링크업된 상태 |
+
+**25G로 강제 설정(필요 시):**
+
+```
+sw-core-01(config)# interface Ethernet1
+sw-core-01(config-if-Et1)# speed forced 25gfull
+```
+
+:bulb: 일부 플랫폼은 포트가 40G/100G **브레이크아웃 그룹**(예: 4x10G / 4x25G)으로 묶여 있어 25G 단독으로 안 잡힐 수 있다. 이 경우 해당 포트 그룹을 25G 브레이크아웃 모드로 먼저 분리해야 `Ethernet1/1` 같은 25G 서브포트가 나타난다.
+{: .notice--info}
+
 # [05] 스위치 측 — 트랜시버 인식 확인 (호환성 핵심)
 
 신규 트랜시버/케이블을 스위치가 정상 식별하는지 본다. Arista는 미지원/타사 트랜시버에 경고를 남기는 경우가 있다.
@@ -378,7 +423,73 @@ iperf3 -c 10.0.0.2 -u -b 25G -t 20
 
 `Lost/Total Datagrams`가 0%에 가까워야 한다.
 
-# [13] 지연(Latency) 테스트
+# [13] 종단간(PC A → 스위치 → PC B) 25G 검증
+
+여기까지 각 구간(서버A, 스위치 포트, 서버B)을 **개별**로 확인했다. 마지막으로 **PC A에서 25G로 패킷을 보냈을 때 PC B가 동일하게 25G로 받는지**를 종단간(end-to-end)으로 확인한다. 이 테스트가 통과하면 경로상의 모든 요소(**서버A NIC → 스위치 포워딩 → 서버B NIC**)가 25G를 만족한다는 것을 한 번에 증명할 수 있다.
+
+**판정 논리:**
+
+| 관찰 | 결론 |
+|------|------|
+| PC A 송신 ≈ 25G **그리고** PC B 수신 ≈ 25G | 송신 NIC · 스위치 포워딩 · 수신 NIC **모두 25G 정상** |
+| PC A는 25G 송신, PC B 수신 < 25G | 스위치 큐 드롭 또는 **수신측 NIC/PCIe 병목** |
+| PC A가 25G로 송신 자체를 못 함 | **송신측 NIC/케이블/포트 협상** 문제 |
+
+> 핵심: 한쪽 끝에서 넣은 라인레이트가 반대쪽 끝에서 그대로 나오면, 중간의 스위치와 양쪽 NIC가 모두 25G를 처리한다는 것을 **동시에** 입증한다.
+
+**1) 송신 측정 — PC A:**
+
+```bash
+# PC A → PC B, 8 스트림으로 라인레이트에 근접 송신
+iperf3 -c 10.0.0.2 -P 8 -t 30
+```
+
+**2) 수신 측정 — PC B (송신과 동시에 확인):**
+
+PC B의 `iperf3 -s` 출력에서 `receiver` 라인의 Gbits/sec가 PC A 송신값과 일치하는지 본다. 인터페이스 실시간 수신율을 별도로 보려면:
+
+```bash
+# PC B에서 1초 간격 수신 바이트 증가량 → 수신 라인레이트 환산
+sar -n DEV 1
+# 또는
+ifstat -i ens1f0 1
+```
+
+**출력 해석:**
+
+```
+# PC A (송신) iperf3
+[SUM]   0.00-30.00  sec  82.1 GBytes  23.5 Gbits/sec        sender
+# PC B (수신) iperf3 서버
+[SUM]   0.00-30.00  sec  82.0 GBytes  23.5 Gbits/sec        receiver
+# PC B (sar -n DEV)
+ens1f0  ...  rxkB/s ≈ 2.9e6   (≈ 23.5 Gbps 수신)
+```
+
+| 확인 | 의미 |
+|------|------|
+| 송신 ≈ 수신 ≈ 23 Gbps+ | **종단간 25G 검증 통과** — 스위치 + 양쪽 NIC 모두 합격 |
+| 수신이 송신보다 크게 낮음 | 스위치 드롭/수신 NIC 병목 → `show interfaces Et2 counters`, `ethtool -S`로 drop 확인 |
+
+**3) 양방향 동시(전이중) 확인:**
+
+25G는 전이중(full-duplex)이므로 양방향 동시에 각각 25G가 가능해야 한다.
+
+```bash
+# PC A: 송신+수신 동시 부하
+iperf3 -c 10.0.0.2 -P 8 -t 30 --bidir
+```
+
+출력 예(요약):
+
+```
+[SUM][TX]  0.00-30.00  sec  81.9 GBytes  23.4 Gbits/sec        sender
+[SUM][RX]  0.00-30.00  sec  81.8 GBytes  23.4 Gbits/sec        receiver
+```
+
+> 양방향 각각 ~23 Gbps가 유지되면 전이중 25G까지 검증 완료. 이로써 "PC A에서 25G로 보낸 트래픽을 PC B가 25G로 수신"이 실측으로 확인되어, **스위치와 양쪽 PC의 NIC 모두 25G를 만족**한다고 판단할 수 있다.
+
+# [14] 지연(Latency) 테스트
 
 ```bash
 # 빠른 간격으로 RTT 분포 확인
@@ -396,7 +507,7 @@ rtt min/avg/max/mdev = 0.038/0.046/0.071/0.008 ms
 | `avg` 수십 µs | 동일 스위치 경유 정상 |
 | `mdev`(지터) 작음 | 안정적. 크게 튀면 FEC 재시도/버퍼 문제 의심 |
 
-# [14] 에러 카운터 확인 (테스트 전후 비교)
+# [15] 에러 카운터 확인 (테스트 전후 비교)
 
 처리량 테스트 **전후로** 카운터를 떠서 증가분을 본다. 호환성 문제는 여기서 드러난다.
 
@@ -445,7 +556,7 @@ sw-core-01# show interfaces Ethernet1 phy detail | include -i -A2 fec
 | FCS/Symbol Err 0 유지 | 링크 품질 양호 |
 | FEC uncorrected = 0 | **합격 필수 조건** |
 
-# [15] 호환성 트러블슈팅
+# [16] 호환성 트러블슈팅
 
 | 증상 | 원인/조치 |
 |------|-----------|
@@ -456,11 +567,12 @@ sw-core-01# show interfaces Ethernet1 phy detail | include -i -A2 fec
 | 처리량이 10G 수준 | PCIe x4 강등(`LnkSta` 확인), 단일 스트림 한계 → `-P` 다중 스트림, IRQ/RSS 튜닝 |
 | FEC corrected 급증 + uncorrected 발생 | 케이블 품질/길이 한계 → 케이블 교체, 더 강한 FEC(RS) 적용 |
 
-# [16] 요약 체크리스트
+# [17] 요약 체크리스트
 
 | 단계 | 위치 | 확인 |
 |------|------|------|
 | STEP 04 | 스위치 | `show interfaces Et1 status` → `connected`, `25G` |
+| STEP 04 | 스위치 | `show running-config interfaces Et1` → 포트 25G 설정(auto/`forced 25gfull`) 확인 |
 | STEP 05 | 스위치 | `show interfaces Et1 transceiver` → 트랜시버 인식 |
 | STEP 06 | 스위치+서버 | FEC 모드 **양쪽 동일**(RS 권장) |
 | STEP 07 | 서버 | `ethtool ens1f0` → `25000Mb/s`, `Link: yes` |
@@ -468,6 +580,7 @@ sw-core-01# show interfaces Ethernet1 phy detail | include -i -A2 fec
 | STEP 09 | 서버 | `lspci` → PCIe x8 / Gen3+ |
 | STEP 11 | 양쪽 | MTU 9000 일치, `ping -M do -s 8972` 성공 |
 | STEP 12 | 서버 | `iperf3 -P 8` → 양방향 23 Gbps+ |
-| STEP 14 | 양쪽 | CRC/FEC uncorrected **증가 0** |
+| STEP 13 | 양쪽 | **종단간**: PC A 송신 ≈ PC B 수신 ≈ 23 Gbps+ (`--bidir` 전이중 포함) |
+| STEP 15 | 양쪽 | CRC/FEC uncorrected **증가 0** |
 
-> 위 9개 항목이 모두 통과하면, 신규 25G NIC와 Arista 스위치 간 **호환성·성능 검증 완료**로 판단한다.
+> 위 항목이 모두 통과하면, 신규 25G NIC와 Arista 스위치 간 **호환성·성능 검증 완료**로 판단한다. 특히 STEP 13(종단간)에서 PC A가 보낸 25G를 PC B가 그대로 수신하면, 스위치와 양쪽 PC NIC 모두 25G를 만족함이 한 번에 입증된다.

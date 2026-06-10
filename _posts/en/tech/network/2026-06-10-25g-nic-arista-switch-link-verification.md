@@ -114,6 +114,51 @@ To see multiple ports at once:
 sw-core-01# show interfaces status | include 25G
 ```
 
+**Confirm the port is "configured" for 25G (negotiated ≠ configured):**
+
+The `Speed` in `show interfaces ... status` is the *negotiated* result. What speed is actually *configured* on the port has to be checked separately in the running-config. In environments where auto-negotiation is flaky, it's safer to **force** the port to 25G.
+
+```
+sw-core-01# show running-config interfaces Ethernet1
+```
+
+Sample output (default — auto-negotiation):
+
+```
+interface Ethernet1
+   ! no speed line means auto (auto-negotiation)
+```
+
+Sample output (forced 25G):
+
+```
+interface Ethernet1
+   speed forced 25gfull
+```
+
+To see it alongside the current operating speed:
+
+```
+sw-core-01# show interfaces Ethernet1 status | include 25G
+sw-core-01# show interfaces Ethernet1 | include -i -E 'Speed|BW|bandwidth'
+```
+
+| Check | Meaning |
+|-------|---------|
+| No `speed` line in running-config | Auto-negotiation — negotiates to 25G if the transceiver is 25G |
+| `speed forced 25gfull` | Forced to 25G (use when auto-neg fails / platform compatibility issues) |
+| `Speed` is `25G` in `status` | Actually linked up at 25G |
+
+**Force 25G (if needed):**
+
+```
+sw-core-01(config)# interface Ethernet1
+sw-core-01(config-if-Et1)# speed forced 25gfull
+```
+
+:bulb: On some platforms a port belongs to a 40G/100G **breakout group** (e.g. 4x10G / 4x25G) and won't come up as a standalone 25G port. In that case you must first split the port group into 25G breakout mode so that 25G subports like `Ethernet1/1` appear.
+{: .notice--info}
+
 # [05] Switch Side — Transceiver Detection (Compatibility Core)
 
 Check that the switch correctly identifies the new transceiver/cable. Arista may flag unsupported/third-party transceivers.
@@ -378,7 +423,73 @@ iperf3 -c 10.0.0.2 -u -b 25G -t 20
 
 `Lost/Total Datagrams` should be near 0%.
 
-# [13] Latency Test
+# [13] End-to-End 25G Verification (PC A → Switch → PC B)
+
+So far each segment (Server A, switch port, Server B) was checked **individually**. The final step confirms, end-to-end, that **when PC A sends at 25G, PC B receives at the same 25G**. If this test passes, it proves in one shot that every element on the path (**Server A NIC → switch forwarding → Server B NIC**) satisfies 25G.
+
+**Decision logic:**
+
+| Observation | Conclusion |
+|-------------|------------|
+| PC A sends ≈ 25G **and** PC B receives ≈ 25G | TX NIC · switch forwarding · RX NIC **all OK at 25G** |
+| PC A sends 25G, PC B receives < 25G | Switch queue drops or **RX-side NIC/PCIe bottleneck** |
+| PC A can't even send at 25G | **TX-side NIC/cable/port negotiation** problem |
+
+> Key idea: if the line rate injected at one end comes out at the other end intact, it **simultaneously** proves the switch in the middle and both NICs all handle 25G.
+
+**1) Measure the sender — PC A:**
+
+```bash
+# PC A → PC B, 8 streams to approach line rate
+iperf3 -c 10.0.0.2 -P 8 -t 30
+```
+
+**2) Measure the receiver — PC B (at the same time):**
+
+In PC B's `iperf3 -s` output, check that the `receiver` line's Gbits/sec matches PC A's send value. To watch the live receive rate on the interface separately:
+
+```bash
+# On PC B: per-second received bytes → receive line rate
+sar -n DEV 1
+# or
+ifstat -i ens1f0 1
+```
+
+**Interpreting the output:**
+
+```
+# PC A (sender) iperf3
+[SUM]   0.00-30.00  sec  82.1 GBytes  23.5 Gbits/sec        sender
+# PC B (receiver) iperf3 server
+[SUM]   0.00-30.00  sec  82.0 GBytes  23.5 Gbits/sec        receiver
+# PC B (sar -n DEV)
+ens1f0  ...  rxkB/s ≈ 2.9e6   (≈ 23.5 Gbps received)
+```
+
+| Check | Meaning |
+|-------|---------|
+| Send ≈ Receive ≈ 23 Gbps+ | **End-to-end 25G verification passed** — switch + both NICs all pass |
+| Receive far below send | Switch drops / RX NIC bottleneck → check `show interfaces Et2 counters`, `ethtool -S` for drops |
+
+**3) Bidirectional (full-duplex) check:**
+
+25G is full-duplex, so each direction should sustain 25G simultaneously.
+
+```bash
+# PC A: simultaneous TX + RX load
+iperf3 -c 10.0.0.2 -P 8 -t 30 --bidir
+```
+
+Sample output (excerpt):
+
+```
+[SUM][TX]  0.00-30.00  sec  81.9 GBytes  23.4 Gbits/sec        sender
+[SUM][RX]  0.00-30.00  sec  81.8 GBytes  23.4 Gbits/sec        receiver
+```
+
+> If both directions sustain ~23 Gbps, full-duplex 25G is verified too. This empirically confirms that "traffic PC A sent at 25G is received by PC B at 25G," so you can conclude that **both the switch and both PCs' NICs satisfy 25G**.
+
+# [14] Latency Test
 
 ```bash
 # RTT distribution at a fast interval
@@ -396,7 +507,7 @@ rtt min/avg/max/mdev = 0.038/0.046/0.071/0.008 ms
 | `avg` tens of µs | Normal through the same switch |
 | Small `mdev` (jitter) | Stable. Large spikes suggest FEC retries/buffer issues |
 
-# [14] Error Counter Check (Before/After Comparison)
+# [15] Error Counter Check (Before/After Comparison)
 
 Snapshot counters **before and after** the throughput test and look at the delta. Compatibility problems show up here.
 
@@ -445,7 +556,7 @@ sw-core-01# show interfaces Ethernet1 phy detail | include -i -A2 fec
 | FCS/Symbol Err stay 0 | Link quality good |
 | FEC uncorrected = 0 | **Required pass condition** |
 
-# [15] Compatibility Troubleshooting
+# [16] Compatibility Troubleshooting
 
 | Symptom | Cause / action |
 |---------|----------------|
@@ -456,11 +567,12 @@ sw-core-01# show interfaces Ethernet1 phy detail | include -i -A2 fec
 | Throughput stuck at ~10G | PCIe x4 downgrade (check `LnkSta`), single-stream limit → use `-P` multi-stream, tune IRQ/RSS |
 | FEC corrected surges + uncorrected appears | Cable quality/length limit → replace cable, apply stronger FEC (RS) |
 
-# [16] Summary Checklist
+# [17] Summary Checklist
 
 | Step | Where | Check |
 |------|-------|-------|
 | STEP 04 | Switch | `show interfaces Et1 status` → `connected`, `25G` |
+| STEP 04 | Switch | `show running-config interfaces Et1` → port configured for 25G (auto / `forced 25gfull`) |
 | STEP 05 | Switch | `show interfaces Et1 transceiver` → transceiver detected |
 | STEP 06 | Switch + server | FEC mode **identical on both** (RS recommended) |
 | STEP 07 | Server | `ethtool ens1f0` → `25000Mb/s`, `Link: yes` |
@@ -468,6 +580,7 @@ sw-core-01# show interfaces Ethernet1 phy detail | include -i -A2 fec
 | STEP 09 | Server | `lspci` → PCIe x8 / Gen3+ |
 | STEP 11 | Both | MTU 9000 matched, `ping -M do -s 8972` succeeds |
 | STEP 12 | Server | `iperf3 -P 8` → ≥ 23 Gbps both directions |
-| STEP 14 | Both | CRC/FEC uncorrected **delta 0** |
+| STEP 13 | Both | **End-to-end**: PC A send ≈ PC B receive ≈ 23 Gbps+ (incl. `--bidir` full-duplex) |
+| STEP 15 | Both | CRC/FEC uncorrected **delta 0** |
 
-> When all nine items pass, consider the **compatibility and performance between the new 25G NIC and the Arista switch verified**.
+> When all items pass, consider the **compatibility and performance between the new 25G NIC and the Arista switch verified**. In particular, when STEP 13 (end-to-end) shows PC B receiving the 25G that PC A sent, it proves in one shot that the switch and both PCs' NICs all satisfy 25G.
