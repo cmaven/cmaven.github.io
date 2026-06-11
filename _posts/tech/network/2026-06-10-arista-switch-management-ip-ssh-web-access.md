@@ -54,12 +54,78 @@ Stop bits : 1
 Flow ctrl : None
 ```
 
-> 9600 8N1. 리눅스/macOS라면 다음과 같이 접속할 수 있다.
+> 9600 8N1. 윈도우라면 PuTTY/Tera Term을 쓰고, 리눅스(Ubuntu)/macOS라면 아래 절차로 `screen` 또는 `minicom`을 사용한다.
+
+## [02-1] Ubuntu에서 USB 시리얼 장치 확인
+
+USB-to-시리얼(콘솔) 케이블을 PC에 꽂으면 보통 `/dev/ttyUSB0`(FTDI/PL2303 계열) 또는 `/dev/ttyACM0`(CDC-ACM 계열)로 잡힌다. 어떤 이름으로 잡혔는지 먼저 확인한다.
 
 ```bash
-# 장치 이름은 환경에 따라 다름 (예: /dev/ttyUSB0, /dev/tty.usbserial-XXXX)
+# 케이블을 꽂은 직후, 새로 생성된 시리얼 장치 확인
+ls -l /dev/ttyUSB* /dev/ttyACM* 2>/dev/null
+
+# 케이블을 꽂는 순간의 커널 메시지로 장치 이름 확인 (가장 확실)
+dmesg | grep -iE 'ttyUSB|ttyACM|usb' | tail -n 20
+
+# USB 장치 목록에서 시리얼 칩(FTDI, Prolific 등) 확인
+lsusb
+```
+
+> `dmesg`에 `FTDI USB Serial Device converter now attached to ttyUSB0` 같은 줄이 보이면 그 장치가 콘솔 케이블이다. 꽂기 전/후로 `ls`를 비교하면 새로 생긴 장치를 바로 알 수 있다.
+
+:warning: 일반 사용자 계정은 시리얼 포트 접근 권한이 없어 `Permission denied`가 날 수 있다. 사용자를 `dialout` 그룹에 추가하면 sudo 없이 접속할 수 있다(재로그인 필요).
+{: .notice--warning}
+
+```bash
+# 현재 사용자를 dialout 그룹에 추가 후 로그아웃→로그인(또는 재부팅)
+sudo usermod -aG dialout $USER
+
+# 임시로는 sudo로 실행해도 된다
+```
+
+## [02-2] screen으로 접속
+
+가장 가볍게 쓸 수 있는 방법이다.
+
+```bash
+# 설치 (Ubuntu/Debian)
+sudo apt update
+sudo apt install -y screen
+
+# 접속: screen <장치> <baud>
 screen /dev/ttyUSB0 9600
 ```
+
+- 화면이 비어 있으면 **Enter**를 한 번 쳐서 프롬프트를 깨운다.
+- 종료: `Ctrl + a` 누른 뒤 `k` → `y` (또는 `Ctrl + a`, `\`).
+- 분리(세션 유지): `Ctrl + a` 뒤 `d`, 재접속은 `screen -r`.
+
+## [02-3] minicom으로 접속
+
+메뉴 기반으로 설정을 저장해두고 쓰기 편하다.
+
+```bash
+# 설치
+sudo apt update
+sudo apt install -y minicom
+
+# 한 줄로 바로 접속 (장치/baud 지정)
+sudo minicom -D /dev/ttyUSB0 -b 9600
+```
+
+세부 설정을 저장하려면 설정 메뉴로 들어간다.
+
+```bash
+sudo minicom -s
+```
+
+- `Serial port setup` 메뉴에서:
+  - **A - Serial Device** : `/dev/ttyUSB0`
+  - **E - Bps/Par/Bits** : `9600 8N1`
+  - **F - Hardware Flow Control** : `No`
+  - **G - Software Flow Control** : `No`
+- 설정 후 `Save setup as dfl`로 기본값 저장 → `Exit`로 접속 시작.
+- minicom 종료: `Ctrl + a` 뒤 `x` → `Yes`.
 
 접속되면 기본 계정 `admin`으로 로그인한다(초기 비밀번호 없음). 프롬프트가 `switch>` 또는 `switch login:` 형태로 나타난다.
 

@@ -54,12 +54,78 @@ Stop bits : 1
 Flow ctrl : None
 ```
 
-> That's 9600 8N1. On Linux/macOS you can connect like this:
+> That's 9600 8N1. On Windows use PuTTY/Tera Term; on Linux (Ubuntu)/macOS, use `screen` or `minicom` as shown below.
+
+## [02-1] Identify the USB Serial Device on Ubuntu
+
+When you plug a USB-to-serial (console) cable into the PC, it usually appears as `/dev/ttyUSB0` (FTDI/PL2303 family) or `/dev/ttyACM0` (CDC-ACM family). Find out which name it got first.
 
 ```bash
-# Device name varies (e.g. /dev/ttyUSB0, /dev/tty.usbserial-XXXX)
+# Right after plugging in the cable, check the newly created serial device
+ls -l /dev/ttyUSB* /dev/ttyACM* 2>/dev/null
+
+# Confirm the device name from kernel messages at plug-in time (most reliable)
+dmesg | grep -iE 'ttyUSB|ttyACM|usb' | tail -n 20
+
+# Check the serial chip (FTDI, Prolific, etc.) in the USB device list
+lsusb
+```
+
+> If `dmesg` shows a line like `FTDI USB Serial Device converter now attached to ttyUSB0`, that device is your console cable. Comparing `ls` before and after plugging in immediately reveals the new device.
+
+:warning: A regular user account may lack serial-port access and hit `Permission denied`. Add your user to the `dialout` group to connect without sudo (re-login required).
+{: .notice--warning}
+
+```bash
+# Add the current user to the dialout group, then log out → log in (or reboot)
+sudo usermod -aG dialout $USER
+
+# As a temporary workaround you can also just run with sudo
+```
+
+## [02-2] Connect with screen
+
+The lightest-weight option.
+
+```bash
+# Install (Ubuntu/Debian)
+sudo apt update
+sudo apt install -y screen
+
+# Connect: screen <device> <baud>
 screen /dev/ttyUSB0 9600
 ```
+
+- If the screen is blank, press **Enter** once to wake the prompt.
+- Quit: `Ctrl + a` then `k` → `y` (or `Ctrl + a`, `\`).
+- Detach (keep session): `Ctrl + a` then `d`; reattach with `screen -r`.
+
+## [02-3] Connect with minicom
+
+Menu-based, convenient for saving settings.
+
+```bash
+# Install
+sudo apt update
+sudo apt install -y minicom
+
+# Connect directly in one line (specify device/baud)
+sudo minicom -D /dev/ttyUSB0 -b 9600
+```
+
+To save detailed settings, open the configuration menu.
+
+```bash
+sudo minicom -s
+```
+
+- In the `Serial port setup` menu:
+  - **A - Serial Device** : `/dev/ttyUSB0`
+  - **E - Bps/Par/Bits** : `9600 8N1`
+  - **F - Hardware Flow Control** : `No`
+  - **G - Software Flow Control** : `No`
+- After setting, `Save setup as dfl` to store defaults → `Exit` to start the session.
+- Quit minicom: `Ctrl + a` then `x` → `Yes`.
 
 Once connected, log in with the default `admin` account (no initial password). The prompt appears as `switch>` or `switch login:`.
 
