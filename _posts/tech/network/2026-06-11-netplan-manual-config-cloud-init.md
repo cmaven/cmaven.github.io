@@ -1,6 +1,5 @@
-<!-- 2026-06-11-netplan-manual-config-cloud-init.md: cloud-init 자동 생성 환경에서 netplan을 직접 수정해 인터페이스 IP/게이트웨이/DNS를 설정하는 가이드 | 생성일: 2026-06-11 -->
 ---
-title: "cloud-init 자동 생성 환경에서 netplan 직접 수정해 NIC에 IP·게이트웨이·DNS 설정하기"
+title: "netplan apply가 안 먹힐 때: cloud-init 끄고 NIC에 IP 직접 설정하기"
 description: "Ubuntu에서 50-cloud-init.yaml이 자동 생성되어 netplan apply가 먹지 않을 때, cloud-init의 네트워크 관리를 끄고 추가 NIC에 IP/게이트웨이/DNS를 영구 설정하는 방법과 기존 파일 처리 3가지 선택지"
 excerpt: "인터페이스 이름 확인 → cloud-init 네트워크 비활성화 → netplan yaml 작성 → netplan try로 안전 적용까지. 기존 50-cloud-init.yaml을 삭제할지 말지에 대한 3가지 선택지(추가/통합/비활성화)와 default route 충돌 주의점 정리"
 date: 2026-06-11

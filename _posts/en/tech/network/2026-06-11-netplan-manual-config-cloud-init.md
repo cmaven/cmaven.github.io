@@ -1,4 +1,3 @@
-<!-- 2026-06-11-netplan-manual-config-cloud-init.md: Guide to manually editing netplan to set IP/gateway/DNS on a NIC when cloud-init auto-generates the config | created: 2026-06-11 -->
 ---
 title: "Manually Editing netplan to Set IP/Gateway/DNS on a NIC When cloud-init Auto-Generates the Config"
 description: "When 50-cloud-init.yaml is auto-generated on Ubuntu and netplan apply no longer sticks, here is how to disable cloud-init's network management and permanently configure IP/gateway/DNS on an extra NIC — plus three options for handling the existing file"
