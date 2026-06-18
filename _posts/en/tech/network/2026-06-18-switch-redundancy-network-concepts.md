@@ -173,6 +173,7 @@ interface Vlan10
 | Switch1 real IP | `10.0.10.2` | priority 200 → Master |
 | Switch2 real IP | `10.0.10.3` | priority 100 → Backup |
 
+{% raw %}
 <pre class="mermaid">
 graph TD
     SRV["Server<br/>gateway = 10.0.10.1 (VIP)"]
@@ -188,6 +189,7 @@ graph TD
     style M fill:#e3f2fd,stroke:#1565c0
     style B fill:#fff3e0,stroke:#e65100
 </pre>
+{% endraw %}
 
 > Using **MLAG (L2 chassis redundancy) + VRRP (L3 gateway redundancy) together** makes links, switches, and the gateway all redundant. That's the standard redundant topology.
 
@@ -286,6 +288,7 @@ interface Vlan30
 
 # [06] The Whole Picture — How the Concepts Wire into One Topology
 
+{% raw %}
 <pre class="mermaid">
 graph TD
     CORE["external / core"]
@@ -313,6 +316,7 @@ graph TD
     style S2 fill:#e8f5e9,stroke:#2e7d32
     style MGMT fill:#fff3e0,stroke:#e65100
 </pre>
+{% endraw %}
 
 | Redundancy target | Responsible concept |
 |-------------------|---------------------|

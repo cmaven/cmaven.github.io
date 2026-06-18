@@ -173,6 +173,7 @@ interface Vlan10
 | 스위치1 실 IP | `10.0.10.2` | priority 200 → Master |
 | 스위치2 실 IP | `10.0.10.3` | priority 100 → Backup |
 
+{% raw %}
 <pre class="mermaid">
 graph TD
     SRV["서버<br/>gateway = 10.0.10.1 (VIP)"]
@@ -188,6 +189,7 @@ graph TD
     style M fill:#e3f2fd,stroke:#1565c0
     style B fill:#fff3e0,stroke:#e65100
 </pre>
+{% endraw %}
 
 > MLAG(L2 섀시 이중화) + VRRP(L3 게이트웨이 이중화)를 **함께** 쓰면 링크·스위치·게이트웨이가 모두 이중화된다. 이것이 일반적인 이중화 토폴로지다.
 
@@ -286,6 +288,7 @@ interface Vlan30
 
 # [06] 전체 그림 — 개념이 어떻게 한 토폴로지로 엮이는가
 
+{% raw %}
 <pre class="mermaid">
 graph TD
     CORE["외부망 / 코어"]
@@ -313,6 +316,7 @@ graph TD
     style S2 fill:#e8f5e9,stroke:#2e7d32
     style MGMT fill:#fff3e0,stroke:#e65100
 </pre>
+{% endraw %}
 
 | 이중화 대상 | 담당 개념 |
 |------------|----------|
