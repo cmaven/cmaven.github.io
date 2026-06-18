@@ -382,6 +382,81 @@ ping -M do -s 8972 -c 4 10.0.0.2
 
 A single TCP stream may not saturate 25G due to single-core limits. Use **multiple streams (`-P`)** to approach line rate.
 
+## [12-1] Multi-IP Servers — Pin the Test to a Specific Link (IP)
+
+When a single server has two NICs — **A: internet/management** (usually holds the default route) and **B: data test** (the 25G link) — i.e. it uses **several IPs at once**, you must tell iperf3 which interface to send traffic over. If you measure with a hostname or the internet/management IP (A) and no binding, traffic follows the **default route (NIC A)** — and you measure the wrong link, not the 25G data link (B). So **when testing B, bind iperf3 to B's IP (`-B`)** to keep traffic from leaking out onto A (the internet NIC).
+
+Sample routing tables (Servers A/B):
+
+```bash
+# Server A
+kcloud@server-a:~$ ip r
+default via 10.10.10.1 dev ens259f0 proto static
+10.10.10.0/24 dev ens259f0 proto kernel scope link src 10.10.10.108
+192.168.90.0/24 dev ens801f0np0 proto kernel scope link src 192.168.90.200
+
+# Server B
+kcloud@server-b:~$ ip r
+default via 10.10.10.1 dev ens259f0 proto static
+10.10.10.0/24 dev ens259f0 proto kernel scope link src 10.10.10.109
+192.168.90.0/24 dev ens801f0np0 proto kernel scope link src 192.168.90.201
+```
+
+| Subnet | Interface | Role |
+|--------|-----------|------|
+| `10.10.10.0/24` (default route) | `ens259f0` | **A: internet / management (SSH)** — not under test |
+| `192.168.90.0/24` | `ens801f0np0` | **B: 25G data link (under test)** |
+
+> Even though SSH goes over `10.10.10.0/24`, link speed must be measured on **`192.168.90.0/24` (the 25G link)**.
+
+**1) First confirm the test traffic exits via the 25G link:**
+
+```bash
+# Check the actual route to the destination → must be dev ens801f0np0 / src 192.168.90.200
+ip route get 192.168.90.201
+```
+
+Sample output:
+
+```
+192.168.90.201 dev ens801f0np0 src 192.168.90.200 uid 1000
+```
+
+> If `dev` is `ens801f0np0` (25G), you're good. If it exits via `ens259f0` (management), recheck the destination IP or routing.
+
+**2) Server B (receiver): bind to the 25G IP:**
+
+```bash
+# Bind to the 25G link IP with -B (won't accept requests on the management IP)
+iperf3 -s -B 192.168.90.201
+```
+
+**3) Server A (sender): set both destination and source to the 25G IP:**
+
+```bash
+# -c destination = B's 25G IP, -B source = A's 25G IP
+iperf3 -c 192.168.90.201 -B 192.168.90.200 -P 8 -t 30
+```
+
+| Option | Role |
+|--------|------|
+| `-c 192.168.90.201` | Destination on the 25G subnet → routing sends it out `ens801f0np0` |
+| `-B 192.168.90.200` | Pins the source IP to the 25G link (prevents leaking onto the wrong NIC in multi-IP setups) |
+
+:warning: If you give a hostname or the management IP (`10.10.10.x`) as the destination, the test flows over the management NIC and you'll record the **management-network speed (e.g. 1G/10G), not 25G**. Always use the data-network (`192.168.90.x`) IP.
+{: .notice--warning}
+
+**4) Confirm which interface is actually used during the test:**
+
+```bash
+# During the test, check that only ens801f0np0 (25G) tx/rx increases
+sar -n DEV 1 | grep -E 'ens801f0np0|ens259f0'
+```
+
+Only `ens801f0np0` rx/tx should climb to ~25G, while `ens259f0` (management) stays essentially flat.
+
+Once the IPs are pinned, follow the standard procedure below as-is (the remaining examples in this post use a single `10.0.0.x` subnet for simplicity).
+
 **Server B (receiver / server role):**
 
 ```bash
