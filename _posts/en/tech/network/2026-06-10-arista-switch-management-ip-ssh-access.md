@@ -12,21 +12,21 @@ ref: arista-switch-management-ip-ssh-access
 Environment: Arista switch (EOS) + console cable + a PC on the same subnet
 {: .notice--info}
 
-> The CLI output in this post is drawn from real work on an actual device (`DCS-7050SX3-48YC8C-F`, hostname `sw-core-01`), where `10.254.202.110/24` was assigned to `Management1` so the switch could be reached over SSH from the `10.254.202.0/24` management network. Sensitive details such as passwords are masked.
+> The CLI output in this post is drawn from real work on an actual device (`DCS-7050SX3-48YC8C-F`, hostname `sw-core-01`), where an IP was assigned to `Management1` so the switch could be reached over SSH from the management network. The IP (`192.0.2.110/24`) and subnet (`192.0.2.0/24`) shown here have been replaced with documentation example ranges (RFC 5737), and sensitive details such as passwords are masked. Substitute your own addresses when applying this in practice.
 
 # [00] Overall Architecture
 
 ```
-Management PC (10.254.202.20/24)
+Management PC (192.0.2.20/24)
   │
-  └── SSH   ssh admin@10.254.202.110
+  └── SSH   ssh admin@192.0.2.110
         │
         ▼
-  Same L2 switch / same subnet (10.254.202.0/24)
+  Same L2 switch / same subnet (192.0.2.0/24)
         │
         ▼
 Arista switch (sw-core-01)
-  └── interface Management1 : 10.254.202.110/24
+  └── interface Management1 : 192.0.2.110/24
         └── management ssh   (SSH daemon, Default VRF)
 ```
 
@@ -40,7 +40,7 @@ Arista switch (sw-core-01)
 | Console cable | RJ45-to-USB or serial (DB9) console cable |
 | Terminal program | PuTTY, Tera Term, `screen`, `tio`, etc. |
 | Management PC | A PC with an IP on the **same subnet** as the switch |
-| IPs to assign | e.g. switch `10.254.202.110/24`, PC `10.254.202.20/24` |
+| IPs to assign | e.g. switch `192.0.2.110/24`, PC `192.0.2.20/24` |
 
 # [02] First Login via the Console Port
 
@@ -153,7 +153,7 @@ sw-core-01# show ip route vrf MGMT
 % IP Routing table for VRF MGMT does not exist.
 ```
 
-On this device, the `MGMT` VRF routing table **did not exist**, as shown above. That means `Management1` operates in the **Default VRF**, not a separate management VRF. When accessing from the same `10.254.202.0/24` range, it communicates via the connected route without any extra routes.
+On this device, the `MGMT` VRF routing table **did not exist**, as shown above. That means `Management1` operates in the **Default VRF**, not a separate management VRF. When accessing from the same `192.0.2.0/24` range, it communicates via the connected route without any extra routes.
 
 > Conversely, if `show vrf` lists a VRF like `MGMT` and Management1 belongs to it, follow the **VRF path**; if there is no VRF, follow the **default path**. Both cases are shown in the steps below.
 
@@ -176,7 +176,7 @@ Now assign the IP and bring up the interface.
 ```
 sw-core-01# configure terminal
 sw-core-01(config)# interface Management1
-sw-core-01(config-if-Ma1)# ip address 10.254.202.110/24
+sw-core-01(config-if-Ma1)# ip address 192.0.2.110/24
 sw-core-01(config-if-Ma1)# no shutdown
 sw-core-01(config-if-Ma1)# exit
 ```
@@ -189,7 +189,7 @@ Checking again after the change confirms the IP is applied.
 ```
 sw-core-01# show ip interface Management1
 Management1 is up, line protocol is up (connected)
-  Internet address is 10.254.202.110/24
+  Internet address is 192.0.2.110/24
   Broadcast address is 255.255.255.255
   IPv6 Interface Forwarding : None
   Proxy-ARP is disabled
@@ -199,7 +199,7 @@ Management1 is up, line protocol is up (connected)
 
 sw-core-01# show running-config interfaces Management1
 interface Management1
-   ip address 10.254.202.110/24
+   ip address 192.0.2.110/24
 ```
 
 # [06] Set the Default Gateway
@@ -209,16 +209,16 @@ If you only access from a PC on the same subnet, it works without a gateway (tha
 **Without VRF (default):**
 
 ```
-sw-core-01(config)# ip route 0.0.0.0/0 10.254.202.1
+sw-core-01(config)# ip route 0.0.0.0/0 192.0.2.1
 ```
 
 **When Management1 is in the MGMT VRF:**
 
 ```
-sw-core-01(config)# ip route vrf MGMT 0.0.0.0/0 10.254.202.1
+sw-core-01(config)# ip route vrf MGMT 0.0.0.0/0 192.0.2.1
 ```
 
-:warning: The gateway address above (`10.254.202.1`) is an example. **Confirm your actual management gateway address** before applying it.
+:warning: The gateway address above (`192.0.2.1`) is an example. **Confirm your actual management gateway address** before applying it.
 {: .notice--warning}
 
 # [07] Create an Admin Account and Password
@@ -284,18 +284,18 @@ Copy completed successfully.
 
 # [10] Test Access from the PC (Same Network)
 
-First set your management PC's IP to the same range as the switch (e.g. `10.254.202.20/24`).
+First set your management PC's IP to the same range as the switch (e.g. `192.0.2.20/24`).
 
 **Check connectivity (ping):**
 
 ```bash
-ping 10.254.202.110
+ping 192.0.2.110
 ```
 
 **SSH access:**
 
 ```bash
-ssh admin@10.254.202.110
+ssh admin@192.0.2.110
 ```
 
 → After entering the `admin` account password, you log in at the `sw-core-01>` prompt. With a privilege 15 account, elevated rights may apply right after login.
@@ -333,9 +333,9 @@ show ip route vrf MGMT
 |------|-------|------|
 | STEP 02 | Console | First login at 9600 8N1, log in as `admin` |
 | STEP 04 | Switch CLI | `show ip route vrf MGMT` / `show vrf` to check whether the MGMT VRF is used (this device uses the Default VRF) |
-| STEP 05 | Switch CLI | `ip address 10.254.202.110/24` + `no shutdown` on Management1 |
+| STEP 05 | Switch CLI | `ip address 192.0.2.110/24` + `no shutdown` on Management1 |
 | STEP 06 | Switch CLI | Set the default gateway (`ip route`) for cross-network access, with VRF if needed |
 | STEP 07 | Switch CLI | Create a password account with `username admin ... secret` |
 | STEP 08 | Switch CLI | Confirm SSHD is active with `show management ssh` (enable `management ssh` if needed) |
 | STEP 09 | Switch CLI | Save config with `write memory` |
-| STEP 10 | Management PC | Test `ssh admin@10.254.202.110` |
+| STEP 10 | Management PC | Test `ssh admin@192.0.2.110` |

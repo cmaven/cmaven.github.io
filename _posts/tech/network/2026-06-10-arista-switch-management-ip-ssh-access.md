@@ -12,21 +12,21 @@ ref: arista-switch-management-ip-ssh-access
 환경: Arista 스위치(EOS) + 콘솔 케이블 + 같은 서브넷의 PC
 {: .notice--info}
 
-> 이 글의 CLI 출력은 실제 장비(`DCS-7050SX3-48YC8C-F`, 호스트명 `sw-core-01`)에서 `Management1`에 `10.254.202.110/24`를 할당해 `10.254.202.0/24` 관리망에서 SSH 접근이 되도록 작업한 기록을 참조 예시로 사용했다. 비밀번호 등 민감 정보는 마스킹했다.
+> 이 글의 CLI 출력은 실제 장비(`DCS-7050SX3-48YC8C-F`, 호스트명 `sw-core-01`)에서 `Management1`에 IP를 할당해 관리망에서 SSH 접근이 되도록 작업한 기록을 참조 예시로 사용했다. 본문의 IP(`192.0.2.110/24`)·서브넷(`192.0.2.0/24`)은 문서화 예시 대역(RFC 5737)으로 치환했고, 비밀번호 등 민감 정보는 마스킹했다. 실제 적용 시 본인 환경의 주소로 바꿔서 사용한다.
 
 # [00] 전체 구성도
 
 ```
-관리 PC (10.254.202.20/24)
+관리 PC (192.0.2.20/24)
   │
-  └── SSH   ssh admin@10.254.202.110
+  └── SSH   ssh admin@192.0.2.110
         │
         ▼
-  같은 L2 스위치 / 같은 서브넷 (10.254.202.0/24)
+  같은 L2 스위치 / 같은 서브넷 (192.0.2.0/24)
         │
         ▼
 Arista 스위치 (sw-core-01)
-  └── interface Management1 : 10.254.202.110/24
+  └── interface Management1 : 192.0.2.110/24
         └── management ssh   (SSH 데몬, Default VRF)
 ```
 
@@ -40,7 +40,7 @@ Arista 스위치 (sw-core-01)
 | 콘솔 케이블 | RJ45-to-USB 또는 시리얼(DB9) 콘솔 케이블 |
 | 터미널 프로그램 | PuTTY, Tera Term, `screen`, `tio` 등 |
 | 관리 PC | 스위치와 **같은 서브넷**에 둘 IP를 가진 PC |
-| 할당할 IP | 예) 스위치 `10.254.202.110/24`, PC `10.254.202.20/24` |
+| 할당할 IP | 예) 스위치 `192.0.2.110/24`, PC `192.0.2.20/24` |
 
 # [02] 콘솔 포트로 최초 접속
 
@@ -153,7 +153,7 @@ sw-core-01# show ip route vrf MGMT
 % IP Routing table for VRF MGMT does not exist.
 ```
 
-이번 장비에서는 위처럼 `MGMT` VRF 라우팅 테이블이 **존재하지 않았다.** 즉 `Management1`이 별도 관리 VRF가 아니라 **Default VRF**에서 동작하는 구성이다. 같은 `10.254.202.0/24` 대역에서 접근하는 경우에는 별도 라우트 없이 connected route로 통신된다.
+이번 장비에서는 위처럼 `MGMT` VRF 라우팅 테이블이 **존재하지 않았다.** 즉 `Management1`이 별도 관리 VRF가 아니라 **Default VRF**에서 동작하는 구성이다. 같은 `192.0.2.0/24` 대역에서 접근하는 경우에는 별도 라우트 없이 connected route로 통신된다.
 
 > 반대로 `show vrf` 출력에 `MGMT` 같은 VRF가 보이고 Management1이 그 VRF에 속해 있으면 **VRF 경로**를, 아무 VRF도 없으면 **기본(default) 경로**를 따른다. 아래 단계에서는 두 경우를 모두 표기한다.
 
@@ -176,7 +176,7 @@ Management1 is up, line protocol is up (connected)
 ```
 sw-core-01# configure terminal
 sw-core-01(config)# interface Management1
-sw-core-01(config-if-Ma1)# ip address 10.254.202.110/24
+sw-core-01(config-if-Ma1)# ip address 192.0.2.110/24
 sw-core-01(config-if-Ma1)# no shutdown
 sw-core-01(config-if-Ma1)# exit
 ```
@@ -189,7 +189,7 @@ sw-core-01(config-if-Ma1)# exit
 ```
 sw-core-01# show ip interface Management1
 Management1 is up, line protocol is up (connected)
-  Internet address is 10.254.202.110/24
+  Internet address is 192.0.2.110/24
   Broadcast address is 255.255.255.255
   IPv6 Interface Forwarding : None
   Proxy-ARP is disabled
@@ -199,7 +199,7 @@ Management1 is up, line protocol is up (connected)
 
 sw-core-01# show running-config interfaces Management1
 interface Management1
-   ip address 10.254.202.110/24
+   ip address 192.0.2.110/24
 ```
 
 # [06] 기본 게이트웨이 설정
@@ -209,16 +209,16 @@ interface Management1
 **VRF를 쓰지 않는 경우(default):**
 
 ```
-sw-core-01(config)# ip route 0.0.0.0/0 10.254.202.1
+sw-core-01(config)# ip route 0.0.0.0/0 192.0.2.1
 ```
 
 **Management1이 MGMT VRF에 속한 경우:**
 
 ```
-sw-core-01(config)# ip route vrf MGMT 0.0.0.0/0 10.254.202.1
+sw-core-01(config)# ip route vrf MGMT 0.0.0.0/0 192.0.2.1
 ```
 
-:warning: 위 게이트웨이 주소(`10.254.202.1`)는 예시다. **실제 관리망 게이트웨이 주소를 확인한 뒤** 적용한다.
+:warning: 위 게이트웨이 주소(`192.0.2.1`)는 예시다. **실제 관리망 게이트웨이 주소를 확인한 뒤** 적용한다.
 {: .notice--warning}
 
 # [07] 관리자 계정 및 비밀번호 생성
@@ -284,18 +284,18 @@ Copy completed successfully.
 
 # [10] PC에서 접속 테스트 (같은 망)
 
-먼저 관리 PC의 IP를 스위치와 같은 대역으로 설정한다(예: `10.254.202.20/24`).
+먼저 관리 PC의 IP를 스위치와 같은 대역으로 설정한다(예: `192.0.2.20/24`).
 
 **연결 확인(ping):**
 
 ```bash
-ping 10.254.202.110
+ping 192.0.2.110
 ```
 
 **SSH 접속:**
 
 ```bash
-ssh admin@10.254.202.110
+ssh admin@192.0.2.110
 ```
 
 → `admin` 계정 비밀번호를 입력하면 `sw-core-01>` 프롬프트로 로그인된다. privilege 15 계정이면 로그인 직후부터 상위 권한이 적용될 수 있다.
@@ -333,9 +333,9 @@ show ip route vrf MGMT
 |------|-----------|------|
 | STEP 02 | 콘솔 | 9600 8N1로 최초 접속, `admin` 로그인 |
 | STEP 04 | 스위치 CLI | `show ip route vrf MGMT` / `show vrf`로 MGMT VRF 사용 여부 확인 (이번 장비는 Default VRF) |
-| STEP 05 | 스위치 CLI | Management1에 `ip address 10.254.202.110/24` + `no shutdown` |
+| STEP 05 | 스위치 CLI | Management1에 `ip address 192.0.2.110/24` + `no shutdown` |
 | STEP 06 | 스위치 CLI | 기본 게이트웨이(`ip route`) 설정 (다른 망 접근 시, 필요하면 VRF 지정) |
 | STEP 07 | 스위치 CLI | `username admin ... secret`로 비밀번호 계정 생성 |
 | STEP 08 | 스위치 CLI | `show management ssh`로 SSHD 활성 확인 (필요 시 `management ssh` 활성화) |
 | STEP 09 | 스위치 CLI | `write memory`로 설정 저장 |
-| STEP 10 | 관리 PC | `ssh admin@10.254.202.110` 접속 테스트 |
+| STEP 10 | 관리 PC | `ssh admin@192.0.2.110` 접속 테스트 |
