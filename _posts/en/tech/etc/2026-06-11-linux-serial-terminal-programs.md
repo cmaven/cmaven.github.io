@@ -1,4 +1,3 @@
-<!-- 2026-06-11-linux-serial-terminal-programs.md: Linux serial terminal programs — overview/install/usage/comparison/removal | created: 2026-06-11 -->
 ---
 title: "Linux Serial Terminal Programs — Install, Use, and Compare screen/minicom/picocom/tio"
 description: "A one-stop guide to the serial terminal programs (screen, minicom, picocom, tio, cu) used to reach network-device and embedded consoles on Ubuntu: overview, install, start/stop, pros/cons, and removal"

@@ -1,4 +1,3 @@
-<!-- 2026-06-11-linux-serial-terminal-programs.md: 리눅스 시리얼 터미널 프로그램 개요·설치·사용·비교·삭제 | 생성일: 2026-06-11 -->
 ---
 title: "리눅스 시리얼 터미널 프로그램 총정리 — screen·minicom·picocom·tio 설치/사용/비교"
 description: "Ubuntu에서 네트워크 장비·임베디드 콘솔에 접속하는 시리얼 터미널 프로그램(screen, minicom, picocom, tio, cu)의 개요·설치·시작/종료·장단점 비교·삭제를 한 번에 정리"
