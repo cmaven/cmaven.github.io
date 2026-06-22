@@ -28,8 +28,10 @@ codekit-config.json
 _asset_bundler_cache
 _site
 
-# sitemap-diff.py output (SEO audit artifact)
+# sitemap-diff.py input/output (SEO audit artifacts, not part of the site)
 sitemap-missing.txt
+urls.txt
+**/urls.txt
 
 # Python bytecode cache
 __pycache__/

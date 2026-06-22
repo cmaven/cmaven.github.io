@@ -5,13 +5,17 @@
 #       https://cmaven.github.io/sitemap.xml 과 비교하여
 #       sitemap에는 있지만 사용자 텍스트에는 없는 URL 목록을 출력·저장.
 # 사용법:
-#   1) 대화형 (기본):
-#        python3 _scripts/sitemap-diff.py
-#      → GSC URL 텍스트 붙여넣고 → 빈 줄에 "EOF" 입력 후 Enter
-#   2) 파일 리다이렉트:
+#   1) urls.txt 파일 인자 (권장):
+#        python3 _scripts/sitemap-diff.py urls.txt
+#   2) 현재 디렉토리 urls.txt 자동 탐색:
+#        python3 _scripts/sitemap-diff.py        # ./urls.txt 있으면 자동 사용
+#   3) 파일 리다이렉트:
 #        python3 _scripts/sitemap-diff.py < paste.txt
+#   4) 대화형 (fallback):
+#        python3 _scripts/sitemap-diff.py        # ./urls.txt 없으면 붙여넣기 모드
+#      → GSC URL 텍스트 붙여넣고 → 빈 줄에 "EOF" 입력 후 Enter
 # 출력: sitemap-missing.txt (스크립트 실행 디렉토리)
-# 생성일: 2026-05-26 | 수정일: 2026-05-26
+# 생성일: 2026-05-26 | 수정일: 2026-06-22
 # ============================================================
 
 import re
@@ -22,7 +26,8 @@ from xml.etree import ElementTree as ET
 
 SITEMAP_URL = "https://cmaven.github.io/sitemap.xml"
 OUT_FILE = "sitemap-missing.txt"
-URL_RE = re.compile(r"https?://[^\s<>\"'\)]+")
+# 멈춤 문자에 콤마·세미콜론·탭 포함 → GSC CSV/TSV export 줄에서 URL만 정확히 분리
+URL_RE = re.compile(r"https?://[^\s<>\"'\),;]+")
 EOF_SENTINEL = "EOF"
 
 
@@ -53,8 +58,26 @@ def normalize(url: str) -> str:
     return url.split("#", 1)[0].rstrip("/")
 
 
+DEFAULT_INPUT_FILE = "urls.txt"
+
+
 def get_input_text() -> str | None:
-    # If stdin is piped (not a TTY), read full stdin
+    # 1) Explicit file argument: python3 sitemap-diff.py urls.txt
+    if len(sys.argv) > 1:
+        arg_path = Path(sys.argv[1])
+        if not arg_path.is_file():
+            print(f"[error] input file not found: {arg_path}", file=sys.stderr)
+            return None
+        print(f"[1/3] Reading URLs from {arg_path} ...", file=sys.stderr)
+        return arg_path.read_text(encoding="utf-8")
+
+    # 2) Auto-detect ./urls.txt in the current directory
+    default_path = Path(DEFAULT_INPUT_FILE)
+    if default_path.is_file():
+        print(f"[1/3] Found {default_path} in current directory, using it ...", file=sys.stderr)
+        return default_path.read_text(encoding="utf-8")
+
+    # 3) If stdin is piped (not a TTY), read full stdin
     if not sys.stdin.isatty():
         return sys.stdin.read()
 
