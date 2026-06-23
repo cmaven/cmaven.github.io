@@ -1,25 +1,25 @@
-<!-- 2026-06-23-homeserver-https-dns01-country-block.md: HTTPS on a Korea-only home server via DNS-01 wildcard | created: 2026-06-23 -->
 ---
 title: "HTTPS for a Domestic-Only Home Server — Let's Encrypt DNS-01 + DuckDNS Wildcard"
 description: "When iptime country-based access restriction (Korea-only) makes HTTP-01 cert issuance fail, use port-free DNS-01 + a DuckDNS wildcard to add HTTPS without disabling the security setting"
-excerpt: "When inbound from abroad is blocked (country restriction / CGNAT) and port-80 HTTP-01 fails, use certbot DNS-01 with a DuckDNS TXT hook to obtain a wildcard cert and serve multiple subdomains over HTTPS — a step-by-step guide"
+excerpt: "When inbound from abroad is blocked (country restriction / CGNAT) and port-80 HTTP-01 fails, use certbot DNS-01 with a DuckDNS TXT hook to obtain a wildcard cert and serve multiple subdomains over HTTPS"
 date: 2026-06-23
 categories: Network
 tags: [iptime, DuckDNS, HTTPS, "Let's Encrypt", Certbot, DNS-01, wildcard, country-restriction, Nginx, Docker, home-server]
 ref: homeserver-https-dns01-country-block
 ---
 
-:bulb: A home server with iptime **"country-based access restriction (allow Korea only)"** blocks inbound traffic from abroad, so **HTTP-01 (port 80) cert issuance fails**. With port-free **DNS-01 (DuckDNS TXT)** you can obtain a **wildcard certificate** and add HTTPS while keeping the security setting on.
+:bulb: If you turn on iptime's "country-based access restriction (allow Korea only)," traffic from abroad gets blocked — and the HTTP-01 method, which validates over port 80, can no longer issue a certificate. The way out is DNS-01 (DuckDNS TXT), which needs no open port: you get a wildcard cert and keep the security setting exactly as it is.
 {: .notice--info}
 
-This is a **follow-up** to [DuckDNS + HTTPS Setup on an iptime Router](/en/Network/iptime-duckdns-https-guide/). DuckDNS domain registration, IP auto-update, port forwarding, and the basic Docker Compose layout were covered there, so here we focus only on **diagnosing the environment where HTTP-01 fails and switching to DNS-01**.
+This is a follow-up to [DuckDNS + HTTPS Setup on an iptime Router](/en/Network/iptime-duckdns-https-guide/). That post already covered DuckDNS domain registration, IP auto-update, port forwarding, and the basic Docker Compose layout, so I won't repeat them here. Instead I'll focus on the one case where you follow that guide to the letter and still get stuck at cert issuance: an environment where inbound from abroad is blocked, and how to switch to DNS-01.
 
-Example environment used in this post:
+Here's the example setup used throughout the post.
+
 - Server LAN IP `192.168.0.22`, domain prefix `mydomain` (→ `mydomain.duckdns.org`)
-- Three services: `engwrite` (Django), `birthplanner` (Vite SPA), `cdocs` (VitePress) — host ports 8000/8100/8200
-- Goal: expose each as a **subdomain** like `https://engwrite.mydomain.duckdns.org`
+- Three services: `engwrite` (Django), `birthplanner` (Vite SPA), `cdocs` (VitePress), on host ports 8000, 8100, 8200
+- The goal is to expose each one as a subdomain like `https://engwrite.mydomain.duckdns.org`
 
-The relationship between the components (iptime · DuckDNS · Let's Encrypt · nginx · server) looks like this.
+Let's start with the big picture. Here's how iptime, DuckDNS, Let's Encrypt, nginx, and the server fit together.
 
 <pre class="mermaid">
 graph TD
@@ -51,15 +51,15 @@ graph TD
     style OVERSEAS fill:#ffebee,stroke:#b71c1c,stroke-dasharray: 5 5
 </pre>
 
-The key idea: keep **inbound from abroad blocked (dashed lines)** while handling cert validation through **DNS-01 (TXT lookup)**, which never needs to reach your server.
+The point is the dashed lines: inbound from abroad stays blocked, while validation is routed through DNS-01 (a TXT lookup) that never has to reach your server. You keep the security and only reroute the issuance path.
 
 ---
 
-# [00] Why the Common Guide Fails Here
+# [00] You Followed the Common Guide — So Why Is It Stuck?
 
-The common approach is **Let's Encrypt HTTP-01**: certbot drops a file under `/.well-known/acme-challenge/`, and Let's Encrypt **reads that file over port 80 from the outside** to prove domain ownership (the method in [STEP 06 of the previous post](/en/Network/iptime-duckdns-https-guide/)).
+The method you'll see most often is Let's Encrypt's HTTP-01. certbot drops a validation file under `/.well-known/acme-challenge/`, then Let's Encrypt reads that file over port 80 from the outside, confirms "yes, you own this domain," and hands you a cert. STEP 06 of the [previous post](/en/Network/iptime-duckdns-https-guide/) is exactly this method.
 
-But if a Korean residential line (especially KT) or an iptime security setting **blocks inbound from abroad**, Let's Encrypt's validation servers (all overseas) cannot reach your port 80, and issuance fails.
+The trouble starts when a Korean residential line (KT especially) or an iptime security setting blocks inbound connections from abroad. Let's Encrypt's validation servers all live overseas, so they can't reach your port 80, and issuance just fails.
 
 ```
 Certbot failed to authenticate some domains (authenticator: webroot).
@@ -67,12 +67,12 @@ Certbot failed to authenticate some domains (authenticator: webroot).
           Timeout during connect (likely firewall problem)
 ```
 
-:warning: This error usually leads people to suspect port forwarding, but often port forwarding is fine and only **overseas IPs are blocked**. Diagnose the root cause first.
+:warning: When this error shows up, the first instinct is almost always to go back and re-check port forwarding — but quite often the forwarding is fine and only overseas IPs are blocked. So pin down the real cause first.
 {: .notice--warning}
 
 ---
 
-# [01] Diagnosis — "Is It Really Unreachable From Outside?"
+# [01] Diagnosis — Is It Really Unreachable From Outside?
 
 ## 1-1. Do DNS and the public IP match?
 
@@ -82,9 +82,9 @@ dig +short mydomain.duckdns.org          # should match the above
 dig +short engwrite.mydomain.duckdns.org # DuckDNS returns the same IP for subdomains
 ```
 
-## 1-2. Is the Port Open From Abroad? — The Key Check
+## 1-2. Is the Port Open From Abroad? — This Is the Part That Matters
 
-A `nc` test from inside Korea **may succeed** (domestic is allowed). You must check from **overseas nodes**. [check-host.net](https://check-host.net){:target="_blank"} checks from many countries at once.
+Poke the port with `nc` from inside Korea and it may look wide open — domestic is allowed anyway. That's why you have to test from overseas nodes. [check-host.net](https://check-host.net){:target="_blank"} checks from several countries at once.
 
 ```bash
 # Check port 80 from 8 overseas nodes
@@ -95,51 +95,50 @@ sleep 12
 curl -s -H 'Accept: application/json' "https://check-host.net/check-result/$RID"
 ```
 
-If overseas nodes **all show `Connection timed out`** but domestic works → **region-based (overseas IP) inbound blocking**. It is not a port-forwarding or CGNAT problem.
+If the overseas nodes all come back `Connection timed out` while domestic works, this isn't a port-forwarding or CGNAT problem — your inbound is blocked by region (overseas IP).
 
-:memo: **Tip**: If not just 80/443 but an **arbitrary high port** (one you already forwarded) also times out from abroad, it is "region blocking," not "specific-port blocking."
+:memo: One tip for telling them apart: pick any high port you've already forwarded and poke it from abroad too. If that one also times out, it's not "one port is blocked," it's "the whole region is blocked."
 {: .notice--info}
 
-## 1-3. Confirm the Culprit — iptime Country-Based Access Restriction
+## 1-3. The Culprit Is iptime's Country-Based Access Restriction
 
-Open the iptime admin page → **Security → Country-based access restriction**. If only **South Korea is in the "allow" list** as below, all other inbound from the entire world is blocked (84,856 entries blocked in this example).
+In the iptime admin page, open Security → Country-based access restriction. If the allow list contains only South Korea as below, every bit of inbound from the rest of the world is blocked. In the example below, 84,856 entries are marked as blocked.
 
 ![iptime country-based access restriction — Korea only](/assets/images/iptime-country-block.png)
 
-This setting is **useful for security**, so keep it on. Change the cert issuance method instead.
+This setting is genuinely useful for security, so leave it on. Instead of turning it off, just change how you issue the certificate.
 
 ---
 
-# [02] Choosing a Solution — Do You Need Overseas Access?
+# [02] How to Solve It — First Decide Whether You Need Overseas Access
 
 | Situation | Solution |
 |-----------|----------|
-| **Domestic use only** (most personal home servers) | **Keep country restriction + DNS-01** ← this post |
-| Overseas access needed | Lift the country restriction then use HTTP-01, or Cloudflare Tunnel / Tailscale |
+| Domestic use only (most personal home servers) | Keep the country restriction + DNS-01 ← this post |
+| Overseas access required | Lift the restriction and use HTTP-01, or Cloudflare Tunnel / Tailscale |
 
-DNS-01 has Let's Encrypt read **only a DNS TXT record without connecting to your server**, so issuance and auto-renewal work even when inbound is blocked. Serving (443) only needs domestic users, so it coexists with the country restriction.
+DNS-01 never connects to your server directly. It validates by reading a TXT record you've placed in DNS, so issuance — and auto-renewal — works even with inbound blocked. Your actual service (443) only needs to serve domestic users anyway, so it never collides with the country restriction.
 
-:bulb: DuckDNS allows only **one TXT slot per domain**, so if you have several subdomains, do not issue them one by one — issue a single **wildcard `*.mydomain.duckdns.org`**. A wildcard is validated by one `_acme-challenge.mydomain.duckdns.org` TXT record.
+:bulb: DuckDNS gives you exactly one TXT slot per domain. So if you try to issue separate certs for several subdomains, you'll run out of slots. The right move is a single wildcard `*.mydomain.duckdns.org`. A wildcard validates against one `_acme-challenge.mydomain.duckdns.org` TXT record, so the slot limit is a non-issue.
 {: .notice--info}
 
 ---
 
 # [03] Prerequisites
 
-1. **DuckDNS domain + token**: see [STEP 02 of the previous post](/en/Network/iptime-duckdns-https-guide/) (add domain `mydomain` → copy the **token** at the top).
-2. **iptime port forwarding**: external `443` → `192.168.0.22:443`. **DNS-01 does not need 80**, but 443 is required for domestic users' HTTPS access.
-   - Even with the country restriction on, **domestic IPs** can still reach this 443.
-3. `docker` + `docker compose` (v2), `curl`, `dig` on the server.
+1. A DuckDNS domain and token. Following [STEP 02 of the previous post](/en/Network/iptime-duckdns-https-guide/), add the domain (`mydomain`) and copy the token from the top of the page.
+2. For iptime port forwarding, external `443` → `192.168.0.22:443` is all you need. DNS-01 doesn't use port 80. You do still need 443 open so domestic users can reach HTTPS — and even with the country restriction on, domestic IPs come in through this 443 just fine.
+3. On the server, you'll want `docker` and `docker compose` (v2), plus `curl` and `dig`.
 
 ---
 
 # [04] Issuing the Cert — certbot DNS-01 + DuckDNS hook
 
-The core is attaching a **hook that sets/clears the DuckDNS TXT record** to certbot's `--manual` mode.
+The core idea is to attach a small hook script to certbot's `--manual` mode — one that adds and removes the DuckDNS TXT record.
 
-## 4-1. DuckDNS Hook Script
+## 4-1. The DuckDNS Hook Script
 
-`~/myserver/scripts/duckdns-hook.sh` (make it executable):
+Create `~/myserver/scripts/duckdns-hook.sh` and make it executable.
 
 ```sh
 #!/bin/sh
@@ -159,12 +158,12 @@ echo "duckdns-hook($action) -> $resp" >&2
 exit 0
 ```
 
-:memo: `CERTBOT_DOMAIN`/`CERTBOT_VALIDATION` are environment variables certbot injects automatically when running the hook.
+:memo: You don't fill in `CERTBOT_DOMAIN` or `CERTBOT_VALIDATION` yourself — certbot injects them as environment variables when it runs the hook.
 {: .notice--info}
 
-## 4-2. docker compose (certbot service)
+## 4-2. The certbot Service in docker compose
 
-Inject the hook script and token into the certbot service of [the previous post's docker-compose.yml](/en/Network/iptime-duckdns-https-guide/).
+Take the certbot service from [the previous post's docker-compose.yml](/en/Network/iptime-duckdns-https-guide/) and feed it the hook script and the token.
 
 ```yaml
   certbot:
@@ -181,7 +180,7 @@ Inject the hook script and token into the certbot service of [the previous post'
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 ```
 
-`~/myserver/duckdns.env` (permission 600):
+Keep the token in a separate `~/myserver/duckdns.env` and lock it down to permission 600.
 
 ```ini
 DUCKDNS_DOMAIN=mydomain
@@ -189,9 +188,9 @@ DUCKDNS_TOKEN=your-token-here
 DUCKDNS_PROPAGATION=30
 ```
 
-## 4-3. Issue (Rehearse With staging First)
+## 4-3. Rehearse With staging Before the Real Issue
 
-Let's Encrypt production certs have a limit of **5 per week**, so validate with `--dry-run` (staging) first.
+Let's Encrypt production certs are capped at 5 per week. Burn through that limit while debugging your config and you're stuck waiting, so run `--dry-run` (staging) once first.
 
 ```bash
 cd ~/myserver
@@ -205,21 +204,21 @@ docker compose run --rm --entrypoint certbot certbot certonly \
   --dry-run
 ```
 
-When you see `The dry run was successful.`, rerun without `--dry-run` → real issuance.
+Once you see `The dry run was successful.`, run it again without `--dry-run` — this time it's the real issue.
 
 ```
 Successfully received certificate.
 Certificate is saved at: /etc/letsencrypt/live/mydomain.duckdns.org/fullchain.pem
 ```
 
-:warning: **Pitfall 1 — entrypoint**: If certbot has an auto-renew `entrypoint` (infinite renew loop) as above, `docker compose run certbot certonly ...` lets the entrypoint swallow the arguments, so `certonly` never runs (it stalls after `No renewals were attempted`). Always override with **`--entrypoint certbot`**.<br><br>**Pitfall 2 — wildcard cert path**: Pinning the lineage name with `--cert-name mydomain.duckdns.org` stores it under `live/mydomain.duckdns.org/`, making it easy to match the nginx config path.
+:warning: There are two traps people reliably step on here.<br><br>**One: the entrypoint swallows your arguments.** If certbot has an auto-renew entrypoint (the infinite renew loop above), then running `docker compose run certbot certonly ...` lets the entrypoint eat the arguments and `certonly` never runs. If you only ever see `No renewals were attempted` and then it stops, this is why. Override it with `--entrypoint certbot`, as the command above does.<br><br>**Two: the wildcard cert path.** Pinning the lineage name with `--cert-name mydomain.duckdns.org` saves the cert under `live/mydomain.duckdns.org/`, which is what lets it line up cleanly with the nginx config path in the next step.
 {: .notice--danger}
 
 ---
 
-# [05] nginx — Per-Subdomain 443 + Wildcard Cert
+# [05] nginx — One 443 per Subdomain, a Single Wildcard Cert
 
-`~/myserver/nginx/nginx.conf` (essentials):
+The essentials of `~/myserver/nginx/nginx.conf` look like this.
 
 ```nginx
 events {}
@@ -257,22 +256,22 @@ http {
 cd ~/myserver && docker compose down && docker compose up -d
 ```
 
-:memo: Unlike HTTP-01, `certonly` does not generate `options-ssl-nginx.conf` or `ssl-dhparams.pem`. Put `ssl_protocols` etc. **inline** in nginx to avoid startup failure.
+:memo: Unlike the HTTP-01 path, `certonly` doesn't generate helper files like `options-ssl-nginx.conf` or `ssl-dhparams.pem`. Try to `include` them and nginx will refuse to start, complaining the file is missing. That's why I wrote `ssl_protocols` straight into the conf above.
 {: .notice--info}
 
 ---
 
-# [06] Serve Each App at Root ('/') — Advantage of Subdomains
+# [06] Run Each App at Root ('/') — the Real Win of Subdomains
 
-The subdomain approach runs each app at **its own root**, so you never touch base paths. (Path-based routing like `/engwrite/` changes the base and easily breaks static files and redirects.) If you previously tried path-based routing, **revert it to root**.
+The nice thing about the subdomain approach is that each app just runs at its own root — you never touch base paths. Go the path-based route (`/engwrite/`) instead and you have to change the base, at which point static-file paths and redirects start breaking one after another. If you tried path-based routing earlier, you'll want to undo those traces and put everything back at root.
 
-- **Django (engwrite)**: `.env`
+- **Django (engwrite)** — in `.env`
   - `DJANGO_ALLOWED_HOSTS=engwrite.mydomain.duckdns.org,127.0.0.1,localhost`
   - `CSRF_TRUSTED_ORIGINS=https://engwrite.mydomain.duckdns.org`
-  - `USE_HTTPS=true`, `FORCE_SCRIPT_NAME=` (empty — serve at root)
-  - settings: `SECURE_SSL_REDIRECT=False` (external nginx terminates HTTPS)
-- **Vite SPA (birthplanner)**: remove `base` in `vite.config.ts` (default `/`), remove React Router `basename`, rebuild.
-- **VitePress (cdocs)**: remove `base: '/cdocs/'` in config (default `/`), and serve a **prod static build, not the dev server** (don't expose the dev server externally — routing breaks).
+  - `USE_HTTPS=true`, `FORCE_SCRIPT_NAME=` (empty, to serve at root)
+  - in settings, `SECURE_SSL_REDIRECT=False` (the outer nginx terminates HTTPS)
+- **Vite SPA (birthplanner)** — drop `base` in `vite.config.ts` so it defaults to `/`, remove the React Router `basename`, and rebuild.
+- **VitePress (cdocs)** — remove `base: '/cdocs/'` in config so it's back to `/`, and serve a prod static build rather than the dev server. The dev server shouldn't be exposed externally, and its routing breaks anyway.
 
 ---
 
@@ -294,7 +293,7 @@ cd ~/myserver && docker compose run --rm --entrypoint certbot certbot renew --dr
 # Congratulations, all simulated renewals succeeded
 ```
 
-Open `https://engwrite.mydomain.duckdns.org/` in a browser → padlock + normal page means you're done.
+Open `https://engwrite.mydomain.duckdns.org/` in a browser — a padlock and a normal page means you're done.
 
 ---
 
@@ -302,20 +301,20 @@ Open `https://engwrite.mydomain.duckdns.org/` in a browser → padlock + normal 
 
 | Symptom | Cause / Fix |
 |---------|-------------|
-| `Timeout during connect (likely firewall problem)` | Inbound from abroad blocked (country restriction / ISP). Use **DNS-01** instead of HTTP-01 (this post) |
-| Stalls after `No renewals were attempted` | The certbot service entrypoint swallows `certonly` → add `--entrypoint certbot` |
-| nginx fails to start: `options-ssl-nginx.conf missing` | `certonly` does not create this file → set `ssl_protocols` etc. **inline** in nginx |
+| `Timeout during connect (likely firewall problem)` | Inbound from abroad is blocked (country restriction / ISP). Use DNS-01 instead of HTTP-01 (this post) |
+| Stops after `No renewals were attempted` | The certbot service entrypoint swallowed `certonly`. Add `--entrypoint certbot` |
+| nginx won't start: `options-ssl-nginx.conf missing` | `certonly` doesn't create this file. Set `ssl_protocols` etc. inline in nginx |
 | Host denied access to `live/...` | certbot creates it as root 0700. Run the `[ -f ]` check inside the container (`docker compose run --entrypoint test ...`) or use sudo |
-| DNS-01 issued but no external access | Check whether 443 is also blocked. OK for domestic-only; for overseas, lift the country restriction or use a tunnel |
+| DNS-01 issued but no external access | Check whether 443 is also blocked. Fine for domestic-only; for overseas, lift the restriction or use a tunnel |
 | rate limit (5/week) | Always debug failures with `--dry-run` (staging) |
 
 ---
 
-# [09] Summary
+# [09] Wrap-Up
 
-- The common real cause of HTTPS not working on a Korean home server is often **not a port-forwarding mistake but "inbound from abroad being blocked"** (ISP or iptime country restriction).
-- In that case, **DNS-01 + a DuckDNS wildcard** lets you add HTTPS without opening more ports and while keeping the country restriction (security) on.
-- The subdomain approach keeps apps at root, avoiding base-path pitfalls.
+When HTTPS won't come up on a Korean home server, the real cause is surprisingly often not a port-forwarding mistake but blocked inbound from abroad. Whether your ISP blocked it or you turned on iptime's country-based restriction, the result is the same: Let's Encrypt's port-80 validation can't reach you.
 
-:bulb: For a normal environment where overseas access is not blocked, start with the simpler **HTTP-01 (port-80 webroot)** approach in [DuckDNS + HTTPS Setup on an iptime Router](/en/Network/iptime-duckdns-https-guide/).
+In that situation, DNS-01 + a DuckDNS wildcard lets you add HTTPS without opening another port and without giving up the country restriction you set for security. As a bonus, the subdomain approach keeps each app at root, so you never wrestle with base paths.
+
+:bulb: Conversely, if you're on an ordinary connection where overseas access isn't blocked, there's no need to reach for DNS-01 — the simpler HTTP-01 (port-80 webroot) is the better fit. For that, start with [DuckDNS + HTTPS Setup on an iptime Router](/en/Network/iptime-duckdns-https-guide/).
 {: .notice--info}
