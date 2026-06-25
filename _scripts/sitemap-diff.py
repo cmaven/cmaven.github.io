@@ -15,7 +15,7 @@
 #        python3 _scripts/sitemap-diff.py        # ./urls.txt 없으면 붙여넣기 모드
 #      → GSC URL 텍스트 붙여넣고 → 빈 줄에 "EOF" 입력 후 Enter
 # 출력: sitemap-missing.txt (스크립트 실행 디렉토리)
-# 생성일: 2026-05-26 | 수정일: 2026-06-22
+# 생성일: 2026-05-26 | 수정일: 2026-06-25
 # ============================================================
 
 import re
@@ -117,10 +117,17 @@ def main() -> int:
     except Exception as e:
         print(f"[error] failed to fetch sitemap: {e}", file=sys.stderr)
         return 1
-    sitemap_urls = {normalize(u) for u in parse_sitemap_locs(xml_text)}
 
-    missing = sorted(sitemap_urls - user_urls)
-    extras = sorted(user_urls - sitemap_urls)
+    # 비교는 normalize(끝 슬래시 무시) 기준 — GSC의 슬래시 없는 URL과도 매칭되게.
+    # 단, 출력은 sitemap.xml 원본 URL(정식 형태=끝 슬래시 포함)을 복원한다.
+    # → 결과물을 그대로 GSC 색인 요청에 써도 리디렉션 없이 색인되도록.
+    sitemap_by_norm: dict[str, str] = {}
+    for u in parse_sitemap_locs(xml_text):
+        sitemap_by_norm.setdefault(normalize(u), u)
+    sitemap_norms = set(sitemap_by_norm)
+
+    missing = sorted(sitemap_by_norm[n] for n in (sitemap_norms - user_urls))
+    extras = sorted(user_urls - sitemap_norms)
 
     print("[3/3] Writing output file ...", file=sys.stderr)
     Path(OUT_FILE).write_text(
@@ -129,7 +136,7 @@ def main() -> int:
 
     print("", file=sys.stderr)
     print("=== Summary ===", file=sys.stderr)
-    print(f"  sitemap.xml URLs        : {len(sitemap_urls)}", file=sys.stderr)
+    print(f"  sitemap.xml URLs        : {len(sitemap_norms)}", file=sys.stderr)
     print(f"  pasted URLs             : {len(user_urls)} (raw matches: {len(user_urls_raw)})", file=sys.stderr)
     print(f"  in sitemap, NOT pasted  : {len(missing)}  <- saved to {OUT_FILE}", file=sys.stderr)
     print(f"  in pasted, NOT sitemap  : {len(extras)}", file=sys.stderr)
