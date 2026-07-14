@@ -5,7 +5,7 @@ excerpt: "How to inspect Linux server hardware using dmidecode, lscpu, lshw, lsb
 categories: Linux
 tags: [Ubuntu, CPU, Memory, Disk, Network, GPU, dmidecode, lscpu, lshw, hardware-check]
 date: 2022-10-26
-last_modified_at: 2026-05-26
+last_modified_at: 2026-07-14
 ref: linux-server-hw-check
 ---
 
@@ -64,8 +64,20 @@ dmidecode -t memory | egrep "Size: [0-9]+ GB" | grep -v "Volatile Size:"| wc -l
 dmidecode -t memory | egrep "Size: No Module Installed"
 dmidecode -t memory | egrep "Size: No Module Installed" | wc -l
 
-# Check the DDRx generation of the installed memory
+# Check the DDR generation (DDR3/DDR4/DDR5) of the installed memory
+# lshw shows both generation and speed, e.g. "DIMM DDR4 Synchronous 3200 MHz ..."
 lshw -short -C memory
+
+# Check the DDR generation with dmidecode (Type: DDR3/DDR4/DDR5 per installed module)
+dmidecode -t memory | grep "Type: DDR"
+
+# Count modules per DDR generation at a glance
+dmidecode -t memory | grep "Type: DDR" | sort | uniq -c
+
+# Check the memory clock speed (MHz/MT/s)
+# Speed: rated speed of the module / Configured Memory Speed: actual operating speed
+# (older dmidecode versions print "Configured Clock Speed" instead)
+dmidecode -t memory | grep -i "speed" | grep -v "Unknown"
 ```
 
 ![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)

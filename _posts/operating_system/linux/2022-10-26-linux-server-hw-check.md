@@ -5,6 +5,7 @@ excerpt: "dmidecode, lscpu, lshw, lsblk 등을 활용한 Linux 서버 하드웨�
 categories: Linux
 tags: [Ubuntu, CPU, Memory, Disk, Network, GPU, dmidecode, lscpu, lshw, 하드웨어확인]
 date: 2022-10-26
+last_modified_at: 2026-07-14
 ref: linux-server-hw-check
 ---
 
@@ -63,8 +64,20 @@ dmidecode -t memory | egrep "Size: [0-9]+ GB" | grep -v "Volatile Size:"| wc -l
 dmidecode -t memory | egrep "Size: No Module Installed"
 dmidecode -t memory | egrep "Size: No Module Installed" | wc -l
 
-# 서버에 장착된 메모리의 DDRx 확인
+# 서버에 장착된 메모리의 DDR 세대(DDR3/DDR4/DDR5) 확인
+# lshw는 "DIMM DDR4 Synchronous 3200 MHz ..." 형태로 세대와 속도를 함께 표시
 lshw -short -C memory
+
+# dmidecode로 DDR 세대 확인 (장착된 모듈의 Type: DDR3/DDR4/DDR5)
+dmidecode -t memory | grep "Type: DDR"
+
+# 세대별 모듈 수까지 한 번에 확인
+dmidecode -t memory | grep "Type: DDR" | sort | uniq -c
+
+# 메모리 동작 속도(MHz/MT/s) 확인
+# Speed: 모듈 정격 속도 / Configured Memory Speed: 실제 동작 속도
+# (구버전 dmidecode는 "Configured Clock Speed"로 표시됨)
+dmidecode -t memory | grep -i "speed" | grep -v "Unknown"
 ```
 
 ![2022-10-27 13 15 45](https://user-images.githubusercontent.com/76153041/198190125-d0cf6441-4bc3-4acd-b5eb-f4c6acc96fc2.png)
