@@ -8,6 +8,10 @@ tags: [OpenCode, Ollama, local-LLM, multi-agent, subagent, code-review, Qwen3-Co
 ref: opencode-dual-model-review-loop
 ---
 
+> **Local LLM Coding Agent series**
+> ① [Local LLM Core Concepts](/en/etc/local-llm-gpu-vram-concepts/) · ② [Ollama Local LLM Setup Guide](/en/etc/opencode-korean-local-llm-a30x2/) · ③ [Ollama Multi-GPU Operations & Troubleshooting](/en/etc/ollama-multi-gpu-troubleshooting/) · ④ **AI Code Review with Two Local LLMs** (this post)
+{: .notice--primary}
+
 :bulb: A follow-up to [Ollama Local LLM Setup Guide: Running OpenCode on Two NVIDIA A30 GPUs](/en/etc/opencode-korean-local-llm-a30x2/). That post spread a single model across both GPUs to reach a 64K context. This one does the opposite: **one model per GPU, so the implementing model and the reviewing model are different models.** OpenCode's primary/subagent structure turns that into a loop where A implements, B reviews, and A applies.
 {: .notice--info}
 
@@ -108,7 +112,7 @@ sudo systemctl restart ollama
 
 Per the Ollama docs the default for `OLLAMA_MAX_LOADED_MODELS` is `3 × number of GPUs`, so two models load without setting anything. The value only needs attention if you pinned it to `1` following the previous post — leave it there and Ollama evicts one model to load the other on every single request.
 
-`OLLAMA_MODELS` carries over the data-disk path set up in 5-2 of the previous post. This setup pulls two models and then derives more from them in 3-2, so disk pressure is higher here than in the previous post.
+`OLLAMA_MODELS` carries over the data-disk path set up in [Ops & Troubleshooting 02](/en/etc/ollama-multi-gpu-troubleshooting/). This setup pulls two models and then derives more from them in 3-2, so disk pressure is higher here than in the previous post.
 
 | Item | Approximate size |
 |---|---|
@@ -116,7 +120,7 @@ Per the Ollama docs the default for `OLLAMA_MAX_LOADED_MODELS` is `3 × number o
 | EXAONE 4.0 32B Q4_K_M | 19.3GB |
 | Qwen3.5 35B-A3B, if kept from the previous post | +24GB |
 
-The derived models (`coder-32k`, `reviewer-16k`) reference the original weights rather than copying them, so nothing doubles. Three models together still exceed 60GB, so apply 5-2 of the previous post first if models still live on the root filesystem.
+The derived models (`coder-32k`, `reviewer-16k`) reference the original weights rather than copying them, so nothing doubles. Three models together still exceed 60GB, so apply [Ops & Troubleshooting 02](/en/etc/ollama-multi-gpu-troubleshooting/) first if models still live on the root filesystem.
 
 `OLLAMA_KEEP_ALIVE=-1` is mandatory rather than optional in this setup. Loading nearly 38GB across two models is not a cost you want to pay per round. The flip side is that all 48GB of GPU memory stays committed to Ollama, so if the same server also runs training or other inference, this layout is the wrong one.
 
@@ -169,7 +173,7 @@ nvidia-smi
 
 Success looks like `PROCESSOR` reading GPU for both models and `nvidia-smi` showing roughly 20GB on each of GPU 0 and 1. If either falls back to a CPU split, lower `num_ctx` and `ollama create` again. If both models pile onto one card, one `num_ctx` is large enough that Ollama gave up on the clean placement — adjust the same way.
 
-> `100% CPU` is not a context problem, it's a driver problem. See 5-1 of the previous post.
+> `100% CPU` is not a context problem, it's a driver problem. See [Ops & Troubleshooting 01](/en/etc/ollama-multi-gpu-troubleshooting/).
 {: .notice--warning}
 
 ## 3-3. When placement has to be pinned
@@ -405,7 +409,7 @@ Round 2: re-review → apply             only checks whether round 1 introduced 
 Round 3+                               human steps in; the requirement itself is ambiguous
 ```
 
-If critical and major findings keep appearing in round 2, splitting the requirement is faster than another round. The task-decomposition principle from 9-1 of the previous post applies unchanged.
+If critical and major findings keep appearing in round 2, splitting the requirement is faster than another round. The task-decomposition principle from [Setup Guide 07](/en/etc/opencode-korean-local-llm-a30x2/) applies unchanged.
 
 ## 5-3. The human gate
 
@@ -461,11 +465,11 @@ Do check number 3 at least once. If `permission` never took effect, the reviewer
 
 # [08] What this post did not verify
 
-This setup makes concrete the per-GPU split floated as a next step in section [12] of the previous post. The following is written from documentation and was not measured on this server.
+This setup makes concrete the per-GPU split floated as a next step in [Setup Guide 10](/en/etc/opencode-korean-local-llm-a30x2/). The following is written from documentation and was not measured on this server.
 
 - **VRAM figures and context ceilings.** 19GB and 19.3GB are the distribution sizes listed on Ollama and Hugging Face respectively; actual occupancy with KV cache, and whether 32K/16K fit in 24GB, has to be measured with the procedure in 3-2. These are starting values, not verified limits.
 - **Where the two models land.** One-per-card is the expected outcome of Ollama's documented placement rule. If load order changes it, pin with 3-3.
-- **Review quality.** How much of Qwen3-Coder's error surface EXAONE actually catches depends on the repository and the kind of work. The comparison method in section [12] of the previous post — 10 to 20 real tasks — is the only basis for judging it.
+- **Review quality.** How much of Qwen3-Coder's error surface EXAONE actually catches depends on the repository and the kind of work. The comparison method in [Setup Guide 10](/en/etc/opencode-korean-local-llm-a30x2/) — 10 to 20 real tasks — is the only basis for judging it.
 - **OpenCode config schema.** The `agent`, `mode`, and `permission` keys follow the OpenCode docs and change between versions. On an error, check the `https://opencode.ai/config.json` schema first.
 
 ---

@@ -8,6 +8,10 @@ tags: [OpenCode, Ollama, 로컬LLM, 멀티에이전트, 서브에이전트, 코�
 ref: opencode-dual-model-review-loop
 ---
 
+> **로컬 LLM 코딩 에이전트 시리즈**
+> ① [로컬 LLM 입문 개념](/etc/local-llm-gpu-vram-concepts/) · ② [Ollama 로컬 LLM 구축 가이드](/etc/opencode-korean-local-llm-a30x2/) · ③ [Ollama 멀티GPU 운영·트러블슈팅](/etc/ollama-multi-gpu-troubleshooting/) · ④ **AI 코드 리뷰 자동화**(현재 글)
+{: .notice--primary}
+
 :bulb: [Ollama 로컬 LLM 구축 가이드: A30 GPU 2장으로 OpenCode 한국어 코딩 에이전트 만들기](/etc/opencode-korean-local-llm-a30x2/)의 후속이다. 앞 글이 모델 하나를 두 GPU에 분산해 64K 컨텍스트를 확보하는 구성이었다면, 이 글은 **GPU 한 장에 모델 하나씩 올려 구현 모델과 검토 모델을 분리하는 구성**이다. OpenCode의 primary/subagent 구조로 A가 구현하고 B가 검토하고 다시 A가 반영하는 루프를 만든다.
 {: .notice--info}
 
@@ -108,7 +112,7 @@ sudo systemctl restart ollama
 
 Ollama 문서 기준 `OLLAMA_MAX_LOADED_MODELS`의 기본값은 `GPU 수 × 3`이므로 명시하지 않아도 2개는 적재된다. 앞 글에서 `1`로 고정해 뒀다면 반드시 풀어야 한다. 값이 `1`이면 요청이 올 때마다 상대 모델을 내리고 올리는 동작이 반복된다.
 
-`OLLAMA_MODELS`는 앞 글 5-2에서 모델 저장 경로를 데이터 디스크로 옮겨 둔 설정 그대로다. 이 구성은 모델을 두 개 받고 3-2에서 파생 모델까지 만들기 때문에 디스크 압박이 앞 글보다 크다.
+`OLLAMA_MODELS`는 [운영편 02](/etc/ollama-multi-gpu-troubleshooting/)에서 모델 저장 경로를 데이터 디스크로 옮겨 둔 설정 그대로다. 이 구성은 모델을 두 개 받고 3-2에서 파생 모델까지 만들기 때문에 디스크 압박이 앞 글보다 크다.
 
 | 항목 | 대략 크기 |
 |---|---|
@@ -116,7 +120,7 @@ Ollama 문서 기준 `OLLAMA_MAX_LOADED_MODELS`의 기본값은 `GPU 수 × 3`�
 | EXAONE 4.0 32B Q4_K_M | 19.3GB |
 | 앞 글에서 받은 Qwen3.5 35B-A3B를 남겨 둔 경우 | +24GB |
 
-파생 모델(`coder-32k`, `reviewer-16k`)은 원본 가중치를 참조하므로 크기가 두 배가 되지는 않는다. 그래도 세 모델을 함께 두면 60GB를 넘으므로, 루트 파일시스템에 그대로 두는 구성이라면 앞 글 5-2를 먼저 적용한다.
+파생 모델(`coder-32k`, `reviewer-16k`)은 원본 가중치를 참조하므로 크기가 두 배가 되지는 않는다. 그래도 세 모델을 함께 두면 60GB를 넘으므로, 루트 파일시스템에 그대로 두는 구성이라면 [운영편 02](/etc/ollama-multi-gpu-troubleshooting/)를 먼저 적용한다.
 
 `OLLAMA_KEEP_ALIVE=-1`은 이 구성에서 선택이 아니라 필수다. 두 모델을 합쳐 38GB 가까이 적재하는 데 드는 시간을 라운드마다 다시 치르지 않으려면 상주시켜야 한다. 다만 GPU 48GB 전부가 Ollama에 묶이므로, 같은 서버에서 학습이나 다른 추론을 돌린다면 이 구성 자체가 맞지 않는다.
 
@@ -169,7 +173,7 @@ nvidia-smi
 
 `ollama ps`의 `PROCESSOR`가 두 모델 모두 GPU로 표시되고 `nvidia-smi`에서 GPU 0·1이 각각 20GB대를 점유하면 성공이다. CPU 혼합으로 떨어지면 `num_ctx`를 낮춰 다시 `ollama create` 한다. 두 모델이 한 GPU에 몰렸다면 한쪽 `num_ctx`가 과해 Ollama가 배치를 포기한 것이므로 같은 방향으로 조정한다.
 
-> `PROCESSOR`가 `100% CPU`로 나오면 컨텍스트 문제가 아니라 드라이버 문제다. 앞 글 5-1 참고.
+> `PROCESSOR`가 `100% CPU`로 나오면 컨텍스트 문제가 아니라 드라이버 문제다. [운영편 01](/etc/ollama-multi-gpu-troubleshooting/) 참고.
 {: .notice--warning}
 
 ## 3-3. GPU를 고정해야 한다면
@@ -199,7 +203,7 @@ Environment="OLLAMA_KEEP_ALIVE=-1"
 WantedBy=default.target
 ```
 
-기존 `ollama.service`에는 `CUDA_VISIBLE_DEVICES=0`을 주고, 두 인스턴스가 같은 모델 디렉터리(`/usr/share/ollama/.ollama/models`)를 공유하게 둔다. 인스턴스별로 `OLLAMA_CONTEXT_LENGTH`가 분리되므로 3-2의 Modelfile 작업도 필요 없다.
+기존 `ollama.service`에는 `CUDA_VISIBLE_DEVICES=0`을 주고, 두 인스턴스가 같은 모델 디렉터리(`OLLAMA_MODELS`로 지정한 경로)를 공유하게 둔다. 인스턴스별로 `OLLAMA_CONTEXT_LENGTH`가 분리되므로 3-2의 Modelfile 작업도 필요 없다.
 
 대가는 운영 대상이 둘로 늘어나는 것이다. 포트 두 개, systemd 유닛 두 개, 로그 두 곳을 관리해야 하고 OpenCode 설정에도 provider가 둘 생긴다. 3-1 방식으로 먼저 시도하고, 배치가 실제로 흔들릴 때 옮기는 순서를 권한다.
 
@@ -405,7 +409,7 @@ OpenCode를 다시 띄워 등록 상태를 확인한다.
 3라운드 이상                     사람이 개입. 요구사항 자체가 모호하다는 신호
 ```
 
-2라운드에서도 치명·중대가 계속 나오면 모델을 더 돌리는 것보다 요구사항을 쪼개는 쪽이 빠르다. 앞 글 9-1의 작업 분할 원칙이 그대로 적용된다.
+2라운드에서도 치명·중대가 계속 나오면 모델을 더 돌리는 것보다 요구사항을 쪼개는 쪽이 빠르다. [구축편 07](/etc/opencode-korean-local-llm-a30x2/)의 작업 분할 원칙이 그대로 적용된다.
 
 ## 5-3. 사람 게이트
 
@@ -461,11 +465,11 @@ sudo journalctl -u ollama -f      # @reviewer 호출 중 reviewer-16k 요청이 
 
 # [08] 이 글에서 검증하지 않은 것
 
-이 구성은 앞 글의 [12]절에서 다음 단계로 제시했던 GPU 분리 운영을 구체화한 것이다. 다음 항목은 문서 기준으로 작성했고 이 서버에서 측정하지 않았다.
+이 구성은 [구축편 10](/etc/opencode-korean-local-llm-a30x2/)에서 다음 단계로 제시했던 GPU 분리 운영을 구체화한 것이다. 다음 항목은 문서 기준으로 작성했고 이 서버에서 측정하지 않았다.
 
 - **VRAM 수치와 컨텍스트 상한**: 19GB·19.3GB는 각각 Ollama·Hugging Face에 표기된 배포본 크기이고, KV Cache를 더한 실제 점유량과 32K·16K가 A30 24GB에 들어가는지는 3-2의 절차로 각자 측정해야 한다. 시작값일 뿐 검증된 상한이 아니다.
 - **두 모델의 배치 결과**: 한 장에 하나씩 놓이는 것은 Ollama 문서의 배치 규칙에서 따라 나오는 기대값이다. 적재 순서에 따라 달라지면 3-3으로 고정한다.
-- **검토 품질**: EXAONE의 지적이 Qwen3-Coder의 실수를 실제로 얼마나 잡아내는지는 저장소와 작업 성격에 따라 다르다. 앞 글 [12]의 비교 방법대로 실제 작업 10~20개로 측정하는 것이 유일한 판단 근거다.
+- **검토 품질**: EXAONE의 지적이 Qwen3-Coder의 실수를 실제로 얼마나 잡아내는지는 저장소와 작업 성격에 따라 다르다. [구축편 10](/etc/opencode-korean-local-llm-a30x2/)의 비교 방법대로 실제 작업 10~20개로 측정하는 것이 유일한 판단 근거다.
 - **OpenCode 설정 스키마**: `agent`, `mode`, `permission` 키는 OpenCode 문서 기준이며 버전에 따라 달라진다. 오류가 나면 `https://opencode.ai/config.json` 스키마를 먼저 확인한다.
 
 ---
