@@ -293,7 +293,7 @@ nvidia-smi          # overall status
 nvidia-smi topo -m  # without NVLink the GPUs show a PCIe path — not an error
 ```
 
-If `nvidia-smi` already works, don't force a driver change. Only on a fresh server with no driver:
+Even if `nvidia-smi` works, check that **Driver Version is 550 or newer**. Recent Ollama CUDA runners require 550+, and anything below that runs on CPU no matter how healthy the GPUs are (see 5-1). On a server with no driver, or one below that version:
 
 ```bash
 sudo apt update
@@ -333,7 +333,6 @@ The systemd override is the heart of the setup. Open it with `sudo systemctl edi
 
 ```ini
 [Service]
-Environment="CUDA_VISIBLE_DEVICES=0,1"
 Environment="OLLAMA_HOST=127.0.0.1:11434"
 Environment="OLLAMA_CONTEXT_LENGTH=65536"
 Environment="OLLAMA_NUM_PARALLEL=1"
@@ -350,7 +349,6 @@ sudo systemctl restart ollama
 
 | Setting | Meaning |
 |---|---|
-| `CUDA_VISIBLE_DEVICES=0,1` | use both GPU 0 and 1 |
 | `OLLAMA_HOST=127.0.0.1:11434` | API reachable only locally (see security section) |
 | `OLLAMA_CONTEXT_LENGTH=65536` | 64K default context (see 2-6) |
 | `OLLAMA_NUM_PARALLEL=1` | one concurrent request to save VRAM |
@@ -360,6 +358,70 @@ sudo systemctl restart ollama
 | `OLLAMA_KEEP_ALIVE=-1` | keep the model resident on the GPUs |
 
 `OLLAMA_KEEP_ALIVE=-1` may not suit a server that shares GPUs with other workloads. Change it to something like `30m` if needed.
+
+Leaving out `CUDA_VISIBLE_DEVICES` is deliberate. With only two GPUs, `0,1` restricts nothing while getting in the way of Ollama's own discovery, and it leaves a warning in the log.
+
+```text
+WARN msg="user overrode visible devices" CUDA_VISIBLE_DEVICES=0,1
+WARN msg="if GPUs are not correctly discovered, unset and try again"
+```
+
+Set it only on a server where Ollama should get a subset of the GPUs.
+
+## 5-1. Driver below 550 — the trap that silently falls back to CPU
+
+Check this first. **Recent Ollama CUDA runners require NVIDIA driver 550 or newer.** On an older driver such as 535, Ollama discovers the GPUs, drops them from the candidate list, and runs on CPU without raising an error. Every part of the install looks fine and `nvidia-smi` is perfectly healthy, which makes this hard to pin down.
+
+The symptom shows up in the `PROCESSOR` column of `ollama ps`.
+
+```text
+NAME               SIZE     PROCESSOR    CONTEXT
+qwen3.5:35b-a3b    24 GB    100% CPU     65536
+```
+
+The distinction matters here. If VRAM were merely too small, the model would load partially and be reported as a **split** like `35%/65% CPU/GPU`. A flat `100% CPU` means **no usable GPU was found at all** — so shrinking the context will not fix it.
+
+One log line confirms it.
+
+```bash
+sudo systemctl restart ollama
+sleep 5
+sudo journalctl -u ollama --since "2 min ago" --no-pager \
+  | grep -viE "compat tensor transform" \
+  | grep -iE "inference compute|driver too old"
+```
+
+```text
+WARN source=cuda_compat.go:65 msg="NVIDIA driver too old"
+    device="NVIDIA A30" compute=8.0 driver=535 required_driver="550 or newer"
+INFO source=types.go:50 msg="inference compute" id=cpu library=cpu ... total="754.6 GiB"
+INFO msg="vram-based default context" total_vram="0 B" default_num_ctx=4096
+```
+
+A healthy system prints one `inference compute` line per GPU with `library=cuda`. A single `id=cpu` line plus `total_vram="0 B"` is the confirmation.
+
+> If your `grep` pattern includes `compat`, the thousands of `compat tensor transform` lines emitted during model load will bury the GPU-discovery lines from startup. Filter them out first, as above.
+{: .notice--warning}
+
+The only fix is a newer driver. Plenty of write-ups suggest adding `LD_LIBRARY_PATH=/usr/local/cuda/lib64`, but it does nothing for this symptom: Ollama uses its own bundled runtime under `/usr/local/lib/ollama/cuda_v12` rather than the CUDA Toolkit, and the one library it does borrow — `libcuda.so.1` — already sits in the default ldconfig path. If `ldconfig -p | grep libcuda` finds it, that setting changes nothing.
+
+```bash
+apt-cache search 'nvidia-driver-5[5-9][0-9]-server' | sort
+sudo apt install -y nvidia-driver-570-server   # A30 is a data center GPU — use the -server branch
+sudo reboot
+```
+
+On a Kubernetes worker, drain the node first. If the NVIDIA GPU Operator manages the driver on that node, raise the Operator's driver version instead of installing on the host.
+
+```bash
+kubectl get pods -A -o wide | grep -iE "nvidia|gpu" | grep <node>   # look for driver-daemonset
+kubectl cordon <node>
+kubectl drain <node> --ignore-daemonsets --delete-emptydir-data
+```
+
+If operational constraints rule out a driver upgrade, the only alternative is pinning Ollama to an older release (`OLLAMA_VERSION=<version> sh`) — not recommended, since support for new models keeps moving forward.
+
+The required driver version changes with each Ollama release. This article reflects **Ollama 0.32.5, which requires 550 or newer**; check the release notes for the version you install.
 
 ---
 
@@ -392,7 +454,9 @@ What to check in `ollama ps`:
 - `CONTEXT` is near 65536
 - No excessive CPU/GPU mixed offload
 
-If only one GPU is used, Ollama may have decided the model plus context fits on one card — which can be normal. The real problem is VRAM exhaustion or CPU offload at 64K. In that case work through: ① stop other GPU processes → ② restart Ollama → ③ confirm `CUDA_VISIBLE_DEVICES=0,1` is applied → ④ check `journalctl -e -u ollama` → ⑤ re-check `nvidia-smi` during generation.
+If only one GPU is used, Ollama may have decided the model plus context fits on one card — which can be normal. The real problem is VRAM exhaustion or CPU offload at 64K. In that case work through: ① stop other GPU processes → ② restart Ollama → ③ confirm the `inference compute` log lines report `library=cuda` (see 5-1) → ④ check `journalctl -e -u ollama` → ⑤ re-check `nvidia-smi` during generation.
+
+If it reads `100% CPU` instead, this is not the section you want — go to 5-1, it's the driver.
 
 Finally, verify the OpenAI-compatible API.
 
@@ -578,6 +642,7 @@ With `OLLAMA_KEEP_ALIVE=-1`, subsequent requests skip most of that cost.
 | Connection refused | `sudo systemctl status ollama` → `journalctl -e -u ollama` |
 | Answers but can't call file-edit tools | Latest OpenCode/Ollama, official model tag, Build agent selected, context not too small, AGENTS.md not over-restricting tool use |
 | Quality drops in long conversations | New session per feature. Rules live in AGENTS.md, not chat. Commit finished work and hand over a short status to the next session |
+| `ollama ps` shows `100% CPU` | Not a VRAM shortage — no GPU was accepted. Shrinking the context will not help. Check with `journalctl -u ollama \| grep -i "driver too old"` and upgrade if the driver is below 550 (see 5-1) |
 | Two GPUs but not much faster | Normal for a no-NVLink split (see 2-10). The win is a bigger model + longer context + no CPU offload, not speed |
 
 ---

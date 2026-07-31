@@ -293,7 +293,7 @@ nvidia-smi          # 전체 상태
 nvidia-smi topo -m  # NVLink 없으면 PCIe 경로로 표시됨 — 오류 아님
 ```
 
-`nvidia-smi`가 이미 정상이라면 드라이버를 무리하게 변경하지 않는다. 드라이버가 없는 새 서버에서만:
+`nvidia-smi`가 동작하더라도 **Driver Version이 550 이상인지** 함께 확인한다. 최신 Ollama의 CUDA 런너가 550 이상을 요구하고, 그 미만이면 GPU가 멀쩡해도 CPU로 실행된다(5-1 참고). 드라이버가 없거나 버전이 낮은 서버에서:
 
 ```bash
 sudo apt update
@@ -333,7 +333,6 @@ sudo systemctl status ollama
 
 ```ini
 [Service]
-Environment="CUDA_VISIBLE_DEVICES=0,1"
 Environment="OLLAMA_HOST=127.0.0.1:11434"
 Environment="OLLAMA_CONTEXT_LENGTH=65536"
 Environment="OLLAMA_NUM_PARALLEL=1"
@@ -350,7 +349,6 @@ sudo systemctl restart ollama
 
 | 설정 | 의미 |
 |---|---|
-| `CUDA_VISIBLE_DEVICES=0,1` | GPU 0과 1을 모두 사용 |
 | `OLLAMA_HOST=127.0.0.1:11434` | 로컬에서만 API 접속 허용 (보안 절 참고) |
 | `OLLAMA_CONTEXT_LENGTH=65536` | 기본 컨텍스트 64K (2-6 참고) |
 | `OLLAMA_NUM_PARALLEL=1` | 동시 요청 1개로 VRAM 절약 |
@@ -360,6 +358,70 @@ sudo systemctl restart ollama
 | `OLLAMA_KEEP_ALIVE=-1` | 모델을 내리지 않고 GPU에 상주 |
 
 `OLLAMA_KEEP_ALIVE=-1`은 GPU를 다른 작업과 공유하는 서버에선 부적합할 수 있다. 필요하면 `30m`처럼 바꾼다.
+
+`CUDA_VISIBLE_DEVICES`를 넣지 않은 것은 의도다. GPU가 두 장뿐이면 `0,1`은 아무것도 제한하지 않으면서 Ollama의 자동 탐색만 방해하고, 로그에도 경고가 남는다.
+
+```text
+WARN msg="user overrode visible devices" CUDA_VISIBLE_DEVICES=0,1
+WARN msg="if GPUs are not correctly discovered, unset and try again"
+```
+
+GPU 일부만 Ollama에 할당해야 하는 서버에서만 명시한다.
+
+## 5-1. 드라이버 550 미만 — 조용히 CPU로 떨어지는 함정
+
+가장 먼저 확인할 것. **최신 Ollama의 CUDA 런너는 NVIDIA 드라이버 550 이상을 요구한다.** 535 같은 구버전이면 Ollama가 GPU를 발견하고도 후보에서 제외한 뒤, 오류 없이 CPU로 실행한다. 설치는 전부 정상이고 `nvidia-smi`도 멀쩡해서 원인을 찾기 어렵다.
+
+증상은 `ollama ps`의 `PROCESSOR` 열에 나타난다.
+
+```text
+NAME               SIZE     PROCESSOR    CONTEXT
+qwen3.5:35b-a3b    24 GB    100% CPU     65536
+```
+
+여기서 중요한 구분이 있다. VRAM이 모자라 일부만 올라간 경우라면 `35%/65% CPU/GPU`처럼 **분할로 표기**된다. 딱 `100% CPU`는 **쓸 수 있는 GPU를 하나도 찾지 못했다**는 뜻이다. 즉 컨텍스트를 줄여도 해결되지 않는다.
+
+확진은 로그 한 줄이다.
+
+```bash
+sudo systemctl restart ollama
+sleep 5
+sudo journalctl -u ollama --since "2 min ago" --no-pager \
+  | grep -viE "compat tensor transform" \
+  | grep -iE "inference compute|driver too old"
+```
+
+```text
+WARN source=cuda_compat.go:65 msg="NVIDIA driver too old"
+    device="NVIDIA A30" compute=8.0 driver=535 required_driver="550 or newer"
+INFO source=types.go:50 msg="inference compute" id=cpu library=cpu ... total="754.6 GiB"
+INFO msg="vram-based default context" total_vram="0 B" default_num_ctx=4096
+```
+
+`inference compute` 줄이 `library=cuda`로 GPU 개수만큼 나와야 정상이다. `id=cpu` 하나뿐이고 `total_vram="0 B"`면 확정이다.
+
+> `grep` 패턴에 `compat`를 넣으면 모델 적재 시 쏟아지는 `compat tensor transform` 로그 수천 줄에 묻혀 정작 시작 시점의 GPU 탐색 라인을 놓친다. 위처럼 먼저 걸러낸다.
+{: .notice--warning}
+
+해결은 드라이버 상향뿐이다. `LD_LIBRARY_PATH=/usr/local/cuda/lib64` 추가를 권하는 글이 많지만 이 증상에는 무효다. Ollama는 CUDA Toolkit이 아니라 `/usr/local/lib/ollama/cuda_v12`의 번들 런타임을 쓰고, 외부에서 가져오는 `libcuda.so.1`은 이미 ldconfig 기본 경로에 있다. `ldconfig -p | grep libcuda` 로 확인된다면 그 설정은 붙여도 아무 변화가 없다.
+
+```bash
+apt-cache search 'nvidia-driver-5[5-9][0-9]-server' | sort
+sudo apt install -y nvidia-driver-570-server   # A30은 데이터센터용 -server 브랜치
+sudo reboot
+```
+
+Kubernetes 워커 노드라면 먼저 비우고 진행한다. NVIDIA GPU Operator가 드라이버를 관리하는 노드면 호스트에 직접 설치하지 말고 Operator의 드라이버 버전을 올려야 한다.
+
+```bash
+kubectl get pods -A -o wide | grep -iE "nvidia|gpu" | grep <노드명>   # driver-daemonset 있는지
+kubectl cordon <노드명>
+kubectl drain <노드명> --ignore-daemonsets --delete-emptydir-data
+```
+
+운영 제약으로 드라이버를 올릴 수 없다면 대안은 Ollama를 구버전으로 고정하는 것 하나뿐이다(`OLLAMA_VERSION=<버전> sh`). 다만 신규 모델 지원이 계속 빠지므로 권하지 않는다.
+
+요구 드라이버 버전은 Ollama 버전마다 달라진다. 이 글은 **Ollama 0.32.5 기준 550 이상**이며, 설치 시점의 릴리스 노트를 확인하는 것이 정확하다.
 
 ---
 
@@ -392,7 +454,9 @@ ollama ps
 - `CONTEXT`가 65536에 가깝게 표시되는가
 - CPU와 GPU 혼합 offload가 과도하지 않은가
 
-한 GPU만 쓰인다면 모델+컨텍스트가 한 장에 들어간다고 판단한 정상 동작일 수 있다. 문제는 64K에서 VRAM 부족이나 CPU offload가 생길 때다. 그때는 ① 다른 GPU 프로세스 종료 → ② Ollama 재시작 → ③ `CUDA_VISIBLE_DEVICES=0,1` 적용 확인 → ④ `journalctl -e -u ollama` 로그 → ⑤ 실행 중 `nvidia-smi` 재확인 순으로 본다.
+한 GPU만 쓰인다면 모델+컨텍스트가 한 장에 들어간다고 판단한 정상 동작일 수 있다. 문제는 64K에서 VRAM 부족이나 CPU offload가 생길 때다. 그때는 ① 다른 GPU 프로세스 종료 → ② Ollama 재시작 → ③ 로그의 `inference compute` 줄에 `library=cuda`가 나오는지 확인(5-1 참고) → ④ `journalctl -e -u ollama` 로그 → ⑤ 실행 중 `nvidia-smi` 재확인 순으로 본다.
+
+`100% CPU`로 표시된다면 이 절이 아니라 5-1의 드라이버 문제다.
 
 마지막으로 OpenAI 호환 API를 확인한다.
 
@@ -578,6 +642,7 @@ OOM은 `Out Of Memory`, 즉 GPU 메모리 부족이다. 발생하면 품질 손�
 | Connection refused | `sudo systemctl status ollama` → `journalctl -e -u ollama` |
 | 답은 하는데 파일 수정 도구를 못 씀 | OpenCode·Ollama 최신 버전, 공식 모델 태그, Build 에이전트인지, 컨텍스트가 너무 작지 않은지, AGENTS.md가 도구 사용을 과도하게 제한하지 않는지 |
 | 대화가 길어지면 품질 저하 | 기능 단위로 새 세션. 규칙은 대화가 아니라 AGENTS.md에. 완료 작업은 commit으로 남기고 다음 세션에 짧게 인계 |
+| `ollama ps`가 `100% CPU` | VRAM 부족이 아니라 GPU 미채택. 컨텍스트 축소는 무효다. `journalctl -u ollama \| grep -i "driver too old"` 로 확인하고 드라이버가 550 미만이면 상향 (5-1 참고) |
 | 두 GPU인데 생각보다 안 빠름 | NVLink 없는 분산의 정상 특성(2-10 참고). 이 구성의 이득은 속도가 아니라 큰 모델 + 긴 컨텍스트 + CPU offload 방지 |
 
 ---
