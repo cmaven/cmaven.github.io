@@ -1,5 +1,5 @@
 ---
-title: "Building a Korean-Language Local LLM Setup for OpenCode on Two A30s — Ollama + Qwen3.5 35B-A3B"
+title: "Ollama Local LLM Setup Guide: Running OpenCode on Two NVIDIA A30 GPUs"
 description: "Running OpenCode entirely offline in Korean on two NVIDIA A30 24GB GPUs (no NVLink) with Ollama and Qwen3.5 35B-A3B Q4_K_M. From beginner concepts (LLM, VRAM, quantization, KV cache, MoE) through systemd tuning, 64K context, staged OOM mitigation, and an AGENTS.md that locks in Korean output quality"
 excerpt: "No API keys, just two A30s: OpenCode as a Korean-speaking coding agent. Written so you can follow along even if GPUs and LLMs are new to you — concepts first, tuning after"
 date: 2026-07-30
@@ -340,6 +340,7 @@ Environment="OLLAMA_MAX_LOADED_MODELS=1"
 Environment="OLLAMA_FLASH_ATTENTION=1"
 Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
 Environment="OLLAMA_KEEP_ALIVE=-1"
+Environment="OLLAMA_MODELS=/data/ollama/models"
 ```
 
 ```bash
@@ -356,6 +357,7 @@ sudo systemctl restart ollama
 | `OLLAMA_FLASH_ATTENTION=1` | reduces long-context memory use |
 | `OLLAMA_KV_CACHE_TYPE=q8_0` | 8-bit KV cache — roughly half of f16 (see 2-7) |
 | `OLLAMA_KEEP_ALIVE=-1` | keep the model resident on the GPUs |
+| `OLLAMA_MODELS=/data/ollama/models` | store models on the data disk instead of root (see 5-2) |
 
 `OLLAMA_KEEP_ALIVE=-1` may not suit a server that shares GPUs with other workloads. Change it to something like `30m` if needed.
 
@@ -422,6 +424,101 @@ kubectl drain <node> --ignore-daemonsets --delete-emptydir-data
 If operational constraints rule out a driver upgrade, the only alternative is pinning Ollama to an older release (`OLLAMA_VERSION=<version> sh`) — not recommended, since support for new models keeps moving forward.
 
 The required driver version changes with each Ollama release. This article reflects **Ollama 0.32.5, which requires 550 or newer**; check the release notes for the version you install.
+
+## 5-2. Move model storage to the data disk
+
+Ollama's default model path is `/usr/share/ollama/.ollama/models` — on the root filesystem. The model used in this guide is around 20GB, and pulling a couple more for comparison fills root. Move the storage location before pulling anything.
+
+Start with the disk layout:
+
+```bash
+lsblk
+df -h /
+```
+
+If a large disk is mounted separately from root, put the models there.
+
+```text
+NAME                      SIZE MOUNTPOINTS
+sda                     446.1G
+├─sda1                      1G /boot/efi
+├─sda2                      2G /boot
+└─sda3                  443.1G
+  └─ubuntu--vg-ubuntu--lv 443G /
+sdb                       3.6T /data
+```
+
+Use the 3.6T `/data` rather than stacking models on the 443G root. Model sizes run like this:
+
+| Model | Approximate size |
+|---|---|
+| Qwen3.5 35B-A3B Q4_K_M | 24GB |
+| Qwen3-Coder 30B-A3B Q4_K_M | 19GB |
+| EXAONE 4.0 32B Q4_K_M | 19.3GB |
+
+Three models alone exceed 60GB, and adding quantization variants reaches the hundreds of GB quickly.
+
+**① Confirm the mount survives a reboot**
+
+```bash
+findmnt /data
+grep -E "\s/data\s" /etc/fstab
+```
+
+With no `fstab` entry, `/data` won't mount after a reboot. Ollama then starts against an empty directory and **behaves as though every model vanished.** Register it by UUID:
+
+```bash
+sudo blkid /dev/sdb
+echo 'UUID=<the-uuid-you-found>  /data  ext4  defaults  0  2' | sudo tee -a /etc/fstab
+sudo mount -a
+```
+
+**② Create the directory and set ownership**
+
+```bash
+sudo mkdir -p /data/ollama/models
+sudo chown -R ollama:ollama /data/ollama
+```
+
+If `ollama` doesn't own it, the service fails immediately on start — it runs as `User=ollama`.
+
+**③ Move existing models**
+
+Skip this if you haven't pulled anything yet.
+
+```bash
+sudo systemctl stop ollama
+sudo rsync -a /usr/share/ollama/.ollama/models/ /data/ollama/models/
+sudo chown -R ollama:ollama /data/ollama
+```
+
+**④ Point systemd at the new path**
+
+Already included in the override in [05] above.
+
+```ini
+Environment="OLLAMA_MODELS=/data/ollama/models"
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start ollama
+```
+
+**⑤ Verify, then delete the original**
+
+```bash
+ollama list          # the moved models should all still be listed
+df -h / /data        # growth should now land on /data
+```
+
+Delete the original only after `ollama list` looks right and a fresh pull succeeds.
+
+```bash
+sudo rm -rf /usr/share/ollama/.ollama/models
+```
+
+A symlink works too, but the environment variable is visible in the service config, which makes it easier to trace later.
 
 ---
 
@@ -675,6 +772,8 @@ A30 #1 └─ Qwen3-Coder 30B-A3B Q4 → code implementation, tests
 ```
 
 The upside: the two models are independent, so there's almost no inter-GPU traffic, and the Korean model and coding model split roles cleanly. The costs: running two Ollama servers, fitting model + KV cache into 24GB per GPU (start contexts at 24K–32K), and more complex provider config. Start with the baseline — one Qwen3.5 split across both cards — and try this afterward.
+
+Pairing that layout with OpenCode subagents lets you separate the implementing model from the reviewing one. The follow-up post, [AI Code Review with Two Local LLMs](/en/etc/opencode-dual-model-review-loop/), covers per-model context limits, restricting the reviewer's permissions, and capping the review rounds.
 
 Eight operating principles to close:
 

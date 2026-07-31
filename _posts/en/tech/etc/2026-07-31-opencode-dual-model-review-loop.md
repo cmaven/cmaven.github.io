@@ -1,5 +1,5 @@
 ---
-title: "A Build–Review–Apply Loop with Two Local LLMs — OpenCode Subagents on Two A30s"
+title: "AI Code Review with Two Local LLMs: OpenCode Subagents on Multi-GPU Ollama"
 description: "Pinning Qwen3-Coder and EXAONE to one A30 24GB each and using OpenCode's primary/subagent split to separate the implementing model from the reviewing model. Per-model num_ctx, why the reviewer must lose edit permission, and the round cap that stops infinite ping-pong"
 excerpt: "A model reviewing its own code misses its own mistakes. Keep two models from different families resident on one GPU each, and the author is no longer the reviewer"
 date: 2026-07-31
@@ -8,7 +8,7 @@ tags: [OpenCode, Ollama, local-LLM, multi-agent, subagent, code-review, Qwen3-Co
 ref: opencode-dual-model-review-loop
 ---
 
-:bulb: A follow-up to [Building a Korean-Language Local LLM Setup for OpenCode on Two A30s](/en/Etc/opencode-korean-local-llm-a30x2/). That post spread a single model across both GPUs to reach a 64K context. This one does the opposite: **one model per GPU, so the implementing model and the reviewing model are different models.** OpenCode's primary/subagent structure turns that into a loop where A implements, B reviews, and A applies.
+:bulb: A follow-up to [Ollama Local LLM Setup Guide: Running OpenCode on Two NVIDIA A30 GPUs](/en/etc/opencode-korean-local-llm-a30x2/). That post spread a single model across both GPUs to reach a 64K context. This one does the opposite: **one model per GPU, so the implementing model and the reviewing model are different models.** OpenCode's primary/subagent structure turns that into a loop where A implements, B reviews, and A applies.
 {: .notice--info}
 
 The end state:
@@ -63,7 +63,7 @@ The drawbacks listed in the previous post's comparison table stop mattering here
 The VRAM layout:
 
 ```text
-A30 #0 24GB ├─ Qwen3-Coder 30B-A3B Q4_K_M  ~18.6GB
+A30 #0 24GB ├─ Qwen3-Coder 30B-A3B Q4_K_M  ~19GB
             └─ KV cache + runtime            ~5GB
 
 A30 #1 24GB ├─ EXAONE 4.0 32B Q4_K_M        ~19.3GB
@@ -93,6 +93,7 @@ Environment="OLLAMA_MAX_LOADED_MODELS=2"
 Environment="OLLAMA_FLASH_ATTENTION=1"
 Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
 Environment="OLLAMA_KEEP_ALIVE=-1"
+Environment="OLLAMA_MODELS=/data/ollama/models"
 ```
 
 ```bash
@@ -107,6 +108,16 @@ sudo systemctl restart ollama
 
 Per the Ollama docs the default for `OLLAMA_MAX_LOADED_MODELS` is `3 × number of GPUs`, so two models load without setting anything. The value only needs attention if you pinned it to `1` following the previous post — leave it there and Ollama evicts one model to load the other on every single request.
 
+`OLLAMA_MODELS` carries over the data-disk path set up in 5-2 of the previous post. This setup pulls two models and then derives more from them in 3-2, so disk pressure is higher here than in the previous post.
+
+| Item | Approximate size |
+|---|---|
+| `qwen3-coder:30b-a3b-q4_K_M` | 19GB |
+| EXAONE 4.0 32B Q4_K_M | 19.3GB |
+| Qwen3.5 35B-A3B, if kept from the previous post | +24GB |
+
+The derived models (`coder-32k`, `reviewer-16k`) reference the original weights rather than copying them, so nothing doubles. Three models together still exceed 60GB, so apply 5-2 of the previous post first if models still live on the root filesystem.
+
 `OLLAMA_KEEP_ALIVE=-1` is mandatory rather than optional in this setup. Loading nearly 38GB across two models is not a cost you want to pay per round. The flip side is that all 48GB of GPU memory stays committed to Ollama, so if the same server also runs training or other inference, this layout is the wrong one.
 
 ## 3-2. Per-model context
@@ -116,13 +127,23 @@ Per the Ollama docs the default for `OLLAMA_MAX_LOADED_MODELS` is `3 × number o
 The implementer holds several source files plus test output, so it needs the room:
 
 ```bash
+ollama pull qwen3-coder:30b-a3b-q4_K_M
+
 cat > /tmp/coder.Modelfile <<'EOF'
-FROM qwen3-coder:30b-a3b
+FROM qwen3-coder:30b-a3b-q4_K_M
 PARAMETER num_ctx 32768
 EOF
 
 ollama create coder-32k -f /tmp/coder.Modelfile
 ```
+
+The name after `FROM` has to be a real registry tag. Give it one that doesn't exist and `ollama create` fails while fetching the manifest.
+
+```text
+Error: pull model manifest: file does not exist
+```
+
+The 30B-family tags for `qwen3-coder` are `30b`, `30b-a3b-q4_K_M`, and `30b-a3b-q8_0`. There is no `30b-a3b`. Using `30b-a3b-q4_K_M`, with the quantization in the name, keeps you on the same weights even after `latest` moves. Check tags on the [model's Tags tab](https://ollama.com/library/qwen3-coder/tags), and `ollama pull` first so `ollama create` works from the local copy.
 
 The reviewer reads a diff and a requirement, so it doesn't:
 
@@ -186,11 +207,26 @@ The cost is two of everything: two ports, two units, two log streams, and a seco
 
 # [04] OpenCode — primary and subagent
 
-## 4-1. Registering both models
+## 4-1. Where the config file goes
 
-With the single instance from 3-1, one provider carries both models.
+OpenCode reads config from two places.
 
-```jsonc
+| Scope | Path | Applies to |
+|---|---|---|
+| Global | `~/.config/opencode/opencode.json` | every project |
+| Project | `opencode.json` in the project root | that repository; commit it to share with the team |
+
+The `.jsonc` extension, which allows comments, is also recognized. The two files are **merged, not replaced** — the project file wins only on conflicting keys.
+
+There is one Ollama server per machine regardless of user account, so provider and model definitions belong in the global file. If you already created `~/.config/opencode/opencode.jsonc` in the previous post, replace its contents with what follows.
+
+## 4-2. The complete global config
+
+This is the finished file for the single-instance layout from 3-1. Provider and agent go in **the same file**.
+
+```bash
+mkdir -p ~/.config/opencode
+cat > ~/.config/opencode/opencode.jsonc <<'EOF'
 {
   "$schema": "https://opencode.ai/config.json",
 
@@ -215,19 +251,45 @@ With the single instance from 3-1, one provider carries both models.
         }
       }
     }
+  },
+
+  "agent": {
+    "build": {
+      "model": "ollama/coder-32k"
+    }
   }
 }
+EOF
 ```
 
-Keep `limit.context` equal to the `num_ctx` set in 3-2. If they disagree, OpenCode builds requests past the server's limit and Ollama truncates from the front.
+| Key | Meaning |
+|---|---|
+| `model` | session default; point it at the implementing model |
+| `small_model` | used for lightweight work like session titles. Name the same local model to avoid pulling in an external provider |
+| `provider.ollama.models` | must match the derived model names created with `ollama create` in 3-2 exactly |
+| `limit.context` | same value as `num_ctx` in 3-2. If they disagree, OpenCode builds requests past the server's limit and Ollama truncates from the front |
+| `agent.build` | pins the model for the default implementing agent. The reviewer is defined separately in 4-3 |
 
-With the two-instance layout from 3-3, add a second provider with the other `baseURL` and point the agent below at `ollama-reviewer/...`.
+The review model (`reviewer-16k`) is registered under `models` but never set as `model`. The subagent in 4-3 refers to it by name.
 
-## 4-2. Defining the agents
+Check the result:
+
+```bash
+cd /path/to/your/project
+opencode
+```
+
+```text
+/models   # both "Qwen3-Coder 30B-A3B - implement" and "EXAONE 4.0 32B - review" should appear
+```
+
+For the two-instance layout from 3-3, add a second provider named `ollama-reviewer` with `baseURL` `http://127.0.0.1:11435/v1`, and write the 4-3 `model` as `ollama-reviewer/reviewer-16k`.
+
+## 4-3. Defining the reviewer agent
 
 OpenCode agents differ by `mode`. A `primary` agent is one the user talks to directly; a `subagent` is invoked by a primary agent or called by hand with `@name`.
 
-Define the reviewer as a markdown file — the filename becomes the agent name.
+The implementing agent was finished in 4-2 with a model override under `agent.build`. The reviewer needs its own prompt and permissions, so it goes in a markdown file — **not JSON, a separate file, and the filename becomes the agent name.**
 
 ```bash
 mkdir -p ~/.config/opencode/agents
@@ -275,19 +337,18 @@ For each finding, state:
 
 `permission` is the load-bearing part. **Leave `edit` and `write` open and the reviewer starts fixing the code itself, which dissolves the author/reviewer separation the whole setup exists for.** Restricting `bash` to the `git diff` family leaves exactly the access review needs.
 
-The implementing agent is the stock `build` agent with the model overridden.
+That makes two files in total.
 
-```jsonc
-{
-  "agent": {
-    "build": {
-      "model": "ollama/coder-32k"
-    }
-  }
-}
+```text
+~/.config/opencode/opencode.jsonc      provider, both models, agent.build model override
+~/.config/opencode/agents/reviewer.md  the review subagent's prompt and permissions
 ```
 
-Check registration with `/agents`.
+Restart OpenCode and check registration.
+
+```text
+/agents   # reviewer should appear as a subagent
+```
 
 ---
 
@@ -363,7 +424,7 @@ git add <files>
 
 | Symptom | Cause | Response |
 |---|---|---|
-| Reviewer only says "looks good overall" | no finding format or prohibitions in the prompt | use the severity format and the "no praise" rule from 4-2; keep `temperature` near 0.1 |
+| Reviewer only says "looks good overall" | no finding format or prohibitions in the prompt | use the severity format and the "no praise" rule from 4-3; keep `temperature` near 0.1 |
 | Reviewer edits code | `permission.edit` is open | confirm `edit: deny` and `write: deny` |
 | Reviewer can't see the diff | `bash` fully denied, or the change was already committed | allow `git diff*`; don't commit during the implement step |
 | Tens of seconds of lag each round | model swapping | check both models appear in `ollama ps`; re-check `MAX_LOADED_MODELS` and `KEEP_ALIVE` |
@@ -402,7 +463,7 @@ Do check number 3 at least once. If `permission` never took effect, the reviewer
 
 This setup makes concrete the per-GPU split floated as a next step in section [12] of the previous post. The following is written from documentation and was not measured on this server.
 
-- **VRAM figures and context ceilings.** 18.6GB and 19.3GB are distribution sizes; actual occupancy with KV cache, and whether 32K/16K fit in 24GB, has to be measured with the procedure in 3-2. These are starting values, not verified limits.
+- **VRAM figures and context ceilings.** 19GB and 19.3GB are the distribution sizes listed on Ollama and Hugging Face respectively; actual occupancy with KV cache, and whether 32K/16K fit in 24GB, has to be measured with the procedure in 3-2. These are starting values, not verified limits.
 - **Where the two models land.** One-per-card is the expected outcome of Ollama's documented placement rule. If load order changes it, pin with 3-3.
 - **Review quality.** How much of Qwen3-Coder's error surface EXAONE actually catches depends on the repository and the kind of work. The comparison method in section [12] of the previous post — 10 to 20 real tasks — is the only basis for judging it.
 - **OpenCode config schema.** The `agent`, `mode`, and `permission` keys follow the OpenCode docs and change between versions. On an error, check the `https://opencode.ai/config.json` schema first.
@@ -414,7 +475,7 @@ This setup makes concrete the per-GPU split floated as a next step in section [1
 - [OpenCode Agents](https://opencode.ai/docs/agents/) · [Config](https://opencode.ai/docs/config/) · [Providers](https://opencode.ai/docs/providers/)
 - [Ollama FAQ (concurrent models, multi-GPU placement)](https://docs.ollama.com/faq) · [Modelfile](https://docs.ollama.com/modelfile) · [Context Length](https://docs.ollama.com/context-length)
 - [Qwen3-Coder 30B-A3B](https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct) · [EXAONE 4.0 32B GGUF](https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-32B-GGUF)
-- Previous post: [Building a Korean-Language Local LLM Setup for OpenCode on Two A30s](/en/Etc/opencode-korean-local-llm-a30x2/)
+- Previous post: [Ollama Local LLM Setup Guide: Running OpenCode on Two NVIDIA A30 GPUs](/en/etc/opencode-korean-local-llm-a30x2/)
 
 ---
 

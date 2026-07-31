@@ -1,5 +1,5 @@
 ---
-title: "A30 두 장으로 OpenCode 한국어 로컬 LLM 환경 구축하기 — Ollama + Qwen3.5 35B-A3B"
+title: "Ollama 로컬 LLM 구축 가이드: A30 GPU 2장으로 OpenCode 한국어 코딩 에이전트 만들기"
 description: "NVIDIA A30 24GB 두 장(NVLink 없음)에 Ollama와 Qwen3.5 35B-A3B Q4_K_M을 올려 OpenCode를 외부 API 없이 한국어로 쓰는 구성. LLM·VRAM·양자화·KV Cache·MoE 같은 초심자 개념 설명부터 systemd 튜닝, 64K 컨텍스트, OOM 단계별 대응, AGENTS.md 한국어 규칙까지 정리"
 excerpt: "외부 API 키 없이 A30 두 장만으로 OpenCode를 한국어 코딩 에이전트로 쓴다. GPU·LLM을 처음 접해도 따라올 수 있게 개념부터 튜닝까지 순서대로"
 date: 2026-07-30
@@ -340,6 +340,7 @@ Environment="OLLAMA_MAX_LOADED_MODELS=1"
 Environment="OLLAMA_FLASH_ATTENTION=1"
 Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
 Environment="OLLAMA_KEEP_ALIVE=-1"
+Environment="OLLAMA_MODELS=/data/ollama/models"
 ```
 
 ```bash
@@ -356,6 +357,7 @@ sudo systemctl restart ollama
 | `OLLAMA_FLASH_ATTENTION=1` | 긴 컨텍스트 메모리 사용량 감소 |
 | `OLLAMA_KV_CACHE_TYPE=q8_0` | KV Cache 8비트 — f16 대비 약 절반 (2-7 참고) |
 | `OLLAMA_KEEP_ALIVE=-1` | 모델을 내리지 않고 GPU에 상주 |
+| `OLLAMA_MODELS=/data/ollama/models` | 모델 저장 경로를 데이터 디스크로 (5-2 참고) |
 
 `OLLAMA_KEEP_ALIVE=-1`은 GPU를 다른 작업과 공유하는 서버에선 부적합할 수 있다. 필요하면 `30m`처럼 바꾼다.
 
@@ -422,6 +424,101 @@ kubectl drain <노드명> --ignore-daemonsets --delete-emptydir-data
 운영 제약으로 드라이버를 올릴 수 없다면 대안은 Ollama를 구버전으로 고정하는 것 하나뿐이다(`OLLAMA_VERSION=<버전> sh`). 다만 신규 모델 지원이 계속 빠지므로 권하지 않는다.
 
 요구 드라이버 버전은 Ollama 버전마다 달라진다. 이 글은 **Ollama 0.32.5 기준 550 이상**이며, 설치 시점의 릴리스 노트를 확인하는 것이 정확하다.
+
+## 5-2. 모델 저장 위치를 데이터 디스크로
+
+Ollama의 기본 모델 경로는 `/usr/share/ollama/.ollama/models`, 즉 루트 파일시스템이다. 이 글에서 쓰는 모델 하나가 20GB 안팎이고 비교용으로 몇 개만 더 받아도 루트가 찬다. 모델을 받기 전에 저장 위치부터 옮긴다.
+
+먼저 디스크 구성을 본다.
+
+```bash
+lsblk
+df -h /
+```
+
+루트와 별도로 큰 디스크가 붙어 있는 구성이라면 그쪽에 둔다.
+
+```text
+NAME                      SIZE MOUNTPOINTS
+sda                     446.1G
+├─sda1                      1G /boot/efi
+├─sda2                      2G /boot
+└─sda3                  443.1G
+  └─ubuntu--vg-ubuntu--lv 443G /
+sdb                       3.6T /data
+```
+
+루트 443G에 모델을 쌓는 대신 3.6T짜리 `/data`를 쓴다. 모델 파일 크기는 이 정도다.
+
+| 모델 | 대략 크기 |
+|---|---|
+| Qwen3.5 35B-A3B Q4_K_M | 24GB |
+| Qwen3-Coder 30B-A3B Q4_K_M | 19GB |
+| EXAONE 4.0 32B Q4_K_M | 19.3GB |
+
+세 개만 비교해도 60GB를 넘고, 양자화 변형까지 받으면 금방 100GB대가 된다.
+
+**① 마운트가 재부팅 후에도 유지되는지 확인**
+
+```bash
+findmnt /data
+grep -E "\s/data\s" /etc/fstab
+```
+
+`fstab`에 항목이 없으면 재부팅 후 `/data`가 붙지 않는다. 그 상태로 Ollama가 뜨면 빈 디렉터리를 보고 **모델이 전부 사라진 것처럼 동작한다.** UUID로 등록해 둔다.
+
+```bash
+sudo blkid /dev/sdb
+echo 'UUID=<확인한-UUID>  /data  ext4  defaults  0  2' | sudo tee -a /etc/fstab
+sudo mount -a
+```
+
+**② 디렉터리 생성과 소유권**
+
+```bash
+sudo mkdir -p /data/ollama/models
+sudo chown -R ollama:ollama /data/ollama
+```
+
+소유권이 `ollama`가 아니면 서비스가 시작 직후 실패한다. Ollama는 `User=ollama`로 동작한다.
+
+**③ 기존 모델 이동**
+
+이미 받아 둔 모델이 있으면 옮긴다. 없으면 건너뛴다.
+
+```bash
+sudo systemctl stop ollama
+sudo rsync -a /usr/share/ollama/.ollama/models/ /data/ollama/models/
+sudo chown -R ollama:ollama /data/ollama
+```
+
+**④ systemd에 경로 지정**
+
+위 [05]의 override에 이미 포함된 항목이다.
+
+```ini
+Environment="OLLAMA_MODELS=/data/ollama/models"
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start ollama
+```
+
+**⑤ 확인 후 원본 삭제**
+
+```bash
+ollama list          # 옮긴 모델이 그대로 보여야 한다
+df -h / /data        # 증가분이 /data 쪽에 잡히는지
+```
+
+`ollama list`가 정상이고 새 모델 pull까지 성공한 뒤에 원본을 지운다.
+
+```bash
+sudo rm -rf /usr/share/ollama/.ollama/models
+```
+
+심볼릭 링크로 대체하는 방법도 있지만, 환경변수 쪽이 설정 파일에 드러나서 나중에 원인을 찾기 쉽다.
 
 ---
 
@@ -675,6 +772,8 @@ A30 #1 └─ Qwen3-Coder 30B-A3B Q4 → 코드 구현·테스트
 ```
 
 두 모델이 독립적이라 GPU 간 통신이 거의 없고, 한국어 모델과 코딩 모델의 역할을 나눌 수 있다. 대신 Ollama 서버 두 개 운영, GPU당 24GB 안에서 모델+KV Cache 해결(컨텍스트는 24K~32K 시작), provider 설정 복잡화를 감수해야 한다. 처음에는 Qwen3.5 하나를 두 장에 분산하는 기본안으로 시작하고, 이 구성은 그다음에 시도하는 것을 권한다.
+
+이 배치를 OpenCode의 서브에이전트와 묶으면 구현 모델과 검토 모델을 분리할 수 있다. 후속 글 [Ollama 모델 2개로 AI 코드 리뷰 자동화](/etc/opencode-dual-model-review-loop/)에 모델별 컨텍스트 분리, 검토자 권한 제한, 라운드 상한까지 정리했다.
 
 마지막으로 운영 원칙 여덟 가지.
 

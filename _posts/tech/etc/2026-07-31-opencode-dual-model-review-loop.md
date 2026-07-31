@@ -1,5 +1,5 @@
 ---
-title: "로컬 LLM 두 개로 개발·검토·반영 루프 만들기 — OpenCode 서브에이전트 + A30 두 장"
+title: "Ollama 모델 2개로 AI 코드 리뷰 자동화: OpenCode 서브에이전트로 구현·검토 분리하기"
 description: "A30 24GB 두 장에 Qwen3-Coder와 EXAONE을 한 장씩 올리고, OpenCode의 primary/subagent 구조로 구현 모델과 검토 모델을 분리하는 구성. 모델별 num_ctx 분리, 검토자에게서 편집 권한을 뺏는 이유, 무한 핑퐁을 끊는 라운드 상한까지"
 excerpt: "같은 모델이 자기 코드를 검토하면 같은 실수를 놓친다. 계열이 다른 두 로컬 모델을 GPU 한 장씩에 상주시켜 저자와 검토자를 분리한다"
 date: 2026-07-31
@@ -8,7 +8,7 @@ tags: [OpenCode, Ollama, 로컬LLM, 멀티에이전트, 서브에이전트, 코�
 ref: opencode-dual-model-review-loop
 ---
 
-:bulb: [A30 두 장으로 OpenCode 한국어 로컬 LLM 환경 구축하기](/Etc/opencode-korean-local-llm-a30x2/)의 후속이다. 앞 글이 모델 하나를 두 GPU에 분산해 64K 컨텍스트를 확보하는 구성이었다면, 이 글은 **GPU 한 장에 모델 하나씩 올려 구현 모델과 검토 모델을 분리하는 구성**이다. OpenCode의 primary/subagent 구조로 A가 구현하고 B가 검토하고 다시 A가 반영하는 루프를 만든다.
+:bulb: [Ollama 로컬 LLM 구축 가이드: A30 GPU 2장으로 OpenCode 한국어 코딩 에이전트 만들기](/etc/opencode-korean-local-llm-a30x2/)의 후속이다. 앞 글이 모델 하나를 두 GPU에 분산해 64K 컨텍스트를 확보하는 구성이었다면, 이 글은 **GPU 한 장에 모델 하나씩 올려 구현 모델과 검토 모델을 분리하는 구성**이다. OpenCode의 primary/subagent 구조로 A가 구현하고 B가 검토하고 다시 A가 반영하는 루프를 만든다.
 {: .notice--info}
 
 최종 구성부터.
@@ -63,7 +63,7 @@ OpenCode
 VRAM 배치는 이렇게 된다.
 
 ```text
-A30 #0 24GB ├─ Qwen3-Coder 30B-A3B Q4_K_M  약 18.6GB
+A30 #0 24GB ├─ Qwen3-Coder 30B-A3B Q4_K_M  약 19GB
             └─ KV Cache + 실행 공간          약 5GB
 
 A30 #1 24GB ├─ EXAONE 4.0 32B Q4_K_M        약 19.3GB
@@ -93,6 +93,7 @@ Environment="OLLAMA_MAX_LOADED_MODELS=2"
 Environment="OLLAMA_FLASH_ATTENTION=1"
 Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
 Environment="OLLAMA_KEEP_ALIVE=-1"
+Environment="OLLAMA_MODELS=/data/ollama/models"
 ```
 
 ```bash
@@ -107,6 +108,16 @@ sudo systemctl restart ollama
 
 Ollama 문서 기준 `OLLAMA_MAX_LOADED_MODELS`의 기본값은 `GPU 수 × 3`이므로 명시하지 않아도 2개는 적재된다. 앞 글에서 `1`로 고정해 뒀다면 반드시 풀어야 한다. 값이 `1`이면 요청이 올 때마다 상대 모델을 내리고 올리는 동작이 반복된다.
 
+`OLLAMA_MODELS`는 앞 글 5-2에서 모델 저장 경로를 데이터 디스크로 옮겨 둔 설정 그대로다. 이 구성은 모델을 두 개 받고 3-2에서 파생 모델까지 만들기 때문에 디스크 압박이 앞 글보다 크다.
+
+| 항목 | 대략 크기 |
+|---|---|
+| `qwen3-coder:30b-a3b-q4_K_M` | 19GB |
+| EXAONE 4.0 32B Q4_K_M | 19.3GB |
+| 앞 글에서 받은 Qwen3.5 35B-A3B를 남겨 둔 경우 | +24GB |
+
+파생 모델(`coder-32k`, `reviewer-16k`)은 원본 가중치를 참조하므로 크기가 두 배가 되지는 않는다. 그래도 세 모델을 함께 두면 60GB를 넘으므로, 루트 파일시스템에 그대로 두는 구성이라면 앞 글 5-2를 먼저 적용한다.
+
 `OLLAMA_KEEP_ALIVE=-1`은 이 구성에서 선택이 아니라 필수다. 두 모델을 합쳐 38GB 가까이 적재하는 데 드는 시간을 라운드마다 다시 치르지 않으려면 상주시켜야 한다. 다만 GPU 48GB 전부가 Ollama에 묶이므로, 같은 서버에서 학습이나 다른 추론을 돌린다면 이 구성 자체가 맞지 않는다.
 
 ## 3-2. 모델별 컨텍스트 분리
@@ -116,13 +127,23 @@ Ollama 문서 기준 `OLLAMA_MAX_LOADED_MODELS`의 기본값은 `GPU 수 × 3`�
 구현 모델은 소스 파일 여러 개와 테스트 출력을 함께 들고 있어야 하므로 컨텍스트가 필요하다.
 
 ```bash
+ollama pull qwen3-coder:30b-a3b-q4_K_M
+
 cat > /tmp/coder.Modelfile <<'EOF'
-FROM qwen3-coder:30b-a3b
+FROM qwen3-coder:30b-a3b-q4_K_M
 PARAMETER num_ctx 32768
 EOF
 
 ollama create coder-32k -f /tmp/coder.Modelfile
 ```
+
+`FROM`에 적는 이름은 Ollama 레지스트리의 실제 태그여야 한다. 없는 태그를 적으면 `ollama create`가 매니페스트를 받으려다 실패한다.
+
+```text
+Error: pull model manifest: file does not exist
+```
+
+`qwen3-coder`의 30B 계열 태그는 `30b`, `30b-a3b-q4_K_M`, `30b-a3b-q8_0`이다. `30b-a3b`는 없다. 양자화가 이름에 박힌 `30b-a3b-q4_K_M`을 쓰면 나중에 `latest`가 옮겨가도 같은 가중치를 받는다. 태그는 [모델 페이지의 Tags 탭](https://ollama.com/library/qwen3-coder/tags)에서 확인하고, `ollama pull`로 먼저 받아 두면 `ollama create`가 로컬 사본을 쓴다.
 
 검토 모델은 `git diff`와 요구사항만 읽으므로 작아도 된다.
 
@@ -186,11 +207,26 @@ WantedBy=default.target
 
 # [04] OpenCode — primary와 subagent 분리
 
-## 4-1. 두 모델을 provider에 등록
+## 4-1. 설정 파일 위치
 
-3-1 방식(단일 인스턴스)이면 provider 하나에 모델 두 개를 넣는다.
+OpenCode 설정 파일은 두 곳에 둘 수 있다.
 
-```jsonc
+| 범위 | 경로 | 적용 대상 |
+|---|---|---|
+| 전역 | `~/.config/opencode/opencode.json` | 모든 프로젝트 |
+| 프로젝트 | 프로젝트 루트의 `opencode.json` | 해당 저장소. 커밋하면 팀과 공유된다 |
+
+주석을 허용하는 `.jsonc` 확장자도 인식한다. 두 파일은 **교체가 아니라 병합**되고, 충돌하는 키만 프로젝트 설정이 이긴다.
+
+Ollama 서버는 사용자 계정과 무관하게 한 대에 하나이므로, provider와 모델 정의는 전역 파일에 둔다. 앞 글에서 이미 `~/.config/opencode/opencode.jsonc`를 만들었다면 그 파일을 아래 내용으로 교체하면 된다.
+
+## 4-2. 전역 설정 전체 내용
+
+3-1 방식(단일 Ollama 인스턴스)의 완성본이다. provider와 agent를 **한 파일에 함께** 넣는다.
+
+```bash
+mkdir -p ~/.config/opencode
+cat > ~/.config/opencode/opencode.jsonc <<'EOF'
 {
   "$schema": "https://opencode.ai/config.json",
 
@@ -215,19 +251,45 @@ WantedBy=default.target
         }
       }
     }
+  },
+
+  "agent": {
+    "build": {
+      "model": "ollama/coder-32k"
+    }
   }
 }
+EOF
 ```
 
-`limit.context`는 3-2에서 준 `num_ctx`와 같은 값으로 맞춘다. 어긋나면 OpenCode가 서버 한계를 넘는 요청을 만들고, Ollama가 앞부분을 잘라낸다.
+| 키 | 의미 |
+|---|---|
+| `model` | 세션 기본 모델. 구현 모델을 지정한다 |
+| `small_model` | 세션 제목 생성 같은 가벼운 작업용. 외부 provider를 쓰지 않으려면 같은 로컬 모델로 명시한다 |
+| `provider.ollama.models` | 3-2에서 `ollama create`로 만든 파생 모델 이름과 정확히 같아야 한다 |
+| `limit.context` | 3-2의 `num_ctx`와 같은 값. 어긋나면 OpenCode가 서버 한계를 넘는 요청을 만들고 Ollama가 앞부분을 잘라낸다 |
+| `agent.build` | 기본 구현 에이전트의 모델 고정. 검토 에이전트는 4-3에서 별도 파일로 정의한다 |
 
-3-3 방식(인스턴스 두 개)이면 `baseURL`이 다른 provider를 하나 더 만들고 아래 에이전트 정의의 `model`을 `ollama-reviewer/...` 형태로 가리킨다.
+검토 모델(`reviewer-16k`)은 `models`에 등록만 하고 `model`로 지정하지 않는다. 4-3의 서브에이전트가 이름으로 가리켜 쓴다.
 
-## 4-2. 에이전트 정의
+등록 결과를 확인한다.
+
+```bash
+cd /path/to/your/project
+opencode
+```
+
+```text
+/models   # "Qwen3-Coder 30B-A3B - 구현"과 "EXAONE 4.0 32B - 검토" 두 개가 보여야 한다
+```
+
+3-3 방식(인스턴스 두 개)이면 `baseURL`이 `http://127.0.0.1:11435/v1`인 provider를 `ollama-reviewer`라는 이름으로 하나 더 만들고, 4-3의 `model`을 `ollama-reviewer/reviewer-16k`로 적는다.
+
+## 4-3. 검토 에이전트 정의
 
 OpenCode의 에이전트는 `mode`로 성격이 갈린다. `primary`는 사용자가 직접 대화하는 주 에이전트, `subagent`는 primary가 호출하거나 사용자가 `@이름`으로 부르는 보조 에이전트다.
 
-검토자를 markdown 파일로 정의한다. 파일명이 곧 에이전트 이름이 된다.
+구현 에이전트는 4-2에서 `agent.build`로 모델만 바꿔 끝났다. 검토자는 프롬프트와 권한을 따로 줘야 하므로 markdown 파일로 정의한다. **JSON이 아니라 별도 파일이고, 파일명이 곧 에이전트 이름이 된다.**
 
 ```bash
 mkdir -p ~/.config/opencode/agents
@@ -275,19 +337,18 @@ permission:
 
 `permission`이 이 구성의 핵심이다. **검토자에게서 `edit`과 `write`를 뺏지 않으면 검토자가 직접 코드를 고치기 시작하고, 저자와 검토자를 분리한 의미가 사라진다.** `bash`는 `git diff` 계열만 허용해 검토에 필요한 최소 권한만 남긴다.
 
-구현 에이전트는 기본 `build`를 그대로 쓰되 모델만 지정한다.
+정리하면 파일이 두 개다.
 
-```jsonc
-{
-  "agent": {
-    "build": {
-      "model": "ollama/coder-32k"
-    }
-  }
-}
+```text
+~/.config/opencode/opencode.jsonc      provider, 모델 2개, agent.build 모델 지정
+~/.config/opencode/agents/reviewer.md  검토 서브에이전트의 프롬프트와 권한
 ```
 
-`/agents` 명령으로 등록 상태를 확인한다.
+OpenCode를 다시 띄워 등록 상태를 확인한다.
+
+```text
+/agents   # reviewer 가 subagent 로 보여야 한다
+```
 
 ---
 
@@ -363,11 +424,11 @@ git add <파일>
 
 | 증상 | 원인 | 대응 |
 |---|---|---|
-| 검토자가 "전반적으로 좋습니다"만 반복 | 지적 형식과 금지 항목이 프롬프트에 없음 | 4-2의 심각도 형식과 "칭찬 금지"를 명시. `temperature`를 0.1 수준으로 |
+| 검토자가 "전반적으로 좋습니다"만 반복 | 지적 형식과 금지 항목이 프롬프트에 없음 | 4-3의 심각도 형식과 "칭찬 금지"를 명시. `temperature`를 0.1 수준으로 |
 | 검토자가 코드를 직접 수정 | `permission.edit`이 열려 있음 | `edit: deny`, `write: deny` 확인 |
 | 검토자가 diff를 못 봄 | `bash` 전면 차단, 또는 이미 커밋됨 | `git diff*` 허용 확인. 구현 단계에서 커밋 금지 |
 | 라운드마다 응답이 수십 초 지연 | 모델 스왑 발생 | `ollama ps`에 두 모델이 함께 떠 있는지 확인. `MAX_LOADED_MODELS`와 `KEEP_ALIVE` 재확인 |
-| 지적이 변경과 무관한 파일에 쏠림 | 검토 범위가 프롬프트에 없음 | 요구사항을 호출 시 함께 전달. 4-2의 "변경되지 않은 파일은 별도 항목" 규칙 |
+| 지적이 변경과 무관한 파일에 쏠림 | 검토 범위가 프롬프트에 없음 | 요구사항을 호출 시 함께 전달. 4-3의 "변경되지 않은 파일은 별도 항목" 규칙 |
 | 3라운드 이상 왕복 | 요구사항이 모호 | 5-2에 따라 중단하고 작업을 쪼갬 |
 | 반영 후 테스트가 깨짐 | 오탐 지적까지 반영 | 심각도로 필터. 5-1 ③의 프롬프트 형태 유지 |
 
@@ -402,7 +463,7 @@ sudo journalctl -u ollama -f      # @reviewer 호출 중 reviewer-16k 요청이 
 
 이 구성은 앞 글의 [12]절에서 다음 단계로 제시했던 GPU 분리 운영을 구체화한 것이다. 다음 항목은 문서 기준으로 작성했고 이 서버에서 측정하지 않았다.
 
-- **VRAM 수치와 컨텍스트 상한**: 18.6GB·19.3GB는 모델 배포본 크기이고, KV Cache를 더한 실제 점유량과 32K·16K가 A30 24GB에 들어가는지는 3-2의 절차로 각자 측정해야 한다. 시작값일 뿐 검증된 상한이 아니다.
+- **VRAM 수치와 컨텍스트 상한**: 19GB·19.3GB는 각각 Ollama·Hugging Face에 표기된 배포본 크기이고, KV Cache를 더한 실제 점유량과 32K·16K가 A30 24GB에 들어가는지는 3-2의 절차로 각자 측정해야 한다. 시작값일 뿐 검증된 상한이 아니다.
 - **두 모델의 배치 결과**: 한 장에 하나씩 놓이는 것은 Ollama 문서의 배치 규칙에서 따라 나오는 기대값이다. 적재 순서에 따라 달라지면 3-3으로 고정한다.
 - **검토 품질**: EXAONE의 지적이 Qwen3-Coder의 실수를 실제로 얼마나 잡아내는지는 저장소와 작업 성격에 따라 다르다. 앞 글 [12]의 비교 방법대로 실제 작업 10~20개로 측정하는 것이 유일한 판단 근거다.
 - **OpenCode 설정 스키마**: `agent`, `mode`, `permission` 키는 OpenCode 문서 기준이며 버전에 따라 달라진다. 오류가 나면 `https://opencode.ai/config.json` 스키마를 먼저 확인한다.
@@ -414,7 +475,7 @@ sudo journalctl -u ollama -f      # @reviewer 호출 중 reviewer-16k 요청이 
 - [OpenCode Agents](https://opencode.ai/docs/agents/) · [Config](https://opencode.ai/docs/config/) · [Providers](https://opencode.ai/docs/providers/)
 - [Ollama FAQ (동시 적재·멀티 GPU 배치)](https://docs.ollama.com/faq) · [Modelfile](https://docs.ollama.com/modelfile) · [Context Length](https://docs.ollama.com/context-length)
 - [Qwen3-Coder 30B-A3B](https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct) · [EXAONE 4.0 32B GGUF](https://huggingface.co/LGAI-EXAONE/EXAONE-4.0-32B-GGUF)
-- 앞 글: [A30 두 장으로 OpenCode 한국어 로컬 LLM 환경 구축하기](/Etc/opencode-korean-local-llm-a30x2/)
+- 앞 글: [Ollama 로컬 LLM 구축 가이드: A30 GPU 2장으로 OpenCode 한국어 코딩 에이전트 만들기](/etc/opencode-korean-local-llm-a30x2/)
 
 ---
 
