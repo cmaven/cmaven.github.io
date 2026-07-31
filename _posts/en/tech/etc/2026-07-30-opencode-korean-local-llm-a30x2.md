@@ -482,15 +482,32 @@ sudo chown -R ollama:ollama /data/ollama
 
 If `ollama` doesn't own it, the service fails immediately on start — it runs as `User=ollama`.
 
-**③ Move existing models**
+**③ Move models you already pulled**
 
-Skip this if you haven't pulled anything yet.
+Skip this if you haven't pulled anything yet. If models are already sitting on root, nothing is lost — move them instead of re-downloading.
+
+First, **if a download is running, let it finish.** Interrupting an `ollama pull` or `ollama create` leaves incomplete blobs behind, and after relocating the path you may end up pulling from the start again.
+
+Record the list and check free space before copying.
+
+```bash
+ollama list          # for comparison afterward; note the names and IDs
+du -sh /usr/share/ollama/.ollama/models
+df -h /data          # more free space than the size above
+```
+
+Stop the service before copying — copying while a model is loaded can produce a torn file.
 
 ```bash
 sudo systemctl stop ollama
+sudo mkdir -p /data/ollama/models
 sudo rsync -a /usr/share/ollama/.ollama/models/ /data/ollama/models/
 sudo chown -R ollama:ollama /data/ollama
 ```
+
+`rsync -a` carries both the weights under `blobs/` and the model definitions under `manifests/`. **Models derived with `ollama create` come along too — there's no need to re-run the Modelfile.** Derived models only reference the original blobs, so the copy doesn't double in size either.
+
+`rsync` rather than `mv` keeps the original in place until step ⑤ confirms everything works.
 
 **④ Point systemd at the new path**
 
@@ -508,11 +525,12 @@ sudo systemctl start ollama
 **⑤ Verify, then delete the original**
 
 ```bash
-ollama list          # the moved models should all still be listed
-df -h / /data        # growth should now land on /data
+ollama list          # names and IDs must match the list recorded in ③
+ollama ps            # models still load
+df -h / /data        # further growth now lands on /data
 ```
 
-Delete the original only after `ollama list` looks right and a fresh pull succeeds.
+Delete the original only after the list matches and a fresh pull succeeds. If anything is missing, leave it alone and re-run the `rsync`.
 
 ```bash
 sudo rm -rf /usr/share/ollama/.ollama/models

@@ -482,15 +482,32 @@ sudo chown -R ollama:ollama /data/ollama
 
 소유권이 `ollama`가 아니면 서비스가 시작 직후 실패한다. Ollama는 `User=ollama`로 동작한다.
 
-**③ 기존 모델 이동**
+**③ 이미 받은 모델 이동**
 
-이미 받아 둔 모델이 있으면 옮긴다. 없으면 건너뛴다.
+받은 모델이 없다면 건너뛴다. 이미 루트에 받아 둔 뒤라도 늦지 않다. 다시 받을 필요 없이 그대로 옮긴다.
+
+먼저 **받는 중이라면 끝날 때까지 기다린다.** 진행 중인 `ollama pull`이나 `ollama create`를 중단하면 완료되지 않은 blob이 남고, 경로를 옮긴 뒤 처음부터 다시 받게 될 수 있다.
+
+이전 전에 목록을 남겨 두고 여유 공간을 확인한다.
+
+```bash
+ollama list          # 이전 후 비교용. 이름과 ID를 기록해 둔다
+du -sh /usr/share/ollama/.ollama/models
+df -h /data          # 위 크기보다 여유가 큰지
+```
+
+서비스를 멈추고 복사한다. 실행 중에 복사하면 적재 중인 파일이 어긋날 수 있다.
 
 ```bash
 sudo systemctl stop ollama
+sudo mkdir -p /data/ollama/models
 sudo rsync -a /usr/share/ollama/.ollama/models/ /data/ollama/models/
 sudo chown -R ollama:ollama /data/ollama
 ```
+
+`rsync -a`는 `blobs/`의 가중치와 `manifests/`의 모델 정의를 함께 옮긴다. 따라서 **`ollama create`로 만든 파생 모델도 같이 따라오고, Modelfile을 다시 실행할 필요가 없다.** 파생 모델은 원본 blob을 참조만 하므로 복사량이 두 배가 되지도 않는다.
+
+`mv` 대신 `rsync`를 쓰는 이유는 원본을 남겨 두기 위해서다. ⑤에서 정상 동작을 확인한 뒤에 지운다.
 
 **④ systemd에 경로 지정**
 
@@ -508,11 +525,12 @@ sudo systemctl start ollama
 **⑤ 확인 후 원본 삭제**
 
 ```bash
-ollama list          # 옮긴 모델이 그대로 보여야 한다
-df -h / /data        # 증가분이 /data 쪽에 잡히는지
+ollama list          # ③에서 기록한 목록과 이름·ID가 모두 일치해야 한다
+ollama ps            # 모델 적재가 되는지
+df -h / /data        # 이후 증가분이 /data 쪽에 잡히는지
 ```
 
-`ollama list`가 정상이고 새 모델 pull까지 성공한 뒤에 원본을 지운다.
+목록이 일치하고 새 모델 pull까지 성공한 뒤에 원본을 지운다. 하나라도 빠졌다면 지우지 말고 `rsync`를 다시 실행한다.
 
 ```bash
 sudo rm -rf /usr/share/ollama/.ollama/models
